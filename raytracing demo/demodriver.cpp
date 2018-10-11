@@ -228,7 +228,8 @@ void draw_raygun()
 					//collision, draw point;
 					Pointf loc = p_ray_src[i][j] + d_ray_src[i][j].scale_mul(t);
 					norm = (*(poly_list[k])).surf_norm(*(poly_list[k] + 1), *(poly_list[k] + 2));
-					Pointf reflect = loc.scale_mul(2) - (p_ray_src[i][j]).reflect_across(norm);
+					Pointf reflect = loc + loc  - (p_ray_src[i][j]).reflect_across(norm);
+					Pointf refract = loc + loc - p_ray_src[i][j].refract_through(norm, 1.0f, 1.1f);
 					norm = loc - norm;
 					//draw the rays to plane
 					glColor3f(1.0f, 0.0f, 0.0f);
@@ -239,6 +240,9 @@ void draw_raygun()
 					//reflect line
 					glColor3f(0.0f, 0.0f, 0.0f);
 					draw_ray(loc, reflect);
+					//refract line
+					glColor3f(0.0f, 1.0f, 1.0f);
+					draw_ray(loc, refract);
 				}
 		}
 	}

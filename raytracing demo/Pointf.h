@@ -17,5 +17,5 @@ public:
 	float Pointf::dot_product(const Pointf& c) const;
 	float Pointf::magnitude_precise();
 	Pointf surf_norm(Pointf& v1, Pointf& v2);
-	Pointf Pointf::refract_through(Pointf& norm, float const index_of_refraction_1, float const index_of_refraction_2);
+	Pointf Pointf::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2);
 };

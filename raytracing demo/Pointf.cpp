@@ -93,7 +93,7 @@ Pointf Pointf::reflect_across(Pointf& norm) const
 
 //assumes norm is, well, normal
 //returns a normalized vector corresponding to the refracted direction
-Pointf Pointf::refract_through(Pointf& norm, float const index_of_refraction_1, float const index_of_refraction_2)
+Pointf Pointf::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2)
 {
 	//normalize this
 	Pointf p = this->scale_mul(Q_rsqrt(this->dot_product(*this)));
