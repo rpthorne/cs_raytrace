@@ -39,6 +39,13 @@ Pointf Pointf::operator- (const Pointf& c) const
 	return res;
 }
 
+
+Pointf Pointf::operator- ()const
+{
+	Pointf res = { -x,-y,-z };
+	return res;
+}
+
 Pointf Pointf::operator+ (const Pointf& c) const
 {
 	Pointf res;
@@ -74,7 +81,7 @@ float Pointf::magnitude_precise()
 	return sqrtf(this->dot_product(*this));
 }
 
-Pointf Pointf::reflect_across(Pointf norm) const
+Pointf Pointf::reflect_across(Pointf& norm) const
 {
 	Pointf res;
 	res.x = this->x;
@@ -83,9 +90,22 @@ Pointf Pointf::reflect_across(Pointf norm) const
 	res = res - (norm.scale_mul(2.0f * this->dot_product(norm)));
 	return res;
 }
+
+//assumes norm is, well, normal
+//returns a normalized vector corresponding to the refracted direction
+Pointf Pointf::refract_through(Pointf& norm, float const index_of_refraction_1, float const index_of_refraction_2)
+{
+	//normalize this
+	Pointf p = this->scale_mul(Q_rsqrt(this->dot_product(*this)));
+	Pointf result;
+	float refract_index = index_of_refraction_1 / index_of_refraction_2;
+	float vector_dot = p.dot_product(-norm);
+	result = p.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - sqrt(1 - refract_index * refract_index * (1 - vector_dot * vector_dot)));
+	return result;
+}
 	
 //generates a surface normal out of the implied base and the two points specified
-Pointf Pointf::surf_norm(Pointf v1, Pointf v2)
+Pointf Pointf::surf_norm(Pointf& v1, Pointf& v2)
 {
 	Pointf p, q, r;
 	p = v1 - (*this);
@@ -93,8 +113,6 @@ Pointf Pointf::surf_norm(Pointf v1, Pointf v2)
 	r.x = (p.y * q.z) - (p.z * q.y);
 	r.y = (p.z * q.x) - (p.x * q.z);
 	r.z = (p.x * q.y) - (p.y * q.x);
-	//p.x will be sacrificed to save our norms, dont let it go to waste!
-	p.x = Q_rsqrt(r.dot_product(r));
-	r = r.scale_mul(p.x);
+	r = r.scale_mul(Q_rsqrt(r.dot_product(r)));
 	return r;
 }
