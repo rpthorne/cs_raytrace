@@ -2,87 +2,99 @@
 #include <math.h>
 
 
-class Pointf
+//from "Quake III Arena"
+//https://github.com/id-Software/Quake-III-Arena/blob/master/code/game/q_math.c#L552
+//(lines 552 - 572) taken from wikepedia article, unmodified:
+//https://en.wikipedia.org/wiki/Fast_inverse_square_root#cite_note-quakesrc-6
+//finds the approximate inverse square root in a short, time efficient manner.
+float Q_rsqrt(float number)
 {
-public:
-	float x, y, z;
-	Pointf Pointf::operator- (const Pointf& c) const
-	{
-		Pointf res;
-		res.x = this->x - c.x;
-		res.y = this->y - c.y;
-		res.z = this->z - c.z;
-		return res;
-	}
+	long i;
+	float x2, y;
+	const float threehalfs = 1.5F;
 
-	Pointf Pointf::operator+ (const Pointf& c) const
-	{
-		Pointf res;
-		res.x = this->x + c.x;
-		res.y = this->y + c.y;
-		res.z = this->z + c.z;
-		return res;
-	}
-	//performs dot product like * should on vectors
-	float Pointf::dot_product(const Pointf& c) const { return this->x * c.x + this->y * c.y + this->z * c.z; }
+	x2 = number * 0.5F;
+	y = number;
+	i = *(long *)&y;                       // evil floating point bit level hacking
+	i = 0x5f3759df - (i >> 1);               // what the fuck? 
+	y = *(float *)&i;
+	y = y * (threehalfs - (x2 * y * y));   // 1st iteration
+										   // y = y * (threehalfs - (x2 * y * y));   // 2nd iteration, this can be removed
 
-	Pointf Pointf::scale_div(const float div) const
-	{
-		Pointf res;
-		res.x = this->x / div;
-		res.y = this->y / div;
-		res.z = this->z / div;
-		return res;
-	}
-	Pointf Pointf::scale_mul(const float mul) const
-	{
-		Pointf res;
-		res.x = this->x * mul;
-		res.y = this->y * mul;
-		res.z = this->z * mul;
-		return res;
-	}
+	return y;
+}
 
-	//doesnt work, dont use
-	PointfA Pointf::asArray()
-	{
-		PointfA f = { this->x, this-> y, this->z };
-		return f;
-	}
 
-	//slow and very accurate calculation
-	float Pointf::magnitude_precise()
-	{
-		return sqrtf(this->dot_product(*this));
-	}
+Pointf::Pointf() { x = 0; y = 0; z = 0; }
+Pointf::Pointf(float a, float b, float c) { this->x = a; this->y = b; this->z = c; }
+float Pointf::getX() const {return x;}
+float Pointf::getY() const { return y; }
+float Pointf::getZ() const { return z; }
+Pointf Pointf::operator- (const Pointf& c) const
+{
+	Pointf res;
+	res.x = this->x - c.x;
+	res.y = this->y - c.y;
+	res.z = this->z - c.z;
+	return res;
+}
 
-	Pointf Pointf::reflect_across(Pointf norm) const
-	{
-		Pointf res;
-		res.x = this->x;
-		res.y = this->y;
-		res.z = this->z;
-		res = res - (norm.scale_mul(2.0f * this->dot_product(norm)));
-		return res;
-	}
+Pointf Pointf::operator+ (const Pointf& c) const
+{
+	Pointf res;
+	res.x = this->x + c.x;
+	res.y = this->y + c.y;
+	res.z = this->z + c.z;
+	return res;
+}
+//performs dot product like * should on vectors
+float Pointf::dot_product(const Pointf& c) const { return this->x * c.x + this->y * c.y + this->z * c.z; }
 
-	Pointf surf_norm(Pointf base, Pointf v1, Pointf v2)
-	{
-		Pointf p, q, r;
-		p.x = v1.x - base.x;
-		p.y = v1.y - base.y;
-		p.z = v1.z - base.z;
-		q.x = v2.x - base.x;
-		q.y = v2.y - base.y;
-		q.z = v2.z - base.z;
-		r.x = (p.y * q.z) - (p.z * q.y);
-		r.y = (p.z * q.x) - (p.x * q.z);
-		r.z = (p.x * q.y) - (p.y * q.x);
-		//p.x will be sacrificed to save our norms, dont let it go to waste!
-		p.x = sqrtf(r.dot_product(r));
-		r.x *= p.x;
-		r.y *= p.x;
-		r.z *= p.x;
-		return r;
-	}
-};
+Pointf Pointf::scale_div(const float div) const
+{
+	Pointf res;
+	res.x = this->x / div;
+	res.y = this->y / div;
+	res.z = this->z / div;
+	return res;
+}
+Pointf Pointf::scale_mul(const float mul) const
+{
+	Pointf res;
+	res.x = this->x * mul;
+	res.y = this->y * mul;
+	res.z = this->z * mul;
+	return res;
+}
+
+	
+//slow and very accurate calculation
+float Pointf::magnitude_precise()
+{
+	return sqrtf(this->dot_product(*this));
+}
+
+Pointf Pointf::reflect_across(Pointf norm) const
+{
+	Pointf res;
+	res.x = this->x;
+	res.y = this->y;
+	res.z = this->z;
+	res = res - (norm.scale_mul(2.0f * this->dot_product(norm)));
+	return res;
+}
+	
+//generates a surface normal out of the implied base and the two points specified
+Pointf Pointf::surf_norm(Pointf v1, Pointf v2)
+{
+	Pointf p, q, r;
+	p = v1 - (*this);
+	q = v2 - (*this);
+	r.x = (p.y * q.z) - (p.z * q.y);
+	r.y = (p.z * q.x) - (p.x * q.z);
+	r.z = (p.x * q.y) - (p.y * q.x);
+	//p.x will be sacrificed to save our norms, dont let it go to waste!
+	p.x = Q_rsqrt(r.dot_product(r));
+	r = r.scale_mul(p.x);
+	return r;
+}

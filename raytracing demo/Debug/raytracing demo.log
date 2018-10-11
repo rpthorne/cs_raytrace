@@ -1,1 +1,14 @@
-﻿
+﻿  demodriver.cpp
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(69): warning C4227: anachronism used: qualifiers on reference are ignored
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(75): warning C4101: 'temp': unreferenced local variable
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(181): warning C4227: anachronism used: qualifiers on reference are ignored
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(266): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(267): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(268): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(269): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(273): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(274): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(304): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\newto_000\documents\visual studio 2015\projects\raytracing demo\raytracing demo\demodriver.cpp(382): warning C4101: 'j': unreferenced local variable
+  raytracing demo.vcxproj -> C:\Users\newto_000\Documents\Visual Studio 2015\Projects\raytracing demo\Debug\raytracing demo.exe
+  raytracing demo.vcxproj -> C:\Users\newto_000\Documents\Visual Studio 2015\Projects\raytracing demo\Debug\raytracing demo.pdb (Partial PDB)
