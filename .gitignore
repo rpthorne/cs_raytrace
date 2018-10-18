@@ -1,0 +1,9 @@
+# remove all files
+/**/
+*.sdf
+*.sln
+#add the source folder
+!/raytracing demo
+
+#remove the vcx project stuff
+*.vcxproj*
