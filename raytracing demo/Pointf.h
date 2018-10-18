@@ -1,8 +1,9 @@
 #pragma once
 
 class Pointf {
-public:
+
 	float x, y, z;
+public:
 	Pointf();
 	Pointf(float a, float b, float c);
 	float Pointf::getX() const;

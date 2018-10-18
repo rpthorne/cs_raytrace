@@ -1,7 +1,9 @@
 # remove all files
-/*/
 /**/
+*.sdf
+*.sln
+#add the source folder
+!/raytracing demo
 
-#add any .cpp and .h files
-!*.cpp
-!*.h
+#remove the vcx project stuff
+*.vcxproj*
