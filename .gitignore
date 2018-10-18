@@ -1,0 +1,7 @@
+# remove all files
+/*/
+/**/
+
+#add any .cpp and .h files
+!*.cpp
+!*.h
