@@ -91,6 +91,11 @@ Pointf Pointf::reflect_across(Pointf& norm) const
 	return res;
 }
 
+Pointf Pointf::cross_product(Pointf &p) const
+{
+	return Pointf(this->y * p.z - this->z * p.y, this->z * p.x - this->x * p.z, this->x * p.y - this->y * p.x);
+}
+
 //assumes norm is, well, normal
 //returns a normalized vector corresponding to the refracted direction
 Pointf Pointf::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2)

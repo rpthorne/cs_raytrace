@@ -15,6 +15,7 @@ public:
 	Pointf Pointf::scale_div(const float div) const;
 	Pointf Pointf::scale_mul(const float mul) const;
 	Pointf Pointf::reflect_across(Pointf& norm) const;
+	Pointf Pointf::cross_product(Pointf &p) const;
 	float Pointf::dot_product(const Pointf& c) const;
 	float Pointf::magnitude_precise();
 	Pointf surf_norm(Pointf& v1, Pointf& v2);
