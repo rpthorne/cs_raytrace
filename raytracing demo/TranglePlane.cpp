@@ -1,4 +1,4 @@
-#includes "AbstractPlane.h"
+#include "AbstractPlane.h"
 #include "pointf.h"
 #include "XRay.h"
 
@@ -8,6 +8,7 @@ class TranglePlane : AbstractPlane
 	{
 		Pointf t0 = b - a;
 		Pointf t1 = c - a;
-		Pointf t2 = -p.
+		Pointf t2 = -p;
+			return 0.0f;
 	}
-}
+};

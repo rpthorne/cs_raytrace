@@ -1,4 +1,5 @@
-#includes <math.h>
+#include <math.h>
+#include "Pointf.h"
 
 class AbstractPlane
 {
@@ -26,4 +27,4 @@ public:
 	//only returns values for which it collides with <| p
 	virtual float ray_plane_collision(XRay &p) = 0;
 	Pointf normal() {return normal;};
-}
+};
