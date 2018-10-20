@@ -2,6 +2,7 @@
 
 class AbstractPlane
 {
+protected:
 	Pointf a,b,c;
 	//stored for ease of computation
 	Pointf normal;
