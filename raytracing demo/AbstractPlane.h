@@ -15,7 +15,7 @@ public:
 		//compute normal now, so dont have to later
 		normal = (b - a).cross_product(c - a);
 		//normalize
-		normal = normal.scale_mul(sqrtf(normal.dot_product(normal)));
+		normal = normal.scale_mul(1.0f / sqrtf(normal.dot_product(normal)));
 	}
 	//returns the amount by which p should be multiplied to the collision point
 	//only returns values for which it collides with <| p
