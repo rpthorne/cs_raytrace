@@ -13,15 +13,9 @@ public:
 		this->b = b;
 		this->c = c;
 		//compute normal now, so dont have to later
-		Pointf p, q, r;
-		p = b - a;
-		q = c - a;
-		//cross product, inlined
-		r.x = (p.y * q.z) - (p.z * q.y);
-		r.y = (p.z * q.x) - (p.x * q.z);
-		r.z = (p.x * q.y) - (p.y * q.x);
+		normal = (b - a).cross_product(c - a);
 		//normalize
-		normal = r.scale_mul(sqrtf(r.dot_product(r)));
+		normal = normal.scale_mul(sqrtf(normal.dot_product(normal)));
 	}
 	//returns the amount by which p should be multiplied to the collision point
 	//only returns values for which it collides with <| p
