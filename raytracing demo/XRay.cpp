@@ -6,27 +6,35 @@ XRay::XRay() {
 	dir = Pointf();
 	src = Pointf();
 	intensity = 0;
+	length = -1;
+	reflect_count = 0;
 }
 
-XRay::XRay(Pointf sr, Pointf dest) {
-	dir = dest;
-	src = sr;
+XRay::XRay(Pointf src, Pointf dir, float intensity) {
+	this->dir = dir;
+	this->src = src;
+	this->intensity = intensity;
+	this->length = -1;
+	this->reflect_count = 0;
 }
 
-XRay XRay::refract_through(XRay& norm, float index_of_refraction_1, float index_of_refraction_2)
+XRay::XRay(Pointf src, Pointf dir, float intensity, int reflect_count) {
+	this->dir = dir;
+	this->src = src;
+	this->intensity = intensity;
+	this->length = -1;
+	this->reflect_count = reflect_count;
+}
+
+Pointf XRay::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2)
 {
 	//normalize this
 	Pointf p = dir.scale_mul(sqrtf(dir.dot_product(dir)));
 	Pointf result;
 	float refract_index = index_of_refraction_1 / index_of_refraction_2;
-	float vector_dot = p.dot_product(-norm.dir);
-	result = p.scale_mul(refract_index) + norm.dir.scale_mul(refract_index * vector_dot - sqrt(1 - refract_index * refract_index * (1 - vector_dot * vector_dot)));
-	return XRay(norm.src, result);
-}
-
-float XRay::magnitude_precise()
-{
-	return sqrtf(dir.dot_product(dir));
+	float vector_dot = p.dot_product(-norm);
+	result = p.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - sqrt(1 - refract_index * refract_index * (1 - vector_dot * vector_dot)));
+	return result;
 }
 
 XRay XRay::scale_mul(const float mul) const
