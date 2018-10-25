@@ -3,11 +3,11 @@
 
 //constructors
 XRay::XRay() {
-	dir = Pointf();
-	src = Pointf();
-	intensity = 0;
-	length = -1;
-	reflect_count = 0;
+	this->dir = Pointf();
+	this->src = Pointf();
+	this->intensity = 0;
+	this->length = -1;
+	this->reflect_count = 0;
 }
 
 XRay::XRay(Pointf src, Pointf dir, float intensity) {
@@ -41,8 +41,6 @@ XRay XRay::scale_mul(const float mul) const
 {
 	XRay res;
 	res.src = src;
-	res.dir.x = this->x * mul;
-	res.dir.y = this->y * mul;
-	res.dir.z = this->z * mul;
+	res.dir = dir.scale_mul(mul);
 	return res;
 }

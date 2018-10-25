@@ -1,6 +1,8 @@
 //detector recieves a list of arrays and determines which points hit
 #include <forward_list>
 #include "XRay.h"
+#include "AbstractPlane.h"
+#include "TrianglePlane.cpp"
 
 std::forward_list<XRay>** buckets;
 Pointf** b_coords;
@@ -107,7 +109,10 @@ int init_detector(int width, int height,Pointf &begin1, Pointf &end1, Pointf nor
 		buckets[i] = (std::forward_list<XRay>*)malloc(height * sizeof(std::forward_list<XRay>));
 		b_coords[i] = (Pointf*)malloc(height * sizeof(Pointf));
 	}
-	
+	//compute normal and begin and ends normal.
+	TrianglePlane normnorm = TrianglePlane(begin1, end1, norm);
+	Pointf temp = normnorm.one();
+	//normnorm = TrianglePlane(begin1, end1, );
 	return 0;
 }
 

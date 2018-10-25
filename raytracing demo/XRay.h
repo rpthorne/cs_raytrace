@@ -11,10 +11,10 @@ private:
 	float length;
 	int reflect_count;
 public:
-	XRay XRay::refract_through(XRay& norm, float index_of_refraction_1, float index_of_refraction_2);
+	Pointf XRay::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2);
 	XRay();
 	XRay(Pointf, Pointf, float intensity);
 	XRay(Pointf, Pointf, float, int);
 	XRay XRay::scale_mul(const float mul) const;
-	float XRay::length();
+	float XRay::get_length() { return length; };
 };
