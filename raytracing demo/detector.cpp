@@ -2,7 +2,7 @@
 #include <forward_list>
 #include "XRay.h"
 #include "AbstractPlane.h"
-#include "TrianglePlane.cpp"
+#include "TrianglePlane.h"
 
 std::forward_list<XRay>** buckets;
 Pointf** b_coords;
@@ -111,7 +111,7 @@ int init_detector(int width, int height,Pointf &begin1, Pointf &end1, Pointf nor
 	}
 	//compute normal and begin and ends normal.
 	TrianglePlane normnorm = TrianglePlane(begin1, end1, norm);
-	Pointf temp = normnorm.one();
+	Pointf temp = normnorm.get_normal();
 	//normnorm = TrianglePlane(begin1, end1, );
 	return 0;
 }

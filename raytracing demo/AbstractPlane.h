@@ -3,16 +3,12 @@
 
 class AbstractPlane
 {
-protected:
-	Pointf a,b,c;
-	//stored for ease of computation
-	Pointf normal;
 public:
 	AbstractPlane(Pointf a, Pointf b, Pointf c) {
 		this->a = a;
 		this->b = b;
 		this->c = c;
-		//compute normal now, so dont have to later
+		//compute normal now, so dont have to latre
 		normal = (b - a).cross_product(c - a);
 		//normalize
 		normal = normal.scale_mul(1.0f / sqrtf(normal.dot_product(normal)));
@@ -20,7 +16,10 @@ public:
 	//returns the amount by which p should be multiplied to the collision point
 	//only returns values for which it collides with <| p
 	virtual float ray_plane_collision(XRay &p) = 0;
-public:
-	Pointf get_normal() {return this->normal;};
+	Pointf get_normal();// {return this->normal; };
 	Pointf one() { return Pointf(1, 1, 1); };
+protected:
+	Pointf a, b, c;
+	//stored for ease of computation
+	Pointf normal;
 };
