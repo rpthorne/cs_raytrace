@@ -66,7 +66,7 @@ Pointf m_offset;
 //if it is less than 0, there is no collision for the ray to the plane in question
 
 //only collision upon the triangle defining the plane, not the whole plane itself :)
-GLfloat ray_plane_collision(Pointf& const r_origin, Pointf& const r_direction, Pointf& const p_1, Pointf& const p_2, Pointf& const p_3)
+GLfloat ilray_plane_collision(Pointf& const r_origin, Pointf& const r_direction, Pointf& const p_1, Pointf& const p_2, Pointf& const p_3)
 {
 	//you can actually just solve this by hand and plug in the values from there, but this is less time consuming for me and it is a prototype so w/e
 	GLfloat matrix[3][4];
@@ -223,7 +223,7 @@ void draw_raygun()
 			GLfloat t;
 			for (k = 0; k < poly_count; k++)
 
-				if (0 < (t = ray_plane_collision(p_ray_src[i][j], d_ray_src[i][j], poly_list[k][0], poly_list[k][1], poly_list[k][2])))
+				if (0 < (t = ilray_plane_collision(p_ray_src[i][j], d_ray_src[i][j], poly_list[k][0], poly_list[k][1], poly_list[k][2])))
 				{
 					//collision, draw point;
 					Pointf loc = p_ray_src[i][j] + d_ray_src[i][j].scale_mul(t);

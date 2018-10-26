@@ -111,7 +111,15 @@ int init_detector(int width, int height,Pointf &begin1, Pointf &end1, Pointf nor
 	}
 	//compute normal and begin and ends normal.
 	TrianglePlane normnorm = TrianglePlane(begin1, end1, norm);
-	Pointf temp = normnorm.get_normal();
+	x_vector = (begin1 + end1).scale_mul(.5f);
+	y_vector = x_vector - normnorm.get_normal().scale_mul((x_vector - begin1).magnitude_precise());
+	x_vector = x_vector + normnorm.get_normal().scale_mul((x_vector - begin1).magnitude_precise());
+	x_vector = x_vector.scale_div(width);
+	y_vector = y_vector.scale_div(height);
+	//change to squarePlane
+	normnorm = TrianglePlane(begin1, end1, normnorm.get_normal());
+
+
 	//normnorm = TrianglePlane(begin1, end1, );
 	return 0;
 }
@@ -120,7 +128,7 @@ int init_detector(int width, int height,Pointf &begin1, Pointf &end1, Pointf nor
 int test_ray(XRay &p)
 {
 	//test if p E detector
-	
+	return 0;// false on success
 }
 
 
@@ -129,11 +137,12 @@ int test_ray(XRay &p)
 int add_to_bucket(XRay &p, int x, int y)
 {
 	buckets[x][y].push_front(p);
+	return 0;// false on success
 }
 
 
 int collect_rays(std::forward_list<XRay>)
 {
-
+	return 0;//on success return false
 }
 

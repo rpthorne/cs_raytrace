@@ -1,5 +1,7 @@
+#pragma once
 #include <math.h>
 #include "Pointf.h"
+#include "XRay.h"
 
 class AbstractPlane
 {

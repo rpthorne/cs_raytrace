@@ -1,7 +1,7 @@
 #pragma once
 #include "AbstractPlane.h"
 
-class TrianglePlane : AbstractPlane
+class TrianglePlane : public AbstractPlane
 {
 public:
 	TrianglePlane(Pointf a, Pointf b, Pointf c);
