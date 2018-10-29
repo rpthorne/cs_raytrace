@@ -86,25 +86,22 @@ GLfloat ilray_plane_collision(Pointf& const r_origin, Pointf& const r_direction,
 	matrix[2][2] = -1 * r_direction.getZ();
 	matrix[2][3] = r_origin.getZ() - p_1.getZ();
 	//ensure [0][0] is not 0;
-	if (abs(matrix[0][0]) <= 0.0001)//add one of row1 to force non-zero
+	if (abs(matrix[0][0]) <= ZERO_MAX)//add one of row1 to force non-zero
 	{
 		matrix[0][0] += matrix[1][0];
 		matrix[0][1] += matrix[1][1];
 		matrix[0][2] += matrix[1][2];
 		matrix[0][3] += matrix[1][3];
+		if (abs(matrix[0][0]) <= ZERO_MAX)//add one of row2 to force non-zero
+		{
+			matrix[0][0] += matrix[2][0];
+			matrix[0][1] += matrix[2][1];
+			matrix[0][2] += matrix[2][2];
+			matrix[0][3] += matrix[2][3];
+		}
+		if (abs(matrix[0][0]) <= ZERO_MAX)//fails, return
+			return -1;
 	}
-	if (abs(matrix[0][0]) <= 0.0001)//add one of row2 to force non-zero
-	{
-		matrix[0][0] += matrix[2][0];
-		matrix[0][1] += matrix[2][1];
-		matrix[0][2] += matrix[2][2];
-		matrix[0][3] += matrix[2][3];
-	}
-	if (abs(matrix[0][0]) <= 0.0001)//fails, return
-	{
-		return -1;
-	}
-
 	//divide row 0 by col0
 	for (i = 1; i < 4; i++)
 	{

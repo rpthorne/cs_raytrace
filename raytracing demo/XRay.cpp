@@ -18,6 +18,10 @@ XRay::XRay(Pointf src, Pointf dir, float intensity) {
 	this->reflect_count = 0;
 }
 
+//getters
+Pointf XRay::get_dir() { return this->dir; }
+Pointf XRay::get_src() { return this->dir; }
+
 XRay::XRay(Pointf src, Pointf dir, float intensity, int reflect_count) {
 	this->dir = dir;
 	this->src = src;

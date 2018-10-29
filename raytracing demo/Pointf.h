@@ -1,4 +1,5 @@
 #pragma once
+static const float ZERO_MAX = 0.0001f;
 
 class Pointf {
 

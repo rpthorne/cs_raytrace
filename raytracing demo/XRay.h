@@ -14,6 +14,9 @@ public:
 	Pointf XRay::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2);
 	XRay();
 	XRay(Pointf, Pointf, float intensity);
+
+	Pointf get_dir();
+	Pointf get_src();
 	XRay(Pointf, Pointf, float, int);
 	XRay XRay::scale_mul(const float mul) const;
 	float XRay::get_length() { return length; };

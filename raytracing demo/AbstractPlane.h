@@ -18,9 +18,9 @@ public:
 	//returns the amount by which p should be multiplied to the collision point
 	//only returns values for which it collides with <| p
 	virtual float ray_plane_collision(XRay &p) = 0;
-	Pointf get_normal();// {return this->normal; };
-	Pointf one() { return Pointf(1, 1, 1); };
+	Pointf get_normal();
 protected:
+	float get_determinant(Pointf, Pointf, Pointf);
 	Pointf a, b, c;
 	//stored for ease of computation
 	Pointf normal;
