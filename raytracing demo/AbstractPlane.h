@@ -20,7 +20,7 @@ public:
 	virtual float ray_plane_collision(XRay &p) = 0;
 	Pointf get_normal();
 protected:
-	float get_determinant(Pointf, Pointf, Pointf);
+	float get_determinant(Pointf&, Pointf&, Pointf&);
 	Pointf a, b, c;
 	//stored for ease of computation
 	Pointf normal;
