@@ -12,7 +12,7 @@ XRay::XRay() {
 	this->length = -1;
 	this->generation = 0;
 	this->current_index_of_refraction = 1;
-	this->optical_distance = 0;
+	this->optical_wavelength = 0;
 }
 
 XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_) {
@@ -22,7 +22,7 @@ XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_,
 	this->length = -1;
 	this->generation = 0;
 	this->current_index_of_refraction = index_of_refraction_;
-	this->optical_distance = 0;
+	this->optical_wavelength = 0;
 }
 
 XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_, short generation_)
@@ -33,7 +33,7 @@ XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_,
 	this->length = -1;
 	this->generation = generation_;
 	this->current_index_of_refraction = index_of_refraction_;
-	this->optical_distance = 0;
+	this->optical_wavelength = 0;
 }
 
 //getters
@@ -43,7 +43,7 @@ const Pointf XRay::get_src() const { return this->dir; }
 
 float XRay::get_intensity() const { return this->intensity; }
 
-float XRay::get_optic_path_length() const {return this->optical_distance + this->length * this->current_index_of_refraction;}
+float XRay::get_optic_wavelength() const {return this->optical_wavelength + this->length * this->current_index_of_refraction;}
 
 float XRay::get_length() const { return this->length; }
 
