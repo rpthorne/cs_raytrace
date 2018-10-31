@@ -52,6 +52,13 @@ int init_detector(int width1, int height1,Pointf &begin1, Pointf &end1, Pointf d
 	return 0;
 }
 
+//helper function to manage parallel, this should be the only write section
+int add_to_bucket(XRay &p, int x, int y)
+{
+	buckets[x][y].push_front(p);
+	return 0;// false on success
+}
+
 //tests if ray intersects the detector then places it in the appropriate bucket should be to run in parrallel with a semaphore for each bucket
 int test_ray(XRay &p)
 {
@@ -75,16 +82,6 @@ int test_ray(XRay &p)
 	}
 	return -1; 
 }
-
-
-
-//helper function to manage parallel, this should be the only write section
-int add_to_bucket(XRay &p, int x, int y)
-{
-	buckets[x][y].push_front(p);
-	return 0;// false on success
-}
-
 
 int collect_rays(std::forward_list<XRay>)
 {
