@@ -6,11 +6,11 @@ RectPlane::RectPlane() : AbstractPlane(Pointf(), Pointf(), Pointf())
 {
 }
 
-RectPlane::RectPlane(Pointf &a, Pointf &b, Pointf &c) : AbstractPlane(a, b, c)
+RectPlane::RectPlane(const Pointf &a, const Pointf &b, const Pointf &c) : AbstractPlane(a, b, c)
 {
 }
 
-float RectPlane::ray_plane_collision(XRay &p)
+float RectPlane::ray_plane_collision(const XRay &p) const
 {
 	Pointf t0 = b - a;
 	Pointf t1 = c - a;

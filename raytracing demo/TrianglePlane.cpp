@@ -10,7 +10,7 @@
 
 TrianglePlane::TrianglePlane(Pointf a, Pointf b, Pointf c) : AbstractPlane(a, b, c) {};
 
-float TrianglePlane::ray_plane_collision(XRay &p)
+float TrianglePlane::ray_plane_collision(const XRay &p) const
 {
 	Pointf t0 = b - a;
 	Pointf t1 = c - a;
@@ -20,7 +20,7 @@ float TrianglePlane::ray_plane_collision(XRay &p)
 	float det0 = get_determinant(t0, t1, t2);
 	
 	//free variable(s), cannot identify single solution
-	if (abs(det0) < ZERO_MAX) return -1;
+	if (fabsf(det0) < ZERO_MAX) return -1;
 	float detr3 = det0 / get_determinant(t0, t1, t3);// length of ray to return;
 	if (detr3 < 0) return -1;
 

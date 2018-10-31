@@ -7,7 +7,7 @@ public:
 	RectPlane();
 	~RectPlane();
 
-	RectPlane(Pointf &a, Pointf &b, Pointf &c);
-	float ray_plane_collision(XRay &p);
+	RectPlane(const Pointf &a, const Pointf &b, const Pointf &c);
+	float ray_plane_collision(const XRay &p) const ;
 };
 

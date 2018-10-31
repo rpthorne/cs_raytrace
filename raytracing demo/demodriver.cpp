@@ -245,7 +245,7 @@ void draw_raygun()
 	}
 	
 }
-//TODO: initialize raybox as a feild of rays based on the two gunbox's
+//TODO: initialize raybox as a field of rays based on the two gunbox's
 //assuming the gunbox and gunview maintain a 1:1 aspect ratio. create a frustrum
 void define_raybox()
 {
