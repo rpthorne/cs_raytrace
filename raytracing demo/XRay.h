@@ -9,7 +9,7 @@ class XRay
 	float intensity;
 	float length; // absolute length of this ray, not optical length of this ray
 	int generation;
-	float optical_distance;
+	float optical_wavelength;
 	float current_index_of_refraction;
 
 	//secret constructor for generational tracking
