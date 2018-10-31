@@ -15,7 +15,7 @@ XRay::XRay() {
 	this->optical_distance = 0;
 }
 
-XRay::XRay(Pointf const & src_, Pointf const & dir_, const float index_of_refraction_, float const & intensity_) {
+XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_) {
 	this->dir = dir_.normalize();
 	this->src = src_;
 	this->intensity = intensity_;
@@ -25,7 +25,7 @@ XRay::XRay(Pointf const & src_, Pointf const & dir_, const float index_of_refrac
 	this->optical_distance = 0;
 }
 
-XRay::XRay(Pointf const & src_, Pointf const & dir_, const float index_of_refraction_, float const intensity_, int const generation_)
+XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_, short generation_)
 {
 	this->dir = dir_.normalize();
 	this->src = src_;
@@ -49,22 +49,22 @@ float XRay::get_length() const { return this->length; }
 
 //setters and creaters
 
-XRay XRay::reflect(Pointf const &norm, const int total_internal) const
+XRay XRay::reflect(Pointf const &norm, float intensity_refracted) const
 {
 	Pointf new_dir = this->dir;
 	new_dir = new_dir - (norm.scale_mul(2.0f * new_dir.dot_product(norm)));
 	XRay res;
-	if(total_internal)
+	if(intensity_refracted <= 0.0f)
 		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1);
 	else//compute intensity from fresnel
 	{
-		float fresnel_intensity = intensity;
+		float fresnel_intensity = this->intensity - intensity_refracted;
 		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, fresnel_intensity, generation + 1);
 	}
 	return res;
 }
 
-XRay XRay::refract(Pointf const &norm, const float index_of_refraction) const
+XRay XRay::refract(Pointf const &norm, const float index_of_refraction, bool s_polarized) const
 {
 	Pointf new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
@@ -73,10 +73,21 @@ XRay XRay::refract(Pointf const &norm, const float index_of_refraction) const
 	
 	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay
 	if (radicand < 0) return XRay();
-	
-	new_dir = dir.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - sqrt(radicand));
+
+	radicand = sqrt(radicand); // stored for later
+	new_dir = dir.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - radicand);
+
 	//fresnel intensity computation
-	float fresnel_intensity = intensity;
+	float fresnel_intensity = 2 * current_index_of_refraction * radicand;
+	if (s_polarized)
+	{
+		fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dot_product(new_dir));
+	}
+	else // p-polarized
+	{
+		fresnel_intensity = fresnel_intensity / (index_of_refraction * radicand + current_index_of_refraction * norm.dot_product(new_dir));
+	}
+	
 
 	return XRay(src + dir.scale_mul(length), new_dir, index_of_refraction, fresnel_intensity, generation);
 }

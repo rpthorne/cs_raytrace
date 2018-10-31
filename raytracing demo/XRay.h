@@ -13,13 +13,12 @@ class XRay
 	float current_index_of_refraction;
 
 	//secret constructor for generational tracking
-	XRay(Pointf const &src_, Pointf const &dir_, const float index_of_refraction_, float const intensity_, int const generation_);
-
+	XRay(Pointf const &src_, Pointf const &dir_, float index_of_refraction_, float intensity_, short generation_);
 public:
 	//constructers
 
 	XRay();
-	XRay(Pointf const &src_, Pointf const &dir_, const float index_of_refraction_, float const &intensity_);
+	XRay(Pointf const &src_, Pointf const &dir_, float index_of_refraction_, float intensity_);
 
 	//getters
 
@@ -32,6 +31,12 @@ public:
 	//operations
 
 	int XRay::set_length(const float dist);
-	XRay XRay::reflect(Pointf const &norm, const int total_internal) const;
-	XRay XRay::refract(Pointf const &norm, const float index_of_refraction) const;
+
+	//relfect take some output from refract in order to save time
+	XRay XRay::reflect(Pointf const &norm, float intensity_refracted) const;
+	XRay XRay::refract(Pointf const &norm, const float index_of_refraction, bool s_polarized) const;
+	//XRay XRay::reflect_s(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
+	XRay XRay::refract_s(Pointf const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction, 0); };
+	//XRay XRay::reflect_p(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
+	XRay XRay::refract_p(Pointf const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction, 0); };
 };
