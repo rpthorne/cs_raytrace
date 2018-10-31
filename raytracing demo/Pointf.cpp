@@ -76,7 +76,7 @@ Pointf Pointf::scale_mul(const float mul) const
 
 	
 //slow and very accurate calculation
-float Pointf::magnitude_precise()
+float Pointf::magnitude_precise() const
 {
 	return sqrtf(this->dot_product(*this));
 }
@@ -101,7 +101,7 @@ Pointf Pointf::cross_product(Pointf &p) const
 Pointf Pointf::refract_through(Pointf& norm, float index_of_refraction_1, float index_of_refraction_2)
 {
 	//normalize this
-	Pointf p = this->scale_mul(Q_rsqrt(this->dot_product(*this)));
+	Pointf p = normalize();
 	Pointf result;
 	float refract_index = index_of_refraction_1 / index_of_refraction_2;
 	float vector_dot = p.dot_product(-norm);
@@ -110,7 +110,7 @@ Pointf Pointf::refract_through(Pointf& norm, float index_of_refraction_1, float 
 }
 	
 //generates a surface normal out of the implied base and the two points specified
-Pointf Pointf::surf_norm(Pointf& v1, Pointf& v2)
+Pointf Pointf::surf_norm(const Pointf& v1, const Pointf& v2) const
 {
 	Pointf p, q, r;
 	p = v1 - (*this);
@@ -120,4 +120,9 @@ Pointf Pointf::surf_norm(Pointf& v1, Pointf& v2)
 	r.z = (p.x * q.y) - (p.y * q.x);
 	r = r.scale_mul(Q_rsqrt(r.dot_product(r)));
 	return r;
+}
+
+Pointf Pointf::normalize() const
+{
+	return scale_div(magnitude_precise());
 }
