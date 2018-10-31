@@ -25,7 +25,7 @@ public:
 	const Pointf get_dir() const;
 	const Pointf get_src() const;
 	float get_intensity() const;
-	float get_optic_path_length() const;
+	float get_optic_wavelength() const;
 	float get_length() const;
 	
 	//operations
