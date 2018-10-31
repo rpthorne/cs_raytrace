@@ -58,23 +58,27 @@ XRay XRay::reflect(Pointf const &norm, const int total_internal) const
 		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1);
 	else//compute intensity from fresnel
 	{
-
-		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1);
+		float fresnel_intensity = intensity;
+		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, fresnel_intensity, generation + 1);
 	}
 	return res;
 }
 
 XRay XRay::refract(Pointf const &norm, const float index_of_refraction) const
 {
-	//if(inbound 
-
-	//normalize this
-	Pointf p = dir.scale_mul(sqrtf(dir.dot_product(dir)));
-	Pointf result;
+	Pointf new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
-	float vector_dot = p.dot_product(-norm);
-	result = p.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - sqrt(1 - refract_index * refract_index * (1 - vector_dot * vector_dot)));
-	return result;
+	float vector_dot = dir.dot_product(-norm);
+	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
+	
+	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay
+	if (radicand < 0) return XRay();
+	
+	new_dir = dir.scale_mul(refract_index) + norm.scale_mul(refract_index * vector_dot - sqrt(radicand));
+	//fresnel intensity computation
+	float fresnel_intensity = intensity;
+
+	return XRay(src + dir.scale_mul(length), new_dir, index_of_refraction, fresnel_intensity, generation);
 }
 
 //the only place that the data of an XRay can be mutated
