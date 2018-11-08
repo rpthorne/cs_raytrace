@@ -6,26 +6,26 @@
 
 //constructors
 XRay::XRay() {
-	this->dir = Pointf();
-	this->src = Pointf();
+	this->dir = Vector();
+	this->src = Point();
 	this->intensity = 0;
 	this->length = -1;
 	this->generation = 0;
 	this->current_index_of_refraction = 1;
-	this->optical_wavelength = 0;
+	this->optical_pathlength = 0;
 }
 
-XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_) {
+XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, float intensity_) {
 	this->dir = dir_.normalize();
 	this->src = src_;
 	this->intensity = intensity_;
 	this->length = -1;
 	this->generation = 0;
 	this->current_index_of_refraction = index_of_refraction_;
-	this->optical_wavelength = 0;
+	this->optical_pathlength = 0;
 }
 
-XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_, float intensity_, short generation_)
+XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, float intensity_, short generation_)
 {
 	this->dir = dir_.normalize();
 	this->src = src_;
@@ -33,25 +33,25 @@ XRay::XRay(Pointf const & src_, Pointf const & dir_, float index_of_refraction_,
 	this->length = -1;
 	this->generation = generation_;
 	this->current_index_of_refraction = index_of_refraction_;
-	this->optical_wavelength = 0;
+	this->optical_pathlength = 0;
 }
 
 //getters
-const Pointf XRay::get_dir() const { return this->dir; }
+const Vector XRay::get_dir() const { return this->dir; }
 
-const Pointf XRay::get_src() const { return this->dir; }
+const Point XRay::get_src() const { return this->dir; }
 
 float XRay::get_intensity() const { return this->intensity; }
 
-float XRay::get_optic_wavelength() const {return this->optical_wavelength + this->length * this->current_index_of_refraction;}
+float XRay::get_optic_pathlength() const {return this->optical_pathlength + this->length * this->current_index_of_refraction;}
 
 float XRay::get_length() const { return this->length; }
 
 //setters and creaters
 
-XRay XRay::reflect(Pointf const &norm, float intensity_refracted) const
+XRay XRay::reflect(Vector const &norm, float intensity_refracted) const
 {
-	Pointf new_dir = this->dir;
+	Vector new_dir = this->dir;
 	new_dir = new_dir - (norm.scale_mul(2.0f * new_dir.dot_product(norm)));
 	XRay res;
 	if(intensity_refracted <= 0.0f)
@@ -64,9 +64,9 @@ XRay XRay::reflect(Pointf const &norm, float intensity_refracted) const
 	return res;
 }
 
-XRay XRay::refract(Pointf const &norm, const float index_of_refraction, bool s_polarized) const
+XRay XRay::refract(Vector const &norm, const float index_of_refraction, bool s_polarized) const
 {
-	Pointf new_dir;
+	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
 	float vector_dot = dir.dot_product(-norm);
 	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
