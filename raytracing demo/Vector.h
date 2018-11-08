@@ -18,8 +18,5 @@ public:
 
 	float getMagnitude();
 	float dotProduct(Vector v);
-	Vector Vector::scaleDiv(const float div);
-	Vector Vector::scaleMul(const float mul);
-	Vector Vector::normalize();
 };
 
