@@ -12,9 +12,6 @@ class Vector :
 public:
 	
 	Vector(const float x, const float y, const float z);
-	float getX();
-	float getY();
-	float getZ();
 
 	float getMagnitude();
 	float dotProduct(Vector v);
