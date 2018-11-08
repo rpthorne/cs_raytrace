@@ -1,13 +1,16 @@
 #pragma once
-#include "AbstractPoint.h"
-class Point :
-	public AbstractPoint
+
+class AbstractPoint
 {
+	float x, y, z;
 public:
+	AbstractPlane(const float x, const float y, const float z) {
+		this->x = x;
+		this->y = y;
+		this->z = z;	
+	}
 
-	Point(const float x, const float y, const float z);
-	getX();
-	getY();
-	getZ();
+	float getX() { return this->x }
+	float getY() { return this->y }
+	float getZ() { return this->z }
 };
-
