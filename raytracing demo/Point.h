@@ -1,3 +1,9 @@
+/****************************************************************
+* Point is a class representing a single point in 3-dimensional
+* space 
+*****************************************************************/
+
+
 #pragma once
 #include "AbstractPoint.h"
 class Point :
