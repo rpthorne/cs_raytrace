@@ -1,0 +1,25 @@
+/****************************************************************
+* Vector is a class representing a normalized vector, in that the 
+* 3 points represent directional magnitude on each axis from the 
+* origin
+*****************************************************************/
+
+#pragma once
+#include "AbstractPoint.h"
+class Vector :
+	public AbstractPoint
+{
+public:
+	
+	Vector(const float x, const float y, const float z);
+	float getX();
+	float getY();
+	float getZ();
+
+	float getMagnitude();
+	float dotProduct(Vector v);
+	Vector Vector::scaleDiv(const float div);
+	Vector Vector::scaleMul(const float mul);
+	Vector Vector::normalize();
+};
+
