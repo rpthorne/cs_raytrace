@@ -15,3 +15,8 @@ float Vector::getMagnitude() {
 float Vector::dotProduct(Pointf &v) { 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
+
+Vector Vector::crossProduct(Vector &v)
+{
+	return Vector(this->y * v.z - this->z * v.y, this->z * v.x - this->x * v.z, this->x * v.y - this->y * v.x);
+}
