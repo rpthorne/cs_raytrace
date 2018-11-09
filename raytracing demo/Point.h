@@ -15,3 +15,4 @@ public:
 	
 };
 
+Point Point::operator- (Point &c);
