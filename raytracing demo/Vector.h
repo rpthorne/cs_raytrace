@@ -15,5 +15,6 @@ public:
 
 	float getMagnitude();
 	float dotProduct(Vector v);
+	Vector crossProduct(Vector &v);
 };
 
