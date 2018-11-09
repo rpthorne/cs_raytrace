@@ -16,3 +16,18 @@ Point Point::operator- (Point &c)
 	res.z = this->z - c.z;
 	return res;
 }
+
+Point Point::operator- ()
+{
+	Point res = { -x,-y,-z };
+	return res;
+}
+
+Point Point::operator+ (Point &c)
+{
+	Point res;
+	res.x = this->x + c.x;
+	res.y = this->y + c.y;
+	res.z = this->z + c.z;
+	return res;
+}
