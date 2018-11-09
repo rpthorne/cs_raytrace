@@ -14,7 +14,7 @@ public:
 	Vector(const float x, const float y, const float z);
 
 	float getMagnitude();
-	float dotProduct(Vector v);
+	float dotProduct(Vector &v);
 	Vector crossProduct(Vector &v);
 };
 
