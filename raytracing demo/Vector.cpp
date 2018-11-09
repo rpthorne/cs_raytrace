@@ -12,7 +12,7 @@ float Vector::getMagnitude() {
 	return sqrtf(this->dot_product(*this));
 }
 
-float Vector::dotProduct(Pointf &v) { 
+float Vector::dotProduct(Vector &v) { 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
 
