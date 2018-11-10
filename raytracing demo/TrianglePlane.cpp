@@ -1,6 +1,6 @@
 #include "TrianglePlane.h"
 #include "AbstractPlane.h"
-#include "pointf.h"
+#include "point.h"
 #include "XRay.h"
 #include "math.h"
 
@@ -8,14 +8,14 @@
 
 
 
-TrianglePlane::TrianglePlane(Pointf a, Pointf b, Pointf c) : AbstractPlane(a, b, c) {};
+TrianglePlane::TrianglePlane(Point a, Point b, Point c) : AbstractPlane(a, b, c) {};
 
 float TrianglePlane::ray_plane_collision(const XRay &p) const
 {
-	Pointf t0 = b - a;
-	Pointf t1 = c - a;
-	Pointf t2 = -p.get_dir();
-	Pointf t3 = p.get_src() - a;
+	Point t0 = b - a;
+	Point t1 = c - a;
+	Point t2 = -p.get_dir();
+	Point t3 = p.get_src() - a;
 
 	float det0 = get_determinant(t0, t1, t2);
 	

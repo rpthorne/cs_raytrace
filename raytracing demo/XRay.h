@@ -37,7 +37,7 @@ public:
 	XRay XRay::reflect(Vector const &norm, float intensity_refracted) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction, bool s_polarized) const;
 	//XRay XRay::reflect_s(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
-	XRay XRay::refract_s(Pointf const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
+	XRay XRay::refract_s(Vector const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
 	//XRay XRay::reflect_p(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
-	XRay XRay::refract_p(Pointf const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
+	XRay XRay::refract_p(Vector const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
 };

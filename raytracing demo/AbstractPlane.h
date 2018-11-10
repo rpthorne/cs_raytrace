@@ -1,32 +1,31 @@
 #pragma once
 #include <math.h>
-#include "Pointf.h"
+#include "Point.h"
+#include "Vector.h"
 #include "XRay.h"
 
 class AbstractPlane
 {
 protected:
 	//to move????? not good oop
-	float get_determinant(const Pointf&, const Pointf&, const Pointf&) const;
+	float get_determinant(const Point&, const Point&, const Point&) const;
 
 	//these represent three points that define the plane in 3d space
-	Pointf a, b, c;
+	Point a, b, c;
 	//stored for ease of computation
-	Pointf normal;
+	Vector normal;
 public:
-	AbstractPlane(const Pointf &a, const Pointf &b, const Pointf &c) {
+	AbstractPlane(const Point &a, const Point &b, const Point &c) {
 		this->a = a;
 		this->b = b;
 		this->c = c;
 		//compute normal now, so dont have to later
 		normal = (b - a).cross_product(c - a);
-		//normalize
-		normal = normal.normalize();
 	}
 
 	//getters
 
-	Pointf get_normal() const;
+	Point get_normal() const;
 
 	//math ops on planes
 

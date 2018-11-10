@@ -1,21 +1,20 @@
 #include "RectPlane.h"
+#include "Point.h"
 
-
-
-RectPlane::RectPlane() : AbstractPlane(Pointf(), Pointf(), Pointf())
+RectPlane::RectPlane() : AbstractPlane(Point(), Point(), Point())
 {
 }
 
-RectPlane::RectPlane(const Pointf &a, const Pointf &b, const Pointf &c) : AbstractPlane(a, b, c)
+RectPlane::RectPlane(const Point &a, const Point &b, const Point &c) : AbstractPlane(a, b, c)
 {
 }
 
 float RectPlane::ray_plane_collision(const XRay &p) const
 {
-	Pointf t0 = b - a;
-	Pointf t1 = c - a;
-	Pointf t2 = -p.get_dir();
-	Pointf t3 = p.get_src() - a;
+	Point t0 = b - a;
+	Point t1 = c - a;
+	Point t2 = -p.get_dir();
+	Point t3 = p.get_src() - a;
 
 	float det0 = get_determinant(t0, t1, t2);
 
