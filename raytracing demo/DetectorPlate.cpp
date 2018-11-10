@@ -9,7 +9,7 @@
 
 
 //fro now assuming that plate is square
-DetectorPlate::DetectorPlate(const Pointf &begin_, const Pointf &end_, const Pointf &direction, int width_, int height_)
+DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, const Vector &direction, int width_, int height_)
 {
 	int i, j;
 	begin = begin_;
@@ -34,7 +34,7 @@ DetectorPlate::DetectorPlate(const Pointf &begin_, const Pointf &end_, const Poi
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
-			Pointf temp = begin + x_vector.scale_mul(i) + y_vector.scale_mul(j);
+			Point temp = begin + x_vector.scale_mul(i) + y_vector.scale_mul(j);
 			b_coords[i][j] = RectPlane(temp, temp + x_vector, temp + y_vector);
 		}
 }

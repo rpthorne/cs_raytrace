@@ -2,16 +2,18 @@
 #include <forward_list>
 #include "XRay.h"
 #include "RectPlane.h"
+#include "Point.h"
+#include "Vector.h"
 
 class DetectorPlate
 {
 	std::forward_list<XRay>** buckets;
 	RectPlane** b_coords;
 	RectPlane detector_plane;
-	Pointf x_vector;
-	Pointf y_vector;
-	Pointf begin;
-	Pointf end;
+	Vector x_vector;
+	Vector y_vector;
+	Point begin;
+	Point end;
 	int width, height;
 
 	//helper functions
@@ -20,7 +22,7 @@ class DetectorPlate
 public:
 
 	//constructors
-	DetectorPlate(const Pointf &begin_, const Pointf &end_, const Pointf &direction, int width_, int height_);
+	DetectorPlate(const Point &begin_, const Point &end_, const Vector &direction, int width_, int height_);
 
 	//getters
 	int collect_rays(std::forward_list<XRay>**) const;

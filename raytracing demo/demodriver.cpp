@@ -10,7 +10,8 @@
 #include <iostream>
 #include <fstream>
 #include "Pointf.h"
-
+#include "Point.h"
+#include "Vector.h"
 
 
 
