@@ -14,4 +14,5 @@ public:
 	float Sphere::getZ();
 	bool Sphere::onSurface(Point p);
 	Vector Sphere::normalAt(Point p);
+	int Sphere::collide(XRay x, float &t, Point &p);
 };
