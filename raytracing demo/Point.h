@@ -16,5 +16,6 @@ public:
 };
 
 Point Point::operator- (Point &c);
-Pointf Pointf::operator- ();
-Pointf Pointf::operator+ (Point &c);
+Point Point::operator- ();
+Point Point::operator- (Point &c);
+Point Point::operator+ (Point &c);

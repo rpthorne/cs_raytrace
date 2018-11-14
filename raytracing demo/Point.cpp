@@ -23,6 +23,11 @@ Point Point::operator- ()
 	return res;
 }
 
+Point Point::operator- (Point& c)
+{
+	return new Point(this->x - c.x, this->y - c.y, this->z - c.z);
+}
+
 Point Point::operator+ (Point &c)
 {
 	Point res;
