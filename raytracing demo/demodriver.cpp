@@ -9,7 +9,6 @@
 #include <GL/glut.h> // (or others, depending on the system in use)
 #include <iostream>
 #include <fstream>
-#include "Pointf.h"
 #include "Point.h"
 #include "Vector.h"
 

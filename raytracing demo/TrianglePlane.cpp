@@ -1,6 +1,6 @@
 #include "TrianglePlane.h"
 #include "AbstractPlane.h"
-#include "point.h"
+#include "Point.h"
 #include "XRay.h"
 #include "math.h"
 

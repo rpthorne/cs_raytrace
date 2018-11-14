@@ -1,5 +1,5 @@
 #include "AbstractPlane.h"
-#include "Pointf.h"
+#include "Point.h"
 #include "Vector.h"
 
 Pointf AbstractPlane::get_normal() const
