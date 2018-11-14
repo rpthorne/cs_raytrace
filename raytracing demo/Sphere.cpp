@@ -46,7 +46,9 @@ int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
 	//if t is negative (rounding error?), force 0
 	if (t < 0.0f)
 		t = 0.0f;
-	p = x.get_src() + t * x.get_dir();
+	Vector dir = x.get_dir();
+	Point d = new Point(dir.getX() * t, dir.getY() * t, dir.getZ() * t);
+	p = x.get_src() + d;
 
 	n = this->normalAt(p);
 
