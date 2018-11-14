@@ -26,7 +26,7 @@ Vector Sphere::normalAt(Point p) {
 	return Vector(p.getX(), p.getY(), p.getZ());
 }
 
-int Sphere::collide(XRay x, float &t, Point &p ) {
+int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
 	Vector m = x.get_src() - this->o;
 	float b = m.dotProduct(x.get_dir());
 	float c = (m.dotProduct(m) - (this->r * this->r));
@@ -46,7 +46,9 @@ int Sphere::collide(XRay x, float &t, Point &p ) {
 	//if t is negative (rounding error?), force 0
 	if (t < 0.0f)
 		t = 0.0f;
-	q = p + t * d;
+	p = x.get_src() + t * x.get_dir();
+
+	n = this->normalAt(p);
 
 	return 1; //there was an intersection
 }
