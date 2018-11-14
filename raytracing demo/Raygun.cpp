@@ -1,5 +1,6 @@
 #include "Raygun.h"
-
+#include "Point.h"
+#include "Vector.h"
 
 
 Raygun::Raygun()

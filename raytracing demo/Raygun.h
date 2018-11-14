@@ -1,6 +1,7 @@
 #pragma once
 #include "XRay.h"
 #include "Point.h"
+#include "Vector.h"
 #include <forward_list>
 
 class Raygun
