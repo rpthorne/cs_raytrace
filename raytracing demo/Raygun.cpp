@@ -1,6 +1,4 @@
 #include "Raygun.h"
-#include "Point.h"
-#include "Vector.h"
 
 
 Raygun::Raygun()
@@ -14,12 +12,16 @@ Raygun::~Raygun()
 
 
 // standard constructor
-Raygun::Raygun(Point x_source_, Vector c_source_, float fov_, float aspect_ratio_, float index_of_refraction_, float intensity_, int ray_width_, int ray_height_) :Raygun(x_source_, c_source_, fov_, aspect_ratio_, index_of_refraction_, intensity_, ray_width_, ray_height_, 1, 1);
-
-Raygun(const Point x_source_, const Vector c_source_,
+Raygun::Raygun(const Point x_source_, const Vector c_source_,
 	float fov_, float aspect_ratio_,
 	float index_of_refraction_, float intensity_,
-	int ray_width_, int ray_height_, int camera_width_, int camera_height_);
+	int ray_width_, int ray_height_)
+	: Raygun(x_source_, c_source_, fov_, aspect_ratio_, index_of_refraction_, intensity_, ray_width_, ray_height_, 1, 1) {}
+
+Raygun::Raygun(const Point x_source_, const Vector c_source_,
+	float fov_, float aspect_ratio_,
+	float index_of_refraction_, float intensity_,
+	int ray_width_, int ray_height_, int camera_width_, int camera_height_)
 {
 	x_source = x_source_;
 	ray_width = ray_width_;
