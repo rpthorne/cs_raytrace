@@ -1,7 +1,5 @@
-//basic glut information to start building raytraces
-//ryan thorne
-//it is worth mentioning that this IS spaghetti code b/c not sure if it will be used
 
+//ryan thorne
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,10 +14,6 @@
 
 //math constants precomputed
 float R2I = 1.0f / sqrtf(2); //    1/sqrt(2)
-
-//lol wtf even is good formating
-
-
 
 //"environment" variables
 GLsizei win_width = 600, win_height = 600;

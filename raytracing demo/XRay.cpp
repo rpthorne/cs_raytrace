@@ -16,7 +16,7 @@ XRay::XRay() {
 }
 
 XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, float intensity_) {
-	this->dir = dir_.normalize();
+	this->dir = dir_;
 	this->src = src_;
 	this->intensity = intensity_;
 	this->length = -1;
@@ -25,15 +25,15 @@ XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, 
 	this->optical_pathlength = 0;
 }
 
-XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, float intensity_, short generation_)
+XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, float intensity_, short generation_, float optical_pathlength_)
 {
-	this->dir = dir_.normalize();
+	this->dir = dir_;
 	this->src = src_;
 	this->intensity = intensity_;
 	this->length = -1;
 	this->generation = generation_;
 	this->current_index_of_refraction = index_of_refraction_;
-	this->optical_pathlength = 0;
+	this->optical_pathlength = optical_pathlength_;
 }
 
 //getters
