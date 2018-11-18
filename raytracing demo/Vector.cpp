@@ -22,5 +22,5 @@ Vector Vector::crossProduct(Vector &v)
 }
 
 Point Vector::traverse(float d) {
-
+	return new Point(this->x * d, this->y * d, this->z * d);
 }
