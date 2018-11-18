@@ -13,8 +13,9 @@ public:
 	
 	Vector(const float x, const float y, const float z);
 
-	float getMagnitude();
-	float dotProduct(Vector &v);
-	Vector crossProduct(Vector &v);
+	float Vector::getMagnitude();
+	float Vector::dotProduct(Vector &v);
+	Vector Vector::crossProduct(Vector &v);
+	Point Vector::traverse(float d);
 };
 

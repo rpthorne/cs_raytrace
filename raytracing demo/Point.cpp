@@ -1,4 +1,5 @@
 #include "Point.h"
+#include <math.h>
 
 Point::Point() : AbstractPoint(float, float, float)
 {
@@ -35,4 +36,9 @@ Point Point::operator+ (Point &c)
 	res.y = this->y + c.y;
 	res.z = this->z + c.z;
 	return res;
+}
+
+Vector Point::pointToVector() {
+	float magnitude = sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
+	return new Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
 }
