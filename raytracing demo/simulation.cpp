@@ -26,16 +26,17 @@
 //xray count vertically
 #define xrh (2)
 
-
-
+std::forward_list<AbstractPlane> sample;
+Raygun camera;
+std::forward_list<XRay> xray_list;
 
 int setup_scene()
 {
 	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dpd, - dps), cp(dps,-dpd,dps), cv(0,1,0), dpw, dph);
 	
-	std::forward_list<AbstractPlane> sample = make_sample();
-	Raygun camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, xrw, xrh);
-	std::forward_list<XRay> xray_list = camera.create_rays();
+	sample = make_sample();
+	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, xrw, xrh);
+	xray_list = camera.create_rays();
 	for (auto it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{
 		float length = -1;
@@ -55,7 +56,7 @@ int setup_scene()
 		if (length > 0)
 		{
 			it_xlist->set_length(length);
-			xray_list. it_xlist->refract(colliding_object->get_normal(), it_xlist->get_gen());/*need a good way to determine what sample i am in!!!!!!!*/
+			it_xlist->refract(colliding_object->get_normal(), it_xlist->get_gen());/*need a good way to determine what sample i am in!!!!!!!*/
 
 		}
 		//no collision, check for detector plate collision, 
