@@ -22,7 +22,7 @@ public:
 	Raygun();
 	~Raygun();
 	// standard constructor
-	Raygun(const Point x_source_, const Vector c_source_, 
+	Raygun(const Point &x_source_, const Vector &c_source_, 
 		float fov_, float aspect_ratio_, 
 		float index_of_refraction_, float intensity_, 
 		int ray_width_, int ray_height_, int camera_width_, int camera_height_);

@@ -18,13 +18,17 @@
 //camera source depth
 #define cams (4)
 //field of view in degrees?
-#define fov (90)
+#define fov (90.0f)
 //aspect ratio
 #define aspr (1.0f)
 //xray count horizontally
-#define xrw (2)
+#define xrw (2.0f)
 //xray count vertically
-#define xrh (2)
+#define xrh (2.0f)
+//initial index of refraction
+#define iori (1.0f)
+//initial intensity
+#define intii (1.0f)
 
 std::forward_list<AbstractPlane> sample;
 Raygun camera;
@@ -35,7 +39,7 @@ int setup_scene()
 	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dpd, - dps), cp(dps,-dpd,dps), cv(0,1,0), dpw, dph);
 	
 	sample = make_sample();
-	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, xrw, xrh);
+	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii xrw, xrh);
 	xray_list = camera.create_rays();
 	for (auto it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{

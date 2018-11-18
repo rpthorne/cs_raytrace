@@ -14,7 +14,7 @@ class XRay
 	float current_index_of_refraction;
 
 	//secret constructor for generational tracking
-	XRay(Point const &src_, Vector const &dir_, float index_of_refraction_, float intensity_, short generation_);
+	XRay(Point const &src_, Vector const &dir_, float index_of_refraction_, float intensity_, short generation_, float optical_pathlength_);
 public:
 	//constructers
 

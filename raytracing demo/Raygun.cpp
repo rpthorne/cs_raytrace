@@ -18,7 +18,7 @@ Raygun::Raygun(const Point x_source_, const Vector c_source_,
 	int ray_width_, int ray_height_)
 	: Raygun(x_source_, c_source_, fov_, aspect_ratio_, index_of_refraction_, intensity_, ray_width_, ray_height_, 1, 1) {}
 
-Raygun::Raygun(const Point x_source_, const Vector c_source_,
+Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	float fov_, float aspect_ratio_,
 	float index_of_refraction_, float intensity_,
 	int ray_width_, int ray_height_, int camera_width_, int camera_height_)
@@ -45,6 +45,6 @@ std::forward_list<XRay> Raygun::create_rays(int camera_id) {
 	//int yloc = camera_id / camera_width;
 	for (int xloc = (camera_id % camera_width) * ray_per_camera_w * 2; xloc < ray_width * 2 && xloc < 2 * ray_per_camera_w * (camera_width + 1); xloc += 2)
 		for (int yloc = (camera_id / camera_width) * ray_per_camera_h * 2; yloc < ray_height * 2 && yloc < 2 * ray_per_camera_h * (camera_height + 1); yloc += 2)
-			ret.push_front(XRay(x_source, Vector(c_source + Vector(w_dist, 0, 0).traverse(1 + xloc) + Vector(0, h_dist, 0).traverse(1 + yloc)), index_of_refraction, intensity));
+			ret.push_front(XRay(x_source, Vector(c_source + Vector(1, 0, 0).traverse((1 + xloc) * w_dist) + Vector(0, 1, 0).traverse((1 + yloc) * h_dist)), index_of_refraction, intensity));
 	return ret;
 }

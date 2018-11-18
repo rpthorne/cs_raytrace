@@ -49,13 +49,13 @@ float XRay::get_length() const { return this->length; }
 
 //setters and creaters
 
-XRay XRay::reflect(Vector const &norm, float intensity_refracted) const
+XRay XRay::reflect(Vector const &norm) const
 {
 	Vector new_dir = this->dir;
-	new_dir = new_dir - (norm.scale_mul(2.0f * new_dir.dot_product(norm)));
+	new_dir = new_dir - (norm.traverse(2.0f * new_dir.dot_product(norm)));
 	XRay res;
 	if(intensity_refracted <= 0.0f)
-		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1);
+		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
 	else//compute intensity from fresnel
 	{
 		float fresnel_intensity = this->intensity - intensity_refracted;
@@ -64,7 +64,7 @@ XRay XRay::reflect(Vector const &norm, float intensity_refracted) const
 	return res;
 }
 
-XRay XRay::refract(Vector const &norm, const float index_of_refraction, bool s_polarized) const
+XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 {
 	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
