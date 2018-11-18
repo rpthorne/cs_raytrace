@@ -11,6 +11,7 @@ class Vector :
 {
 public:
 	
+	Vector();
 	Vector(const float x, const float y, const float z);
 
 	float Vector::getMagnitude();
