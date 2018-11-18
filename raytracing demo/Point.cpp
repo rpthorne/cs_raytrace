@@ -1,13 +1,11 @@
 #include "Point.h"
 #include <math.h>
 
-Point::Point() : AbstractPoint(float, float, float)
-{
-}
+Point::Point() : AbstractPoint(float, float, float){}
 
-Point::Point(const float x, const float y, const float z) : AbstractPoint(x, y, z)
-{
-}
+Point::Point() : AbstractPoint(0.0, 0.0, 0.0) {}
+
+Point::Point(const float x, const float y, const float z) : AbstractPoint(x, y, z){}
 
 Point Point::operator- (Point &c)
 {

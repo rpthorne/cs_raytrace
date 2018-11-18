@@ -12,6 +12,7 @@ class Point :
 {
 public:
 
+	Point();
 	Point(const float x, const float y, const float z);
 	
 };
