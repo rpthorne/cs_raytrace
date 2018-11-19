@@ -7,7 +7,7 @@ Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}
 Vector::Vector(const float x, const float y, const float z) : AbstractPoint(x, y, z){}
 
 float Vector::getMagnitude() {
-	return sqrtf(this->dot_product(*this));
+	return sqrtf(this->dotProduct(*this));
 }
 
 float Vector::dotProduct(Vector &v) { 
