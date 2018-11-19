@@ -10,7 +10,7 @@ class Point :
 	public AbstractPoint
 {
 public:
-
+	Point();
 	Point(const float x, const float y, const float z);
 	
 	Point Point::operator- () const;
