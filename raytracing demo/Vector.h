@@ -14,10 +14,10 @@ public:
 	Vector();
 	Vector(const float x, const float y, const float z);
 
-	float getMagnitude();
-	float dotProduct(Vector &v);
-	Vector operator- ();
-	Vector crossProduct(Vector &v);
-	Point traverse(float d);
+	float getMagnitude() const;
+	float dotProduct(Vector &v) const;
+	Vector operator- () const;
+	Vector crossProduct(Vector &v) const;
+	Point traverse(float d) const;
 };
 

@@ -10,7 +10,7 @@ public:
 		this->z = z;	
 	}
 
-	float getX() { return this->x }
-	float getY() { return this->y }
-	float getZ() { return this->z }
+	float getX() const { return this->x } 
+	float getY() const { return this->y }
+	float getZ() const { return this->z }
 };
