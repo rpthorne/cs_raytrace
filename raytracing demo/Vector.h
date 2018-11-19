@@ -7,6 +7,7 @@
 #pragma once
 #include "AbstractPoint.h"
 #include "Point.h"
+
 class Vector :
 	public AbstractPoint
 {
