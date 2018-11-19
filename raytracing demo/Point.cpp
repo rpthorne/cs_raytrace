@@ -22,7 +22,7 @@ Point Point::operator- () const
 
 Point Point::operator- (Point& c) const
 {
-	return new Point(this->x - c.x, this->y - c.y, this->z - c.z);
+	return Point(this->x - c.x, this->y - c.y, this->z - c.z);
 }
 
 Point Point::operator+ (Point &c) const
@@ -36,5 +36,5 @@ Point Point::operator+ (Point &c) const
 
 Vector Point::pointToVector() const {
 	float magnitude = sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
-	return new Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
+	return Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
 }
