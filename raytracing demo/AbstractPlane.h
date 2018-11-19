@@ -20,7 +20,7 @@ public:
 		this->b = b;
 		this->c = c;
 		//compute normal now, so dont have to later
-		normal = (b - a).cross_product(c - a);
+		normal = (Vector(b - a)).cross_product(Vector(c - a));
 	}
 
 	//getters

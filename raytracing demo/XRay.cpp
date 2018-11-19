@@ -52,7 +52,7 @@ float XRay::get_length() const { return this->length; }
 XRay XRay::reflect(Vector &norm) const
 {
 	Vector new_dir = this->dir;
-	new_dir = new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dotProduct(norm)));
+	new_dir = Vector(new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dotProduct(norm))));
 	XRay res;
 	if(intensity_refracted <= 0.0f)
 		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
