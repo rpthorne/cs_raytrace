@@ -68,7 +68,7 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 {
 	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
-	float vector_dot = dir.dot_product(-norm);
+	float vector_dot = dir.dotProduct(-norm);
 	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
 	
 	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay
@@ -81,11 +81,11 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 	float fresnel_intensity = 2 * current_index_of_refraction * radicand;
 	if (s_polarized)
 	{
-		fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dot_product(new_dir));
+		fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dotProduct(new_dir));
 	}
 	else // p-polarized
 	{
-		fresnel_intensity = fresnel_intensity / (index_of_refraction * radicand + current_index_of_refraction * norm.dot_product(new_dir));
+		fresnel_intensity = fresnel_intensity / (index_of_refraction * radicand + current_index_of_refraction * norm.dotProduct(new_dir));
 	}
 	
 

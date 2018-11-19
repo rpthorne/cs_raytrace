@@ -13,8 +13,9 @@ public:
 
 	Point(const float x, const float y, const float z);
 	
-	Point Point::operator- (Point &c);
-	Point Point::operator- ();
-	Point Point::operator+ (Point &c);
+	Point Point::operator- () const;
+	Point Point::operator- (Point &c)const;
+	Point Point::operator+ (Point &c) const;
+	Vector Point::pointToVector() const;
 };
 
