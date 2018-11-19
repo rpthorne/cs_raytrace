@@ -5,8 +5,8 @@
 //length assumed to be one
 class XRay
 {
-	Pointf src;
-	Pointf dir; //guaranteed to be normal
+	Point src;
+	Vector dir; //guaranteed to be normal
 	float intensity;
 	float length; // absolute length of this ray, not optical length of this ray
 	int generation;
@@ -34,7 +34,7 @@ public:
 	int XRay::set_length(const float dist);
 
 	//relfect take some output from refract in order to save time
-	XRay XRay::reflect(Vector const &norm, float intensity_refracted) const;
+	XRay XRay::reflect(Vector &norm, float intensity_refracted) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction, bool s_polarized) const;
 	//XRay XRay::reflect_s(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
 	XRay XRay::refract_s(Vector const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
