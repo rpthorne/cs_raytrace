@@ -2,6 +2,7 @@
 
 class AbstractPoint
 {
+protected:
 	float x, y, z;
 public:
 	AbstractPoint(const float x, const float y, const float z) {
