@@ -2,7 +2,7 @@
 #include "Point.h"
 #include "Vector.h"
 
-Pointf AbstractPlane::get_normal() const
+Vector AbstractPlane::get_normal() const
 {
 	return normal;
 }
