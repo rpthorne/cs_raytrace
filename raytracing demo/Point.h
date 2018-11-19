@@ -6,7 +6,7 @@
 
 #pragma once
 #include "AbstractPoint.h"
-#include "Vector.h"
+
 class Point :
 	public AbstractPoint
 {
@@ -17,6 +17,5 @@ public:
 	Point Point::operator- () const;
 	Point Point::operator- (Point &c)const;
 	Point Point::operator+ (Point &c) const;
-	Vector Point::pointToVector() const;
 };
 

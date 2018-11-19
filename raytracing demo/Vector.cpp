@@ -24,3 +24,8 @@ Vector Vector::operator-() const {
 Point Vector::traverse(float d) const {
 	return Point(this->x * d, this->y * d, this->z * d);
 }
+
+Vector Vector::pointToVector(Point p) {
+	float magnitude = sqrtf(p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ());
+	return Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
+}

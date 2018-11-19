@@ -15,6 +15,7 @@ public:
 	
 	Vector();
 	Vector(const float x, const float y, const float z);
+	Vector pointToVector(Point p);
 
 	float getMagnitude();
 	float dotProduct(Vector &v);
