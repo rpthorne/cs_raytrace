@@ -34,6 +34,36 @@ std::forward_list<Sphere> sample;
 Raygun camera;
 std::forward_list<XRay> xray_list;
 
+Point cp(int x, int y, int z)
+{
+	return Point(x, y, z);
+}
+
+Vector cv(int x, int y, int z)
+{
+	return Vector(x, y, z);
+}
+
+std::forward_list<Sphere> make_sample()
+{
+	Sphere sample1 = Sphere(0, 0, 0, spr);
+	std::forward_list<Sphere> ret = std::forward_list<Sphere>();
+	ret.push_front(sample1);
+	return ret;
+}
+
+
+Vector down_vector()
+{
+	return cv(0, 0, -1);
+}
+
+int draw_p(Point &p)
+{
+	return 0;
+}
+
+
 int setup_scene()
 {
 	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dpd, - dps), cp(dps,-dpd,dps), cv(0,1,0), dpw, dph);
@@ -73,30 +103,3 @@ int setup_scene()
 	return 0;
 }
 
-std::forward_list<Sphere> make_sample()
-{
-	Sphere sample1 = Sphere(0, 0, 0, spr);
-	std::forward_list<Sphere> ret = std::forward_list<Sphere>();
-	ret.push_front(sample1);
-	return ret;
-}
-
-Point cp(int x, int y, int z)
-{
-	return Point(x, y, z);
-}
-
-Vector cv(int x, int y, int z)
-{
-	return Vector(x, y, z);
-}
-
-Vector down_vector()
-{
-	return cv(0, 0, -1);
-}
-
-int draw_p(Point &p)
-{
-	return 0;
-}

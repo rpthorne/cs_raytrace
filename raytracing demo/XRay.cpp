@@ -54,13 +54,7 @@ XRay XRay::reflect(Vector &norm) const
 	Vector new_dir = this->dir;
 	new_dir = Vector(new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dotProduct(norm))));
 	XRay res;
-	if(intensity_refracted <= 0.0f)
-		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
-	else//compute intensity from fresnel
-	{
-		float fresnel_intensity = this->intensity - intensity_refracted;
-		res = XRay(this->src + this->dir.scale_mul(length), new_dir, this->current_index_of_refraction, fresnel_intensity, generation + 1);
-	}
+	res = XRay(this->src + this->dir.traverse(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
 	return res;
 }
 
@@ -75,21 +69,15 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 	if (radicand < 0) return XRay();
 
 	radicand = sqrt(radicand); // stored for later
-	new_dir = dir.scale_mul(refract_index) + norm.traverse(refract_index * vector_dot - radicand);
+	new_dir = Vector(dir.traverse(refract_index) + norm.traverse(refract_index * vector_dot - radicand));
 
 	//fresnel intensity computation
 	float fresnel_intensity = 2 * current_index_of_refraction * radicand;
-	if (s_polarized)
-	{
-		fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dotProduct(new_dir));
-	}
-	else // p-polarized
-	{
-		fresnel_intensity = fresnel_intensity / (index_of_refraction * radicand + current_index_of_refraction * norm.dotProduct(new_dir));
-	}
+	fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dotProduct(new_dir));
+
 	
 
-	return XRay(src + dir.scale_mul(length), new_dir, index_of_refraction, fresnel_intensity, generation);
+	return XRay(src + dir.traverse(length), new_dir, index_of_refraction, fresnel_intensity, generation, get_optic_pathlength());
 }
 
 //the only place that the data of an XRay can be mutated
