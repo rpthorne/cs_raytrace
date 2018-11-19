@@ -11,7 +11,7 @@ public:
 		this->z = z;	
 	}
 
-	float getX() const { return this->x } 
-	float getY() const { return this->y }
-	float getZ() const { return this->z }
+	float getX() const { return this->x; };
+	float getY() const { return this->y; };
+	float getZ() const { return this->z; };
 };
