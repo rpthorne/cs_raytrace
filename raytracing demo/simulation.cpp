@@ -30,7 +30,7 @@
 //initial intensity
 #define intii (1.0f)
 
-std::forward_list<AbstractPlane> sample;
+std::forward_list<Sphere> sample;
 Raygun camera;
 std::forward_list<XRay> xray_list;
 
@@ -39,28 +39,31 @@ int setup_scene()
 	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dpd, - dps), cp(dps,-dpd,dps), cv(0,1,0), dpw, dph);
 	
 	sample = make_sample();
-	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii xrw, xrh);
-	xray_list = camera.create_rays();
+	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii, xrw, xrh);
+	xray_list = camera.create_rays(0);
 	for (auto it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{
 		float length = -1;
-		AbstractPlane* colliding_object;
+		Vector colliding_object_norm;
 		//simple check all elements for now
 		for (auto it_samplelist = sample.begin(); it_samplelist != sample.end(); it_samplelist++)
 		{
-			float res = it_samplelist->ray_plane_collision(*it_xlist);
+			float res;
+			Vector norm;
+			Point loc;
+			it_samplelist->collision(*it_xlist, res, loc, norm);
 			if (res > 0 && res < length)
 			{
 				length = res;
-				//aslo store a pointer to our colliding sample maybe a &* is wrong, look into this maybe?
-				colliding_object = &*it_samplelist;
+				//also store a pointer to our colliding sample maybe a &* is wrong, look into this maybe?
+				colliding_object_norm = norm;
 			}
 		}
 		//if there was collision with sample, compute ray split, add new rays to end of list
 		if (length > 0)
 		{
 			it_xlist->set_length(length);
-			it_xlist->refract(colliding_object->get_normal(), it_xlist->get_gen());/*need a good way to determine what sample i am in!!!!!!!*/
+			
 
 		}
 		//no collision, check for detector plate collision, 
@@ -70,11 +73,12 @@ int setup_scene()
 	return 0;
 }
 
-std::forward_list<AbstractPlane> make_sample()
+std::forward_list<Sphere> make_sample()
 {
 	Sphere sample1 = Sphere(0, 0, 0, spr);
-	std::forward_list<AbstractPlane> ret = std::forward_list<AbstractPlane>();
+	std::forward_list<Sphere> ret = std::forward_list<Sphere>();
 	ret.push_front(sample1);
+	return ret;
 }
 
 Point cp(int x, int y, int z)
@@ -92,7 +96,7 @@ Vector down_vector()
 	return cv(0, 0, -1);
 }
 
-int draw_p(Pointf &p)
+int draw_p(Point &p)
 {
 	return 0;
 }

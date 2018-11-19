@@ -39,7 +39,7 @@ XRay::XRay(Point const & src_, Vector const & dir_, float index_of_refraction_, 
 //getters
 const Vector XRay::get_dir() const { return this->dir; }
 
-const Point XRay::get_src() const { return this->dir; }
+const Point XRay::get_src() const { return this->src; }
 
 float XRay::get_intensity() const { return this->intensity; }
 
