@@ -25,7 +25,7 @@ public:
 
 	//getters
 
-	Point get_normal() const;
+	Vector get_normal() const;
 
 	//math ops on planes
 
