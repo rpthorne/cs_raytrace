@@ -34,8 +34,8 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, const Vecto
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
-			Point temp = begin + x_vector.scale_mul(i) + y_vector.scale_mul(j);
-			b_coords[i][j] = RectPlane(temp, temp + x_vector, temp + y_vector);
+			Point temp = begin + x_vector.traverse(i) + y_vector.traverse(j);
+			b_coords[i][j] = RectPlane(temp, temp + x_vector.traverse(1), temp + y_vector.traverse(1));
 		}
 }
 

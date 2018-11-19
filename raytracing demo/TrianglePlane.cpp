@@ -6,7 +6,9 @@
 
 //helper functions
 
-
+#ifndef ZERO_MAX
+#define ZERO_MAX (0.0001f)
+#endif
 
 TrianglePlane::TrianglePlane(Point a, Point b, Point c) : AbstractPlane(a, b, c) {};
 
@@ -14,7 +16,7 @@ float TrianglePlane::ray_plane_collision(const XRay &p) const
 {
 	Point t0 = b - a;
 	Point t1 = c - a;
-	Point t2 = -p.get_dir();
+	Point t2 = -p.get_dir().traverse(1);
 	Point t3 = p.get_src() - a;
 
 	float det0 = get_determinant(t0, t1, t2);
