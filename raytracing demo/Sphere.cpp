@@ -1,11 +1,11 @@
 #include"Sphere.h"
-#include<Math.h>
+#include<math.h>
 #include"Point.h"
 #include"Point.cpp"
 #include"Vector.h"
+#include"Vector.cpp"
 #include"XRay.h"
 #include"XRay.cpp"
-#include <math.h>
 
 Sphere::Sphere() { x = 0; y = 0; z = 0; r = 0; o = Point(0.0, 0.0, 0.0); };
 Sphere::Sphere(float x, float y, float z, float r) { this->x = x; this->y = y; this->z = z; this->r = r; o = Point(x, y, z); }
@@ -28,7 +28,7 @@ Vector Sphere::normalAt(Point p) {
 }
 
 int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
-	Vector m = (x.get_src() - this->o).pointToVector();
+	Vector m = Vector((x.get_src() - this->o));
 	float b = m.dotProduct(x.get_dir());
 	float c = (m.dotProduct(m) - (this->r * this->r));
 

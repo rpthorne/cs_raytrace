@@ -19,7 +19,7 @@ Point Point::operator- () const {
 	return res;
 }
 
-Point Point::operator- (Point& c) const {
+Point Point::operator- (Point const &c) const {
 	return Point(this->x - c.x, this->y - c.y, this->z - c.z);
 }
 

@@ -5,11 +5,18 @@ Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}
 
 Vector::Vector(const float x, const float y, const float z) : AbstractPoint(x, y, z){}
 
+Vector::Vector(Point p) : AbstractPoint(p.getX(), p.getY(), p.getZ()){
+	float magnitude = sqrtf(p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ());
+	this->x = this->x / magnitude;
+	this->y = this->y / magnitude;
+	this->z = this->z / magnitude;
+}
+
 float Vector::getMagnitude() {
 	return sqrtf(this->dotProduct(*this));
 }
 
-float Vector::dotProduct(Vector &v) { 
+float Vector::dotProduct(Vector v) { 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
 
@@ -23,9 +30,4 @@ Vector Vector::operator-() const {
 
 Point Vector::traverse(float d) const {
 	return Point(this->x * d, this->y * d, this->z * d);
-}
-
-Vector Vector::pointToVector(Point p) {
-	float magnitude = sqrtf(p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ());
-	return Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
 }
