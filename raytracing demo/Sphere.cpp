@@ -5,6 +5,7 @@
 #include"Vector.h"
 #include"XRay.h"
 #include"XRay.cpp"
+#include <math.h>
 
 Sphere::Sphere() { x = 0; y = 0; z = 0; r = 0; o = Point(0.0, 0.0, 0.0); };
 Sphere::Sphere(float x, float y, float z, float r) { this->x = x; this->y = y; this->z = z; this->r = r; o = Point(x, y, z); }
@@ -27,7 +28,7 @@ Vector Sphere::normalAt(Point p) {
 }
 
 int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
-	Vector m = x.get_src() - this->o;
+	Vector m = (x.get_src() - this->o).pointToVector();
 	float b = m.dotProduct(x.get_dir());
 	float c = (m.dotProduct(m) - (this->r * this->r));
 
@@ -41,13 +42,13 @@ int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
 	if (discr < 0.0f) return 0; //there was not an intersection
 
 	//shortest distance t of intersection with sphere
-	t = -b - Sqrt(discr);
+	t = -b - sqrtf(discr);
 	
 	//if t is negative (rounding error?), force 0
 	if (t < 0.0f)
 		t = 0.0f;
 	Vector dir = x.get_dir();
-	Point d = new Point(dir.getX() * t, dir.getY() * t, dir.getZ() * t);
+	Point d = Point(dir.getX() * t, dir.getY() * t, dir.getZ() * t);
 	p = x.get_src() + d;
 
 	n = this->normalAt(p);

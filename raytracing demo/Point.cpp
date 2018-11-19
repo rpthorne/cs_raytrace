@@ -14,15 +14,13 @@ Point Point::operator- (Point &c) const
 	return res;
 }
 
-Point Point::operator- () const
-{
+Point Point::operator- () const {
 	Point res = { -x,-y,-z };
 	return res;
 }
 
-Point Point::operator- (Point& c) const
-{
-	return new Point(this->x - c.x, this->y - c.y, this->z - c.z);
+Point Point::operator- (Point& c) const {
+	return Point(this->x - c.x, this->y - c.y, this->z - c.z);
 }
 
 Point Point::operator+ (Point &c) const
@@ -32,9 +30,4 @@ Point Point::operator+ (Point &c) const
 	res.y = this->y + c.y;
 	res.z = this->z + c.z;
 	return res;
-}
-
-Vector Point::pointToVector() const {
-	float magnitude = sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
-	return new Vector(this->x / magnitude, this->y / magnitude, this->z / magnitude);
 }

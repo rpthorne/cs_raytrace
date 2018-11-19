@@ -7,6 +7,7 @@
 #pragma once
 #include "AbstractPoint.h"
 #include "Point.h"
+
 class Vector :
 	public AbstractPoint
 {
@@ -14,9 +15,10 @@ public:
 	
 	Vector();
 	Vector(const float x, const float y, const float z);
+	Vector pointToVector(Point p);
 
-	float getMagnitude() const;
-	float dotProduct(Vector &v) const;
+	float getMagnitude();
+	float dotProduct(Vector &v);
 	Vector operator- () const;
 	Vector crossProduct(Vector &v) const;
 	Point traverse(float d) const;
