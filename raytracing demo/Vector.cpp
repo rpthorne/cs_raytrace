@@ -1,6 +1,5 @@
 #include "Vector.h"
-
-Vector::Vector() : AbstractPoint(float, float, float){}
+#include <math.h>
 
 Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}
 
