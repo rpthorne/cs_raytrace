@@ -17,6 +17,7 @@ public:
 	
 };
 
+Point Point::scale_mul(float m);
 Point Point::operator- (Point &c);
 Point Point::operator- ();
 Point Point::operator- (Point &c);

@@ -7,6 +7,10 @@ Point::Point() : AbstractPoint(0.0, 0.0, 0.0) {}
 
 Point::Point(const float x, const float y, const float z) : AbstractPoint(x, y, z){}
 
+Point Point::scale_mul(float m) {
+	return new Point(this->x * m, this->y * m, this->z * m);
+}
+
 Point Point::operator- (Point &c)
 {
 	Point res;
