@@ -33,6 +33,7 @@
 std::forward_list<Sphere> sample;
 Raygun camera;
 std::forward_list<XRay> xray_list;
+DetectorPlate detector_plate;
 
 Point cp(int x, int y, int z)
 {
@@ -66,11 +67,16 @@ int draw_p(Point &p)
 
 int setup_scene()
 {
-	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dps, - dpd), cp(dps,-dps, - dpd), dpw, dph);
+	detector_plate = DetectorPlate(cp(-dps ,- dps, - dpd), cp(dps,-dps, - dpd), dpw, dph);
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii, xrw, xrh);
 	xray_list = camera.create_rays(0);
+	
+}
+
+int run_scene()
+{
 	for (auto it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{
 		float length = -1;
@@ -93,7 +99,7 @@ int setup_scene()
 		if (length > 0)
 		{
 			it_xlist->set_length(length);
-			
+			//blank atm duh
 
 		}
 		//no collision, check for detector plate collision, 
@@ -103,3 +109,8 @@ int setup_scene()
 	return 0;
 }
 
+int clean_scene()
+{
+	//here we output data from simulation
+	return 0;
+}
