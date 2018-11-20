@@ -81,6 +81,7 @@ int run_scene()
 	{
 		float length = -1;
 		Vector colliding_object_norm;
+		Point colliding_object_loc;
 		//simple check all elements for now
 		for (auto it_samplelist = sample.begin(); it_samplelist != sample.end(); it_samplelist++)
 		{
@@ -93,6 +94,7 @@ int run_scene()
 				length = res;
 				//also store a pointer to our colliding sample maybe a &* is wrong, look into this maybe?
 				colliding_object_norm = norm;
+				colliding_object_norm = loc;
 			}
 		}
 		//if there was collision with sample, compute ray split, add new rays to end of list
@@ -100,7 +102,8 @@ int run_scene()
 		{
 			it_xlist->set_length(length);
 			//blank atm duh
-
+			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
+			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(colliding_object_loc));
 		}
 		//no collision, check for detector plate collision, 
 		else
@@ -108,6 +111,15 @@ int run_scene()
 	}
 	return 0;
 }
+
+float get_ior(Point const &p)
+{
+	float sqrmag = p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ();
+	if (sqrmag <= spr + .0001f)
+		return 1.1f;
+	return 1.0f
+}
+
 
 int clean_scene()
 {
