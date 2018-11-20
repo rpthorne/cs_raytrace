@@ -1,4 +1,5 @@
 #include "XRay.h"
+#pragma once
 #include <math.h>
 
 

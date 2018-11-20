@@ -1,9 +1,6 @@
 //detector recieves a list of arrays and determines which points hit
-#include <forward_list>
 #include "DetectorPlate.h"
-#include "XRay.h"
-#include "TrianglePlane.h"
-#include "RectPlane.h"
+#pragma once
 #include <math.h>
 
 //assuming fixed 2d points on a XYplane begin and end form a rectangle at depth begin.z
@@ -35,7 +32,7 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	x_vector = x_vector.scale_div(width);
 	y_vector = y_vector.scale_div(height);
 	//*/
-	detector_plane = RectPlane(begin, begin + Point(end.getX(), 0, 0), Point(0, end.getY, 0));
+	detector_plane = RectPlane(begin, begin + Point(end.getX(), 0.0f, 0.0f), begin + Point(0.0f, end.getY(), 0.0f));
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
