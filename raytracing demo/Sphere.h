@@ -1,8 +1,7 @@
 #pragma once
-
-#include"Point.h"
-#include"Vector.h"
 #include"XRay.h"
+
+
 class Sphere {
 public:
 	float x, y, z, r;

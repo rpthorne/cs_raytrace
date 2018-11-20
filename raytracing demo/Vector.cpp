@@ -1,4 +1,5 @@
 #include "Vector.h"
+#pragma once
 #include <math.h>
 
 Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}
