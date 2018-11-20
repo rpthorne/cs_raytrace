@@ -103,7 +103,7 @@ int run_scene()
 			it_xlist->set_length(length);
 			//blank atm duh
 			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
-			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(colliding_object_loc));
+			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(colliding_object_loc)));
 		}
 		//no collision, check for detector plate collision, 
 		else
@@ -117,7 +117,7 @@ float get_ior(Point const &p)
 	float sqrmag = p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ();
 	if (sqrmag <= spr + .0001f)
 		return 1.1f;
-	return 1.0f
+	return 1.0f;
 }
 
 
