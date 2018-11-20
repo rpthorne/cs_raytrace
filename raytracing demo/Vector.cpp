@@ -16,7 +16,7 @@ float Vector::get_magnitude() {
 	return sqrtf(this->dot_product(*this));
 }
 
-float Vector::dot_product(Vector v) { 
+float Vector::dot_product(Vector v) const{ 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
 

@@ -62,7 +62,7 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 {
 	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
-	float vector_dot = dir.dot_product(-norm);
+	float vector_dot = this->dir.dot_product(-norm);
 	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
 	
 	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay

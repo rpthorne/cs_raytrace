@@ -31,7 +31,7 @@ Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	intensity = intensity_;
 	index_of_refraction = index_of_refraction_;
 	float nhalf = atanhf(fov_ * .5f);
-	c_source = c_source_ - Point(nhalf * aspect_ratio_, nhalf , 0);
+	c_source = c_source_.traverse(1) - Point(nhalf * aspect_ratio_, nhalf , 0);
 	w_dist = nhalf / ray_width;
 	h_dist = nhalf * aspect_ratio_ / ray_height;
 	ray_per_camera_h = camera_height / ray_height;
