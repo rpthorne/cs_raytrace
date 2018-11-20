@@ -66,7 +66,7 @@ int draw_p(Point &p)
 
 int setup_scene()
 {
-	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dpd, - dps), cp(dps,-dpd,dps), cv(0,1,0), dpw, dph);
+	DetectorPlate detector_plate = DetectorPlate(cp(-dps ,- dps, - dpd), cp(dps,-dps, - dpd), dpw, dph);
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii, xrw, xrh);

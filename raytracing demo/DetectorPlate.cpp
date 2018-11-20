@@ -4,12 +4,13 @@
 #include "XRay.h"
 #include "TrianglePlane.h"
 #include "RectPlane.h"
+#include <math.h>
 
-//assuming arbitrary 3d points begin and end form a rectangle
+//assuming fixed 2d points on a XYplane begin and end form a rectangle at depth begin.z
 
 
-//fro now assuming that plate is square
-DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, const Vector &direction, int width_, int height_)
+//for now assuming that plate is alligned to x-y plane along x and y
+DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_)
 {
 	int i, j;
 	begin = begin_;
@@ -24,6 +25,8 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, const Vecto
 		b_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane));
 	}
 	//compute normal and begin and ends normal.
+	/*
+	//arbitrary plane definition, currently not applicable
 	RectPlane normnorm = RectPlane(begin, end, direction);
 	x_vector = (begin + end).scale_mul(.5f);
 	y_vector = x_vector - normnorm.get_normal().scale_mul((x_vector - begin).magnitude_precise());
@@ -31,11 +34,13 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, const Vecto
 	detector_plane = RectPlane(begin, begin + x_vector, begin + y_vector);
 	x_vector = x_vector.scale_div(width);
 	y_vector = y_vector.scale_div(height);
+	//*/
+	detector_plane = RectPlane(begin, begin + Point(end.getX(), 0, 0), Point(0, end.getY, 0));
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
-			Point temp = begin + x_vector.traverse(i) + y_vector.traverse(j);
-			b_coords[i][j] = RectPlane(temp, temp + x_vector.traverse(1), temp + y_vector.traverse(1));
+			Point temp = begin + Vector(1,0,0).traverse(x_vector * i) + Vector(0,1,0).traverse(y_vector * j);
+			b_coords[i][j] = RectPlane(temp, temp + Vector(1, 0, 0).traverse(x_vector * i), temp + Vector(1, 0, 0).traverse(x_vector * i));
 		}
 }
 
@@ -50,21 +55,12 @@ int DetectorPlate::add_to_bucket(const XRay &p, int x, int y)
 int DetectorPlate::test_ray(XRay &p)
 {
 	//first ask if ray collides with detector
-	if (detector_plane.ray_plane_collision(p) >= 0)
+	float len;
+	if ((len = detector_plane.ray_plane_collision(p)) >= 0)
 		//determine if ray collision has alternate method with more infor
 	{
-		int i = 0, j = 0;
-		float res = -1;
-		for (int i = 0; i < width; i++)
-		{
-			for (j = 0; j < height; j++)
-			{
-				if ((res = b_coords[i][j].ray_plane_collision(p)) >= 0)
-					break;
-			}
-			if (res >= 0) break;
-		}
-		add_to_bucket(p, i, j);
+		Point p_dest = p.get_src() + p.get_dir().traverse(len);
+		add_to_bucket(p, (int)((begin.getX() - end.getX()) / width / (begin.getX() - p_dest.getX())), (int)((begin.getY() - end.getY()) / height / (begin.getY() - p_dest.getY())));
 		return 0;
 	}
 	return -1; 

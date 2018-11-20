@@ -10,8 +10,8 @@ class DetectorPlate
 	std::forward_list<XRay>** buckets;
 	RectPlane** b_coords;
 	RectPlane detector_plane;
-	Vector x_vector;
-	Vector y_vector;
+	float x_vector;
+	float y_vector;
 	Point begin;
 	Point end;
 	int width, height;
@@ -22,7 +22,7 @@ class DetectorPlate
 public:
 
 	//constructors
-	DetectorPlate(const Point &begin_, const Point &end_, const Vector &direction, int width_, int height_);
+	DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_);
 
 	//getters
 	int collect_rays(std::forward_list<XRay>**) const;
