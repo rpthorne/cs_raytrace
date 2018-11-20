@@ -1,6 +1,10 @@
 #include "RectPlane.h"
 #include "Point.h"
 
+#ifndef ZERO_MAX
+#define ZERO_MAX (0.0001f)
+#endif
+
 RectPlane::RectPlane() : AbstractPlane(Point(), Point(), Point())
 {
 }
