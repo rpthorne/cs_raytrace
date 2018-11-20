@@ -12,15 +12,15 @@ Vector::Vector(Point p) : AbstractPoint(p.getX(), p.getY(), p.getZ()){
 	this->z = this->z / magnitude;
 }
 
-float Vector::getMagnitude() {
-	return sqrtf(this->dotProduct(*this));
+float Vector::get_magnitude() {
+	return sqrtf(this->dot_product(*this));
 }
 
-float Vector::dotProduct(Vector v) { 
+float Vector::dot_product(Vector v) { 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
 
-Vector Vector::crossProduct(Vector &v) const
+Vector Vector::cross_product(Vector &v) const
 {
 	return Vector(this->y * v.z - this->z * v.y, this->z * v.x - this->x * v.z, this->x * v.y - this->y * v.x);
 }

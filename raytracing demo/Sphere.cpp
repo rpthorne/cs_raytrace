@@ -30,8 +30,8 @@ Vector Sphere::normalAt(Point p) {
 int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
 	Point tmp = Point(x.get_src().getX() - this->o.getX(), x.get_src().getY() - this->o.getY(), x.get_src().getZ() - this->o.getZ());
 	Vector m = Vector(tmp);
-	float b = m.dotProduct(x.get_dir());
-	float c = (m.dotProduct(m) - (this->r * this->r));
+	float b = m.dot_product(x.get_dir());
+	float c = (m.dot_product(m) - (this->r * this->r));
 
 	//exit if r's origin outside s (c > 0) and r pointing away from s (b > 0)
 	if (c > 0.0f && b > 0.0f)

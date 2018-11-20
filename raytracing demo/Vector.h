@@ -17,10 +17,10 @@ public:
 	Vector(const float x, const float y, const float z);
 	Vector(Point p);
 
-	float getMagnitude();
-	float dotProduct(Vector v);
+	float get_magnitude();
+	float dot_product(Vector v);
 	Vector operator- () const;
-	Vector crossProduct(Vector &v) const;
+	Vector cross_product(Vector &v) const;
 	Point traverse(float d) const;
 };
 

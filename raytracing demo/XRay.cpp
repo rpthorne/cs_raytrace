@@ -52,7 +52,7 @@ float XRay::get_length() const { return this->length; }
 XRay XRay::reflect(Vector &norm) const
 {
 	Vector new_dir = this->dir;
-	new_dir = Vector(new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dotProduct(norm))));
+	new_dir = Vector(new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dot_product(norm))));
 	XRay res;
 	res = XRay(this->src + this->dir.traverse(length), new_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
 	return res;
@@ -62,7 +62,7 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 {
 	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
-	float vector_dot = dir.dotProduct(-norm);
+	float vector_dot = dir.dot_product(-norm);
 	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
 	
 	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay
@@ -73,7 +73,7 @@ XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 
 	//fresnel intensity computation
 	float fresnel_intensity = 2 * current_index_of_refraction * radicand;
-	fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dotProduct(new_dir));
+	fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dot_product(new_dir));
 
 	
 
