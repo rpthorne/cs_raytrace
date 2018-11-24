@@ -4,31 +4,35 @@
 #include "Raygun.h"
 #include <forward_list>
 
+#ifndef ZERO_MAX
+#define ZERO_MAX (0.0001f)
+#endif // !ZERO_MAX
+
 
 //detector plate size
-#define dps (1)
+#define DETECTOR_PLATE_SIZE (1)
 //detector plate depth
-#define dpd (2)
+#define DETECTOR_PLATE_DEPTH (2)
 //detector plate width
-#define dpw (5)
+#define DETECTOR_PLATE_WIDTH (5)
 //detector plate height
-#define dph (5)
+#define DETECTOR_PLATE_HEIGHT (5)
 //sphere radius
-#define spr (1)
+#define SPHERE_RADIUS (1)
 //camera source depth
-#define cams (4)
+#define CAMERA_SOURCE_DEPTH (4)
 //field of view in degrees?
-#define fov (90.0f)
+#define FIELD_OF_VIEW_DEGREES (90.0f)
 //aspect ratio
-#define aspr (1.0f)
+#define ASPECT_RATIO (1.0f)
 //xray count horizontally
-#define xrw (2.0f)
+#define XRAY_COUNT_HORIZONTAL (2.0f)
 //xray count vertically
-#define xrh (2.0f)
+#define XRAY_COUNT_VERTICAL (2.0f)
 //initial index of refraction
-#define iori (1.0f)
+#define DEFAULT_INDEX_OF_REFRACTION (1.0f)
 //initial intensity
-#define intii (1.0f)
+#define INITIAL_INTENSITY (1.0f)
 
 std::forward_list<Sphere> sample;
 Raygun camera;
@@ -47,7 +51,7 @@ Vector cv(int x, int y, int z)
 
 std::forward_list<Sphere> make_sample()
 {
-	Sphere sample1 = Sphere(0, 0, 0, spr);
+	Sphere sample1 = Sphere(0, 0, 0, SPHERE_RADIUS);
 	std::forward_list<Sphere> ret = std::forward_list<Sphere>();
 	ret.push_front(sample1);
 	return ret;
@@ -67,17 +71,17 @@ int draw_p(Point &p)
 
 int setup_scene()
 {
-	detector_plate = DetectorPlate(cp(-dps ,- dps, - dpd), cp(dps,-dps, - dpd), dpw, dph);
+	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,-DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
 	
 	sample = make_sample();
-	camera = Raygun(cp(0, 0, cams), down_vector(), fov, aspr, iori, intii, xrw, xrh);
+	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
 	xray_list = camera.create_rays(0);
 	
 }
 
 int run_scene()
 {
-	for (auto it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
+	for (std::forward_list<XRay>::iterator it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{
 		float length = -1;
 		Vector colliding_object_norm;
@@ -103,7 +107,7 @@ int run_scene()
 			it_xlist->set_length(length);
 			//blank atm duh
 			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
-			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(colliding_object_loc)));
+			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(*it_xlist)));
 		}
 		//no collision, check for detector plate collision, 
 		else
@@ -112,10 +116,11 @@ int run_scene()
 	return 0;
 }
 
-float get_ior(Point const &p)
+float get_ior(XRay &p)
 {
-	float sqrmag = p.getX() * p.getX() + p.getY() * p.getY() + p.getZ() * p.getZ();
-	if (sqrmag <= spr + .0001f)
+	Point f = p.get_src() + p.get_dir().traverse(.001f);
+	float sqrmag = f.getX() * f.getX() + f.getY() * f.getY() + f.getZ() * f.getZ();
+	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
 		return 1.1f;
 	return 1.0f;
 }
