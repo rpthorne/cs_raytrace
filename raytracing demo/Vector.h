@@ -1,4 +1,11 @@
 /****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
+/****************************************************************
 * Vector is a class representing a normalized vector, in that the 
 * 3 points represent directional magnitude on each axis from the 
 * origin

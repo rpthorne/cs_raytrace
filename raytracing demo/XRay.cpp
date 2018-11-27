@@ -1,9 +1,13 @@
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #include "XRay.h"
 #pragma once
 #include <math.h>
-
-
-
 
 //constructors
 XRay::XRay() {

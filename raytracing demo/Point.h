@@ -1,8 +1,12 @@
 /****************************************************************
-* Point is a class representing a single point in 3-dimensional
-* space 
-*****************************************************************/
-
+ *	Point
+ *
+ *	Point class inherits the AbstractPoint class. It contains a
+ * default constructor, standard constructor requiring 3 floats,
+ * as well as some overriding operator methods: Binary + and - as
+ * well as unary -.
+ *
+ ****************************************************************/
 
 #pragma once
 #include "AbstractPoint.h"

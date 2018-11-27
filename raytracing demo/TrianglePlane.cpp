@@ -1,3 +1,10 @@
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #include "TrianglePlane.h"
 #include "AbstractPlane.h"
 #include "Point.h"

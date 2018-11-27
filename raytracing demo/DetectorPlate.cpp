@@ -1,3 +1,10 @@
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 //detector recieves a list of arrays and determines which points hit
 #include "DetectorPlate.h"
 #pragma once

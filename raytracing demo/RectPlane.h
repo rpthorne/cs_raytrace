@@ -1,6 +1,14 @@
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #pragma once
 #include "AbstractPlane.h"
 #include "Point.h"
+
 class RectPlane :
 	public AbstractPlane
 {
