@@ -5,8 +5,8 @@
  *
  ****************************************************************/
 
-#include "XRay.h"
 #pragma once
+#include "XRay.h"
 #include <math.h>
 
 //constructors

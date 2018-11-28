@@ -6,8 +6,8 @@
  ****************************************************************/
 
 //detector recieves a list of arrays and determines which points hit
-#include "DetectorPlate.h"
 #pragma once
+#include "DetectorPlate.h"
 #include <math.h>
 
 //assuming fixed 2d points on a XYplane begin and end form a rectangle at depth begin.z

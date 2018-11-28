@@ -5,8 +5,8 @@
  *
  ****************************************************************/
 
-#include "Vector.h"
 #pragma once
+#include "Vector.h"
 #include <math.h>
 
 Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}
