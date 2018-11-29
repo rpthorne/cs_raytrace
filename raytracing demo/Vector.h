@@ -18,9 +18,9 @@ public:
 	Vector(Point p);
 
 	float get_magnitude();
-	float dot_product(Vector const v) const;
+	float dot_product(Vector const &v) const;
 	Vector operator- () const;
-	Vector cross_product(Vector &v) const;
+	Vector cross_product(Vector const &v) const;
 	Point traverse(float d) const;
 };
 

@@ -17,11 +17,11 @@ float Vector::get_magnitude() {
 	return sqrtf(this->dot_product(*this));
 }
 
-float Vector::dot_product(Vector v) const{ 
+float Vector::dot_product(Vector const &v) const{ 
 	return this->x * v.x + this->y * v.y + this->z * v.z; 
 }
 
-Vector Vector::cross_product(Vector &v) const
+Vector Vector::cross_product(Vector const &v) const
 {
 	return Vector(this->y * v.z - this->z * v.y, this->z * v.x - this->x * v.z, this->x * v.y - this->y * v.x);
 }
