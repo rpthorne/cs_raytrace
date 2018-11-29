@@ -39,6 +39,8 @@ static float beta = PI / 6.0;
 void writemessage()
 {
 	printf("Visual representation of X-Ray tracing simulation\n");
+	printf("\tUse arrow keys to reposition camera\n");
+	printf("");
 }
 
 void reshape(int w, int h)
@@ -201,7 +203,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkey);
-	//writemessage();
+	writemessage();
 	glutMainLoop();
 	return 0;
 }
