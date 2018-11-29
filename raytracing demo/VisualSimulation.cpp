@@ -80,15 +80,10 @@ void drawDetector() {
 			glEnd();
 		}
 	}
-	/*
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
-	glBegin(GL_POLYGON);
-	glVertex3f(-2.5, 2.5, 0.0);
-	glVertex3f(-2.5, -2.5, 0.0);
-	glVertex3f(2.5, -2.5, 0.0);
-	glVertex3f(2.5, 2.5, 0.0);
-	glEnd();
-	*/
+}
+
+void drawRaygun() {
+	//TODO
 }
 
 void display(void)
@@ -123,6 +118,15 @@ void display(void)
 	glTranslatef(-2.0, 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
 	drawDetector();
+	glPopMatrix();
+	glPushMatrix();
+
+	//draw raygun
+	glTranslatef(5, 0.0, 0.0);
+	glRotatef(-90, 0.0, 1.0, 0.0);
+	drawRaygun();
+	glPopMatrix();
+	glPushMatrix();
 
 	glFlush();
 	glutSwapBuffers();
