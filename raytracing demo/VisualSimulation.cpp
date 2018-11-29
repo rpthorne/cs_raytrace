@@ -11,23 +11,21 @@
 #include <math.h>
 #define PI 3.1415
 
-static GLfloat angle1 = 0.0, angle2 = 0.0, angle3 = 0.0, angle4 = 0.0;
-
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLdouble cpos[] = { 0.0, 5.0, 5.0 };
 static GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
+static GLfloat grey[] = { 0.5, 0.5, 0.5, 1.0 };
 static GLfloat cyan[] = { 0.0, 1.0, 1.0, 1.0 };
-static GLfloat green[] = { 0.0, 1.0, 0.0, 1.0 };
-static GLfloat red[] = { 1.0, 0.1, 0.1, 1.0 };
 
 static GLfloat low[] = { 0.0, 1.0, 0.0, 1.0 };
-static GLfloat low_mid[] = { 0.67, 1.0, 0.0, 1.0 };
+static GLfloat low_mid[] = { 0.5, 1.0, 0.0, 1.0 };
 static GLfloat mid[] = { 1.0, 1.0, 0.0, 1.0 };
-static GLfloat mid_high[] = { 1.0, 0.67, 0.0, 1.0 };
-static GLfloat high[] = { 1.0, 0.33, 0.0, 1.0 };
+static GLfloat mid_high[] = { 1.0, 0.5, 0.0, 1.0 };
+static GLfloat high[] = { 1.0, 0.0, 0.0, 1.0 };
 
 //dynamic dimensions
+static GLfloat detector_distance, raygun_distance;
 static GLfloat detector_width, detector_height;
 static int width_pixels, height_pixels;
 const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
@@ -40,7 +38,10 @@ int view = 1;
 
 void writemessage()
 {
-	printf("Visual representation of X-Ray tracing simulation\n");
+	printf("\n\tVisual representation of X-Ray tracing simulation\n");
+	printf("\t\t> Use arrow keys to position camera in scene view\n");
+	printf("\t\t> Use \'v\' to toggle between screen view and scene view\n");
+	printf("");
 }
 
 void reshape(int w, int h)
@@ -88,7 +89,36 @@ void drawDetector() {
 }
 
 void drawRaygun() {
-	//TODO
+	//draw rays here?
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
+
+	glNormal3f(0.0, -1.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(2.0, 2.0, 0.0);
+	glVertex3f(-2.0, 2.0, 0.0);
+	glVertex3f(0.0, 0.0, -2.0);
+	glEnd();
+
+	glNormal3f(0.0, 1.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(-2.0, -2.0, 0.0);
+	glVertex3f(2.0, -2.0, 0.0);
+	glVertex3f(0.0, 0.0, -2.0);
+	glEnd();
+
+	glNormal3f(-1.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(2.0, -2.0, 0.0);
+	glVertex3f(2.0, 2.0, 0.0);
+	glVertex3f(0.0, 0.0, -2.0);
+	glEnd();
+
+	glNormal3f(1.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex3f(-2.0, 2.0, 0.0);
+	glVertex3f(-2.0, -2.0, 0.0);
+	glVertex3f(0.0, 0.0, -2.0);
+	glEnd();
 }
 
 void display(void)
@@ -112,29 +142,30 @@ void display(void)
 	glMaterialfv(GL_FRONT, GL_EMISSION, white);
 	//glPushMatrix();
 	//glTranslatef(lpos[0], lpos[1], lpos[2]);
-	//glutSolidSphere(0.01, 10, 8);
+	//glutSolidSphere(0.1, 10, 8);
 	//glPopMatrix();
 
 	/* remaining objects do not look as if they emit light */
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
-	glPushMatrix(); //save original matrix
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
 	glutSolidSphere(1.0, 30, 20);
 
 	//draw detector plate
-	glTranslatef(-2.0, 0.0, 0.0);
+	detector_distance = 2.0;
+	glPushMatrix();
+	glTranslatef(-(detector_distance), 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
 	drawDetector();
 	glPopMatrix();
-	glPushMatrix();
 
 	//draw raygun
-	glTranslatef(5, 0.0, 0.0);
+	raygun_distance = 5.0;
+	glPushMatrix();
+	glTranslatef(raygun_distance, 0.0, 0.0);
 	glRotatef(-90, 0.0, 1.0, 0.0);
 	drawRaygun();
 	glPopMatrix();
-	glPushMatrix();
 
 	glFlush();
 	glutSwapBuffers();
@@ -144,22 +175,30 @@ void specialkey(GLint key, int x, int y)
 {
 	switch (key) {
 	case GLUT_KEY_RIGHT:
-		alpha = alpha + PI / 180;
-		if (alpha > 2 * PI) alpha = alpha - 2 * PI;
-		glutPostRedisplay();
+		if (view == 3) {
+			alpha = alpha + PI / 180;
+			if (alpha > 2 * PI) alpha = alpha - 2 * PI;
+			glutPostRedisplay();
+		}
 		break;
 	case GLUT_KEY_LEFT:
-		alpha = alpha - PI / 180;
-		if (alpha < 0) alpha = alpha + 2 * PI;
-		glutPostRedisplay();
+		if (view == 3) {
+			alpha = alpha - PI / 180;
+			if (alpha < 0) alpha = alpha + 2 * PI;
+			glutPostRedisplay();
+		}
 		break;
 	case GLUT_KEY_UP:
-		if (beta < 0.45*PI) beta = beta + PI / 180;
-		glutPostRedisplay();
+		if (view == 3) {
+			if (beta < 0.45*PI) beta = beta + PI / 180;
+			glutPostRedisplay();
+		}
 		break;
 	case GLUT_KEY_DOWN:
-		if (beta > 0.05*PI) beta = beta - PI / 180;
-		glutPostRedisplay();
+		if (view == 3) {
+			if (beta > 0.05*PI) beta = beta - PI / 180;
+			glutPostRedisplay();
+		}
 		break;
 
 	default:
@@ -184,13 +223,11 @@ void keyboard(unsigned char key, int x, int y)
 		glutPostRedisplay();
 		break;
 
-	case '1':
-		view = 1;
-		glutPostRedisplay();
-		break;
-
-	case '3':
-		view = 3;
+	case 'v':
+		if (view == 1)
+			view = 3;
+		else
+			view = 1;
 		glutPostRedisplay();
 		break;
 
@@ -203,7 +240,7 @@ int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(600, 600);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(argv[0]);
 
@@ -219,7 +256,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkey);
-	//writemessage();
+	writemessage();
 	glutMainLoop();
 	return 0;
 }
