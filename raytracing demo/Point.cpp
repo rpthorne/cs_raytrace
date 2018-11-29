@@ -1,7 +1,10 @@
 /****************************************************************
- *	className
+ *	Point
  *
- *	description of class
+ *	Point class inherits the AbstractPoint class. It contains a
+ * default constructor, standard constructor requiring 3 floats,
+ * as well as some overriding operator methods: Binary + and - as
+ * well as unary -.
  *
  ****************************************************************/
 

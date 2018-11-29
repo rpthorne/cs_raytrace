@@ -52,8 +52,8 @@ void reshape(int w, int h)
 void drawDetector() {
 	detector_width = 5.0;
 	detector_height = 5.0;
-	width_pixels = 10;
-	height_pixels = 10;
+	width_pixels = 100;
+	height_pixels = 100;
 	float pixelWidth = detector_width / (float)width_pixels;
 	float pixelHeight = detector_height / (float)height_pixels;
 	int i, j;
@@ -61,13 +61,13 @@ void drawDetector() {
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
-			if (i < 2)
+			if (i < (int)(width_pixels * 0.2))
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-			else if (i < 4)
+			else if (i < (int)(width_pixels * 0.4))
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
-			else if (i < 6)
+			else if (i < (int)(width_pixels * 0.6))
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
-			else if (i < 8)
+			else if (i < (int)(width_pixels * 0.8))
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
 			else
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
