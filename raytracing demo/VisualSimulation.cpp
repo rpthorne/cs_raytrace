@@ -36,11 +36,11 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
+int view = 1;
+
 void writemessage()
 {
 	printf("Visual representation of X-Ray tracing simulation\n");
-	printf("\tUse arrow keys to reposition camera\n");
-	printf("");
 }
 
 void reshape(int w, int h)
@@ -48,7 +48,10 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 250.0);
+	if (view == 3)
+		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
+	else
+		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 2.0, 50.0);
 }
 
 void drawDetector() {
@@ -98,7 +101,10 @@ void display(void)
 	cpos[0] = 10.0 * cos(beta) * sin(alpha);
 	cpos[1] = 10.0 * sin(beta);
 	cpos[2] = 10.0 * cos(beta) * cos(alpha);
-	gluLookAt(cpos[0], cpos[1], cpos[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	if (view == 3)
+		gluLookAt(cpos[0], cpos[1], cpos[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	else
+		gluLookAt(1.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
 	static GLfloat lpos[] = { 0.0, 2.0, 0.0, 1.0 };
@@ -178,6 +184,16 @@ void keyboard(unsigned char key, int x, int y)
 		glutPostRedisplay();
 		break;
 
+	case '1':
+		view = 1;
+		glutPostRedisplay();
+		break;
+
+	case '3':
+		view = 3;
+		glutPostRedisplay();
+		break;
+
 	default:
 		break;
 	}
@@ -203,7 +219,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(specialkey);
-	writemessage();
+	//writemessage();
 	glutMainLoop();
 	return 0;
 }
