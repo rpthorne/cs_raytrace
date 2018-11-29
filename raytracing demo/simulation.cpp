@@ -1,203 +1,139 @@
-////////////////////////////////////////////////////////
-// Lab Exercise 07.cpp
-// Uses glutTimerFunc() to smoothly start and stop animation
-//
-///////////////////////////////////////////////////////
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
+#include "DetectorPlate.h"
+#include "Sphere.h"
+#include "Raygun.h"
+#include <forward_list>
+
+#ifndef ZERO_MAX
+#define ZERO_MAX (0.0001f)
+#endif // !ZERO_MAX
 
 
-#include <GL/glut.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#define PI 3.1415
+//detector plate size
+#define DETECTOR_PLATE_SIZE (1)
+//detector plate depth
+#define DETECTOR_PLATE_DEPTH (2)
+//detector plate width
+#define DETECTOR_PLATE_WIDTH (5)
+//detector plate height
+#define DETECTOR_PLATE_HEIGHT (5)
+//sphere radius
+#define SPHERE_RADIUS (1)
+//camera source depth
+#define CAMERA_SOURCE_DEPTH (4)
+//field of view in degrees?
+#define FIELD_OF_VIEW_DEGREES (90.0f)
+//aspect ratio
+#define ASPECT_RATIO (1.0f)
+//xray count horizontally
+#define XRAY_COUNT_HORIZONTAL (2.0f)
+//xray count vertically
+#define XRAY_COUNT_VERTICAL (2.0f)
+//initial index of refraction
+#define DEFAULT_INDEX_OF_REFRACTION (1.0f)
+//initial intensity
+#define INITIAL_INTENSITY (1.0f)
 
-static GLfloat angle1 = 0.0, angle2 = 0.0, angle3 = 0.0, angle4 = 0.0;
+std::forward_list<Sphere> sample;
+Raygun camera;
+std::forward_list<XRay> xray_list;
+DetectorPlate detector_plate;
 
-static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
-static GLdouble cpos[] = { 0.0, 5.0, 5.0 };
-static GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
-static GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
-static GLfloat cyan[] = { 0.0, 1.0, 1.0, 1.0 };
-static GLfloat green[] = { 0.0, 1.0, 0.0, 1.0 };
-static GLfloat red[] = { 1.0, 0.1, 0.1, 1.0 };
-
-static GLfloat low[] = { 0.0, 1.0, 0.0, 1.0 };
-static GLfloat low_mid[] = { 0.67, 1.0, 0.0, 1.0 };
-static GLfloat mid[] = { 1.0, 1.0, 0.0, 1.0 };
-static GLfloat mid_high[] = { 1.0, 0.67, 0.0, 1.0 };
-static GLfloat high[] = { 1.0, 0.33, 0.0, 1.0 };
-
-//dynamic dimensions
-static GLfloat detector_width, detector_height;
-static int width_pixels, height_pixels;
-const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
-
-/* camera location in longitude and latitude */
-static float alpha = 0.0;
-static float beta = PI / 6.0;
-
-void writemessage()
+Point cp(int x, int y, int z)
 {
-	printf("Visual representation of X-Ray tracing simulation\n");
+	return Point(x, y, z);
 }
 
-void reshape(int w, int h)
+Vector cv(int x, int y, int z)
 {
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 250.0);
+	return Vector(x, y, z);
 }
 
-void drawDetector() {
-	detector_width = 5.0;
-	detector_height = 5.0;
-	width_pixels = 10;
-	height_pixels = 10;
-	float pixelWidth = detector_width / (float)width_pixels;
-	float pixelHeight = detector_height / (float)height_pixels;
-	int i, j;
-	glNormal3fv(detectorNormal);
+std::forward_list<Sphere> make_sample()
+{
+	Sphere sample1 = Sphere(0, 0, 0, SPHERE_RADIUS);
+	std::forward_list<Sphere> ret = std::forward_list<Sphere>();
+	ret.push_front(sample1);
+	return ret;
+}
 
-	for (i = 0; i < width_pixels; i++) {
-		for (j = 0; j < height_pixels; j++) {
-			if (i < 2)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-			else if (i < 4)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
-			else if (i < 6)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
-			else if (i < 8)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
-			else
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 
-			glBegin(GL_POLYGON);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glEnd();
+Vector down_vector()
+{
+	return cv(0, 0, -1);
+}
+
+int draw_p(Point &p)
+{
+	return 0;
+}
+
+
+int setup_scene()
+{
+	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,-DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
+	
+	sample = make_sample();
+	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
+	xray_list = camera.create_rays(0);
+	
+}
+
+int run_scene()
+{
+	for (std::forward_list<XRay>::iterator it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
+	{
+		float length = -1;
+		Vector colliding_object_norm;
+		Point colliding_object_loc;
+		//simple check all elements for now
+		for (auto it_samplelist = sample.begin(); it_samplelist != sample.end(); it_samplelist++)
+		{
+			float res;
+			Vector norm;
+			Point loc;
+			it_samplelist->collision(*it_xlist, res, loc, norm);
+			if (res > 0 && res < length)
+			{
+				length = res;
+				//also store a pointer to our colliding sample maybe a &* is wrong, look into this maybe?
+				colliding_object_norm = norm;
+				colliding_object_norm = loc;
+			}
 		}
+		//if there was collision with sample, compute ray split, add new rays to end of list
+		if (length > 0)
+		{
+			it_xlist->set_length(length);
+			//blank atm duh
+			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
+			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(*it_xlist)));
+		}
+		//no collision, check for detector plate collision, 
+		else
+			detector_plate.test_ray(*it_xlist);
 	}
-	/*
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
-	glBegin(GL_POLYGON);
-	glVertex3f(-2.5, 2.5, 0.0);
-	glVertex3f(-2.5, -2.5, 0.0);
-	glVertex3f(2.5, -2.5, 0.0);
-	glVertex3f(2.5, 2.5, 0.0);
-	glEnd();
-	*/
+	return 0;
 }
 
-void display(void)
+float get_ior(XRay &p)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	/* update camera position */
-	cpos[0] = 10.0 * cos(beta) * sin(alpha);
-	cpos[1] = 10.0 * sin(beta);
-	cpos[2] = 10.0 * cos(beta) * cos(alpha);
-	gluLookAt(cpos[0], cpos[1], cpos[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
-
-	static GLfloat lpos[] = { 0.0, 2.0, 0.0, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, lpos);
-	glMaterialfv(GL_FRONT, GL_EMISSION, white);
-	//glPushMatrix();
-	//glTranslatef(lpos[0], lpos[1], lpos[2]);
-	//glutSolidSphere(0.01, 10, 8);
-	//glPopMatrix();
-
-	/* remaining objects do not look as if they emit light */
-	glMaterialfv(GL_FRONT, GL_EMISSION, black);
-	glPushMatrix(); //save original matrix
-
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
-	glutSolidSphere(1.0, 30, 20);
-
-	//draw detector plate
-	glTranslatef(-2.0, 0.0, 0.0);
-	glRotatef(90, 0.0, 1.0, 0.0);
-	drawDetector();
-
-	glFlush();
-	glutSwapBuffers();
+	Point f = p.get_src() + p.get_dir().traverse(.001f);
+	float sqrmag = f.getX() * f.getX() + f.getY() * f.getY() + f.getZ() * f.getZ();
+	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
+		return 1.1f;
+	return 1.0f;
 }
 
-void specialkey(GLint key, int x, int y)
+
+int clean_scene()
 {
-	switch (key) {
-	case GLUT_KEY_RIGHT:
-		alpha = alpha + PI / 180;
-		if (alpha > 2 * PI) alpha = alpha - 2 * PI;
-		glutPostRedisplay();
-		break;
-	case GLUT_KEY_LEFT:
-		alpha = alpha - PI / 180;
-		if (alpha < 0) alpha = alpha + 2 * PI;
-		glutPostRedisplay();
-		break;
-	case GLUT_KEY_UP:
-		if (beta < 0.45*PI) beta = beta + PI / 180;
-		glutPostRedisplay();
-		break;
-	case GLUT_KEY_DOWN:
-		if (beta > 0.05*PI) beta = beta - PI / 180;
-		glutPostRedisplay();
-		break;
-
-	default:
-		break;
-	}
-}
-
-void keyboard(unsigned char key, int x, int y)
-{
-	static int polygonmode[2];
-
-	switch (key) {
-	case 27:
-		exit(0);
-		break;
-
-	case 'w':
-		glGetIntegerv(GL_POLYGON_MODE, polygonmode);
-		if (polygonmode[0] == GL_FILL)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		glutPostRedisplay();
-		break;
-
-	default:
-		break;
-	}
-}
-
-int main(int argc, char** argv)
-{
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
-	glutInitWindowPosition(0, 0);
-	glutCreateWindow(argv[0]);
-
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel(GL_SMOOTH);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(specialkey);
-	//writemessage();
-	glutMainLoop();
+	//here we output data from simulation
 	return 0;
 }
