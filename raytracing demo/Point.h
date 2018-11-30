@@ -21,5 +21,6 @@ public:
 	Point Point::operator- () const;
 	Point Point::operator- (Point const &c)const;
 	Point Point::operator+ (Point const &c) const;
+	float Point::get_magnitude();
 };
 

@@ -32,3 +32,7 @@ Point Point::operator+ (Point const &c) const
 	res.z = this->z + c.z;
 	return res;
 }
+
+float Point::get_magnitude() {
+	return sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
+}

@@ -67,13 +67,13 @@ void drawDetector() {
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
-			if (i < (int)(width_pixels * 0.2))
+			if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 45)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-			else if (i < (int)(width_pixels * 0.4))
+			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 35)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
-			else if (i < (int)(width_pixels * 0.6))
+			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 25)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
-			else if (i < (int)(width_pixels * 0.8))
+			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 15)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
 			else
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
@@ -94,30 +94,30 @@ void drawRaygun() {
 
 	glNormal3f(0.0, -1.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(2.0, 2.0, 0.0);
-	glVertex3f(-2.0, 2.0, 0.0);
-	glVertex3f(0.0, 0.0, -2.0);
+	glVertex3f(1.0, 1.0, 2.0);
+	glVertex3f(-1.0, 1.0, 2.0);
+	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(0.0, 1.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(-2.0, -2.0, 0.0);
-	glVertex3f(2.0, -2.0, 0.0);
-	glVertex3f(0.0, 0.0, -2.0);
+	glVertex3f(-1.0, -1.0, 2.0);
+	glVertex3f(1.0, -1.0, 2.0);
+	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(-1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(2.0, -2.0, 0.0);
-	glVertex3f(2.0, 2.0, 0.0);
-	glVertex3f(0.0, 0.0, -2.0);
+	glVertex3f(1.0, -1.0, 2.0);
+	glVertex3f(1.0, 1.0, 2.0);
+	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(-2.0, 2.0, 0.0);
-	glVertex3f(-2.0, -2.0, 0.0);
-	glVertex3f(0.0, 0.0, -2.0);
+	glVertex3f(-1.0, 1.0, 2.0);
+	glVertex3f(-1.0, -1.0, 2.0);
+	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 }
 
@@ -137,7 +137,7 @@ void display(void)
 		gluLookAt(1.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-	static GLfloat lpos[] = { 0.0, 2.0, 0.0, 1.0 };
+	static GLfloat lpos[] = { 1.0, 2.0, 0.0, 1.0 };
 	glLightfv(GL_LIGHT0, GL_POSITION, lpos);
 	glMaterialfv(GL_FRONT, GL_EMISSION, white);
 	//glPushMatrix();
