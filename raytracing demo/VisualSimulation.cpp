@@ -39,6 +39,7 @@ int view = 1;
 void writemessage()
 {
 	printf("\n\tVisual representation of X-Ray tracing simulation\n");
+	printf("\t\t> Use \'w\' to toggle wire mesh. Useful to see detector pixels\n");
 	printf("\t\t> Use arrow keys to position camera in scene view\n");
 	printf("\t\t> Use \'v\' to toggle between screen view and scene view\n");
 	printf("");
@@ -67,7 +68,9 @@ void drawDetector() {
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
-			if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 45)
+			if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 55)
+				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 45)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 35)
 				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
@@ -128,9 +131,9 @@ void display(void)
 	glLoadIdentity();
 
 	/* update camera position */
-	cpos[0] = 10.0 * cos(beta) * sin(alpha);
-	cpos[1] = 10.0 * sin(beta);
-	cpos[2] = 10.0 * cos(beta) * cos(alpha);
+	cpos[0] = 7.0 * cos(beta) * sin(alpha);
+	cpos[1] = 7.0 * sin(beta);
+	cpos[2] = 7.0 * cos(beta) * cos(alpha);
 	if (view == 3)
 		gluLookAt(cpos[0], cpos[1], cpos[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	else
