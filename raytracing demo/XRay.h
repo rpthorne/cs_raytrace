@@ -7,24 +7,26 @@ class XRay
 {
 	Point src;
 	Vector dir; //guaranteed to be normal
-	float intensity;
 	float length; // absolute length of this ray, not optical length of this ray
+	Vector wave_dir; //must be orthagonal to dir, represents the direction fo the amplitude
+	float intensity; //describes the magnitude of the amlitude of the wave
 	int generation;
 	float optical_pathlength;
 	float current_index_of_refraction;
 
 	//secret constructor for generational tracking
-	XRay(Point const &src_, Vector const &dir_, float index_of_refraction_, float intensity_, short generation_, float optical_pathlength_);
+	XRay(Point const &src_, Vector const &dir_, Vector const &wave_dir_, float index_of_refraction_, float intensity_, short generation_, float optical_pathlength_);
 public:
 	//constructers
 
 	XRay();
-	XRay(Point const &src_, Vector const &dir_, float index_of_refraction_, float intensity_);
+	XRay(Point const &src_, Vector const &dir_, Vector const &wave_dir_, float index_of_refraction_, float intensity_);
 
 	//getters
 
 	const Vector get_dir() const;
 	const Point get_src() const;
+	const Vector get_wave_dir() const;
 	float get_intensity() const;
 	float get_optic_pathlength() const;
 	float get_length() const;
