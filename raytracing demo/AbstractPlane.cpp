@@ -1,3 +1,10 @@
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #include "AbstractPlane.h"
 #include "Point.h"
 #include "Vector.h"

@@ -1,5 +1,12 @@
-#include "Vector.h"
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #pragma once
+#include "Vector.h"
 #include <math.h>
 
 Vector::Vector() : AbstractPoint(0.0, 0.0, 0.0){}

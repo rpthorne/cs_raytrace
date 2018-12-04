@@ -1,3 +1,15 @@
+/****************************************************************
+ *	Abstract Plane
+ *
+ *	An abstract class that discerns a plane within 3-dimensional
+ * space. An abstract plane consists of 3 points, a vector, and a
+ * a float. The constructor requires three points and calculates 
+ * the (normalized) normal vector upon construction. There is a
+ * getter for the normal vector, as well as a getter for the 
+ * (constant) determinant.
+ *
+ ****************************************************************/
+
 #pragma once
 #include <math.h>
 #include "Point.h"

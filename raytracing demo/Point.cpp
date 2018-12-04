@@ -1,3 +1,14 @@
+/****************************************************************
+ *	Point
+ *
+ *	Point class inherits the AbstractPoint class. It contains a
+ * default constructor, standard constructor requiring 3 floats,
+ * as well as some overriding operator methods: Binary + and - as
+ * well as unary -. Also contains a method to return the magnitude
+ * of the point as if it were a normalized vector.
+ *
+ ****************************************************************/
+
 #include "Point.h"
 #include <math.h>
 
@@ -21,4 +32,8 @@ Point Point::operator+ (Point const &c) const
 	res.y = this->y + c.y;
 	res.z = this->z + c.z;
 	return res;
+}
+
+float Point::get_magnitude() {
+	return sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
 }

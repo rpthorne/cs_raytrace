@@ -1,12 +1,16 @@
-#include "XRay.h"
+/****************************************************************
+ *	className
+ *
+ *	description of class
+ *
+ ****************************************************************/
+
 #pragma once
+#include "XRay.h"
 #include <math.h>
 
 //macro for magnitude so i dont have to type that shit
 #define SQR_MAG(mag_point) (mag_point.getX() * mag_point.getX() + mag_point.getY() * mag_point.getY() + mag_point.getZ() * mag_point.getZ()) 
-
-
-
 
 //constructors
 XRay::XRay() {
