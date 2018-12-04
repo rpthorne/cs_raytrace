@@ -96,7 +96,6 @@ int run_scene()
 			if (res > 0 && res < length)
 			{
 				length = res;
-				//also store a pointer to our colliding sample maybe a &* is wrong, look into this maybe?
 				colliding_object_norm = norm;
 				colliding_object_norm = loc;
 			}

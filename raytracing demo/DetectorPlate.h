@@ -8,7 +8,7 @@
 class DetectorPlate
 {
 	std::forward_list<XRay>** buckets;
-	RectPlane** b_coords;
+	RectPlane** bucket_coords;
 	RectPlane detector_plane;
 	float x_vector;
 	float y_vector;

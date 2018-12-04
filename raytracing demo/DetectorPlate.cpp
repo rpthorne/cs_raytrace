@@ -15,11 +15,11 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	width = width_;
 	height = height_;
 	buckets = (std::forward_list<XRay>**)malloc(width * sizeof(std::forward_list<XRay> *));
-	b_coords = (RectPlane**)malloc(width * sizeof(RectPlane *));
+	bucket_coords = (RectPlane**)malloc(width * sizeof(RectPlane *));
 	for (i = 0; i < width; i++)
 	{
 		buckets[i] = (std::forward_list<XRay>*)malloc(height * sizeof(std::forward_list<XRay>));
-		b_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane));
+		bucket_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane));
 	}
 	//compute normal and begin and ends normal.
 	/*
@@ -37,7 +37,7 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 		for (j = 0; j < height; j++)
 		{
 			Point temp = begin + Vector(1,0,0).traverse(x_vector * i) + Vector(0,1,0).traverse(y_vector * j);
-			b_coords[i][j] = RectPlane(temp, temp + Vector(1, 0, 0).traverse(x_vector * i), temp + Vector(1, 0, 0).traverse(x_vector * i));
+			bucket_coords[i][j] = RectPlane(temp, temp + Vector(1, 0, 0).traverse(x_vector * i), temp + Vector(1, 0, 0).traverse(x_vector * i));
 		}
 }
 
