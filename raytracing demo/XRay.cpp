@@ -8,6 +8,8 @@
 #pragma once
 #include "XRay.h"
 #include <math.h>
+#include <stdlib.h>
+#include "TrianglePlane.h"
 
 //macro for magnitude so i dont have to type that shit
 #define SQR_MAG(mag_point) (mag_point.getX() * mag_point.getX() + mag_point.getY() * mag_point.getY() + mag_point.getZ() * mag_point.getZ()) 
@@ -62,6 +64,22 @@ float XRay::get_length() const { return this->length; }
 
 
 //setters and creaters
+
+int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float index_of_refraction)
+{
+	Vector refl_dir = this->dir;
+	refl_dir = Vector(refl_dir.traverse(1) - (norm.traverse(2.0f * refl_dir.dot_product(norm))));
+	reflect = (XRay*)malloc(sizeof(XRay));
+	Point collision_point = this->dir.traverse(length);
+	Vector s_direction = TrianglePlane(collision_point, this->src, collision_point + norm.traverse(1)).get_normal();
+	Vector P_direction = TrianglePlane(collision_point, this->dir, s_direction).get_normal(); 
+	float s_component = this->wave_dir.dot_product(s_direction);//% along s_dir that intensity is
+	float p_component = this->wave_dir.dot_product(s_direction);
+	//fresenl that stuff
+	//p_direction
+	p_component = p_component * (index_of_refraction);
+
+}
 
 //currently assuming no total internal reflections.
 XRay XRay::reflect(Vector &norm) const

@@ -42,6 +42,7 @@ public:
 
 	int XRay::set_length(const float dist);
 
+	int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float index_of_refraction);
 	//relfect take some output from refract in order to save time
 	XRay XRay::reflect(Vector &norm) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction) const;
