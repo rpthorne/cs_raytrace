@@ -17,7 +17,9 @@
 #define ZERO_MAX (0.0001f)
 #endif
 
-TrianglePlane::TrianglePlane(Point a, Point b, Point c) : AbstractPlane(a, b, c) {};
+TrianglePlane::TrianglePlane(const Point a, const Point b, const Point c) : AbstractPlane(a, b, c) {};
+
+TrianglePlane::TrianglePlane(const Point a, const Vector b, const Vector c) : AbstractPlane(a, a + b.traverse(1), a + c.traverse(1)) {};
 
 float TrianglePlane::ray_plane_collision(const XRay &p) const
 {
