@@ -78,6 +78,7 @@ XRay XRay::reflect(Vector &norm) const
 	float s_intensity = sqrtf(SQR_MAG(s_component));
 	p_dir = norm.cross_product(new_dir);//set p_dir to the new p_dir
 	//initials are computed
+	
 
 	//now compute magnutude of nex pieces
 

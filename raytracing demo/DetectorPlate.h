@@ -12,6 +12,14 @@
 #include "Point.h"
 #include "Vector.h"
 
+struct deplentry
+{
+	float complex_intensity;
+	Vector intensity_dir;
+	float simple_intensity;
+	int num_hits;
+};
+
 class DetectorPlate
 {
 	std::forward_list<XRay>** buckets;
@@ -32,7 +40,7 @@ public:
 	DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_);
 
 	//getters
-	int collect_rays(std::forward_list<XRay>**) const;
+	int collect_rays(deplentry***) const;
 
 	//mutators
 	int test_ray(XRay &p);

@@ -22,11 +22,11 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	width = width_;
 	height = height_;
 	buckets = (std::forward_list<XRay>**)malloc(width * sizeof(std::forward_list<XRay> *));
-	bucket_coords = (RectPlane**)malloc(width * sizeof(RectPlane *));
+	bucket_coords = (RectPlane**)malloc(width * sizeof(RectPlane *) + width);
 	for (i = 0; i < width; i++)
 	{
 		buckets[i] = (std::forward_list<XRay>*)malloc(height * sizeof(std::forward_list<XRay>));
-		bucket_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane));
+		bucket_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane) + height);
 	}
 	//compute normal and begin and ends normal.
 	/*
@@ -70,8 +70,31 @@ int DetectorPlate::test_ray(XRay &p)
 	return -1; 
 }
 
-int DetectorPlate::collect_rays(std::forward_list<XRay>**) const
+int DetectorPlate::collect_rays(deplentry*** arr) const
 {
+	//create data table to hold information
+	deplentry*** arr;
+	*arr = (deplentry**)malloc(width * (sizeof(deplentry)) + width);
+	int i, j;
+	for (i = 0; i < height;i++)
+		**(arr + i) = (deplentry*)malloc(width * (sizeof(deplentry)) + height);
+	//no enumerate each cell and data-ize it to the deplentry
+	for (i = 0; i < width; i++)
+		for (j = 0; j < height; j++)
+		{
+			(*arr)[i][j].num_hits = 0;
+			(*arr)[i][j].simple_intensity = 0.0f;
+			(*arr)[i][j].complex_intensity = 0.0f;
+			(*arr)[i][j].intensity_dir = Vector(0, 0, 0);
+			for (auto k = buckets[i][j].begin(); k != buckets[i][j].end(); k++)
+			{
+				Point temp = (*arr)[i][j].intensity_dir.traverse((*arr)[i][j].complex_intensity) + k->get_dir().traverse(k->get_intensity());
+				(*arr)[i][j].complex_intensity = temp.get_magnitude();
+				(*arr)[i][j].intensity_dir = Vector(temp);
+				(*arr)[i][j].simple_intensity += k->get_intensity;
+				(*arr)[i][j].num_hits++;
+			}
+		}
 	return 0;//on success return false
 }
 
