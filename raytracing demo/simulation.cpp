@@ -75,6 +75,16 @@ int draw_p(Point &p)
 }
 
 
+float get_ior(XRay &p)
+{
+	Point f = p.get_src() + p.get_dir().traverse(.001f);
+	float sqrmag = f.getX() * f.getX() + f.getY() * f.getY() + f.getZ() * f.getZ();
+	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
+		return 1.1f;
+	return 1.0f;
+}
+
+
 int setup_scene()
 {
 	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,-DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
@@ -82,7 +92,7 @@ int setup_scene()
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
 	xray_list = camera.create_rays(0);
-	
+	return 0;
 }
 
 int run_scene()
@@ -119,15 +129,6 @@ int run_scene()
 			detector_plate.test_ray(*it_xlist);
 	}
 	return 0;
-}
-
-float get_ior(XRay &p)
-{
-	Point f = p.get_src() + p.get_dir().traverse(.001f);
-	float sqrmag = f.getX() * f.getX() + f.getY() * f.getY() + f.getZ() * f.getZ();
-	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
-		return 1.1f;
-	return 1.0f;
 }
 
 

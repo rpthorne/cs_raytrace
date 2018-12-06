@@ -37,6 +37,7 @@ class DetectorPlate
 public:
 
 	//constructors
+	DetectorPlate();
 	DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_);
 
 	//getters

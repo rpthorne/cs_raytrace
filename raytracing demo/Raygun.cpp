@@ -51,6 +51,6 @@ std::forward_list<XRay> Raygun::create_rays(int camera_id) {
 	//int yloc = camera_id / camera_width;
 	for (int xloc = (camera_id % camera_width) * ray_per_camera_w * 2; xloc < ray_width * 2 && xloc < 2 * ray_per_camera_w * (camera_width + 1); xloc += 2)
 		for (int yloc = (camera_id / camera_width) * ray_per_camera_h * 2; yloc < ray_height * 2 && yloc < 2 * ray_per_camera_h * (camera_height + 1); yloc += 2)
-			ret.push_front(XRay(x_source, Vector(c_source + Vector(1, 0, 0).traverse((1 + xloc) * w_dist) + Vector(0, 1, 0).traverse((1 + yloc) * h_dist)), index_of_refraction, intensity));
+			ret.push_front(XRay(x_source, Vector(c_source + Vector(1, 0, 0).traverse((1 + xloc) * w_dist) + Vector(0, 1, 0).traverse((1 + yloc) * h_dist)), Vector(1,0,0), index_of_refraction, intensity));
 	return ret;
 }

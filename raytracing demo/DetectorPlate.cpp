@@ -73,7 +73,7 @@ int DetectorPlate::test_ray(XRay &p)
 int DetectorPlate::collect_rays(deplentry*** arr) const
 {
 	//create data table to hold information
-	deplentry*** arr;
+	//deplentry*** arr;
 	*arr = (deplentry**)malloc(width * (sizeof(deplentry)) + width);
 	int i, j;
 	for (i = 0; i < height;i++)
@@ -91,7 +91,7 @@ int DetectorPlate::collect_rays(deplentry*** arr) const
 				Point temp = (*arr)[i][j].intensity_dir.traverse((*arr)[i][j].complex_intensity) + k->get_dir().traverse(k->get_intensity());
 				(*arr)[i][j].complex_intensity = temp.get_magnitude();
 				(*arr)[i][j].intensity_dir = Vector(temp);
-				(*arr)[i][j].simple_intensity += k->get_intensity;
+				(*arr)[i][j].simple_intensity += k->get_intensity();
 				(*arr)[i][j].num_hits++;
 			}
 		}
