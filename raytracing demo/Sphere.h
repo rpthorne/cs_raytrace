@@ -22,6 +22,9 @@
  * the point of collision, and the Vector pointer is the normal
  * vector at the point of collision.
  *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
