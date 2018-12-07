@@ -70,15 +70,20 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 	Vector refl_dir = this->dir;
 	refl_dir = Vector(refl_dir.traverse(1) - (norm.traverse(2.0f * refl_dir.dot_product(norm))));
 	reflect = (XRay*)malloc(sizeof(XRay));
-	Point collision_point = this->dir.traverse(length);
-	Vector s_direction = TrianglePlane(collision_point, this->src, collision_point + norm.traverse(1)).get_normal();
-	Vector P_direction = TrianglePlane(collision_point, this->dir, s_direction).get_normal(); 
-	float s_component = this->wave_dir.dot_product(s_direction);//% along s_dir that intensity is
-	float p_component = this->wave_dir.dot_product(s_direction);
+	Point collision_point = dir.traverse(length);
+	Vector s_direction = TrianglePlane(collision_point, src, collision_point + norm.traverse(1)).get_normal();
+	Vector p_direction = TrianglePlane(collision_point, dir, s_direction).get_normal(); 
+	float s_component = wave_dir.dot_product(s_direction);//% along s_dir that intensity is
+	float p_component = wave_dir.dot_product(s_direction);
 	//fresenl that stuff
 	//p_direction
-	p_component = p_component * (index_of_refraction);
-
+	float costheti = -this->dir.dot_product(norm);
+	//p_component = ((index_of_refraction * costheti - current_index_of_refraction * costhett) / (index_of_refraction * costheti - current_index_of_refraction * costhett));
+	p_component = p_component * p_component * this->wave_dir.dot_product(s_direction);
+	//s_component = ((index_of_refraction * costhett - current_index_of_refraction * costheti) / (index_of_refraction * costhett - current_index_of_refraction * costheti));
+	s_component = s_component * s_component * wave_dir.dot_product(s_direction);
+	Point refl_i = s_direction.traverse(s_component) + p_direction.traverse(p_component);
+	
 }
 
 //currently assuming no total internal reflections.
