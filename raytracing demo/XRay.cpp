@@ -83,7 +83,7 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 	//s_component = ((index_of_refraction * costhett - current_index_of_refraction * costheti) / (index_of_refraction * costhett - current_index_of_refraction * costheti));
 	s_component = s_component * s_component * wave_dir.dot_product(s_direction);
 	Point refl_i = s_direction.traverse(s_component) + p_direction.traverse(p_component);
-
+	return 0;
 }
 
 //currently assuming no total internal reflections.
