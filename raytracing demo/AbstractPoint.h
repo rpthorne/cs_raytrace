@@ -8,6 +8,9 @@
  * float values, getters for each of these, and a constructor 
  * which takes three float values as parameters.
  *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
