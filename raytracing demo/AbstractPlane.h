@@ -2,12 +2,19 @@
  *	Abstract Plane
  *
  *	An abstract class that discerns a plane within 3-dimensional
- * space. An abstract plane consists of 3 points, a vector, and a
- * a float. The constructor requires three points and calculates 
- * the (normalized) normal vector upon construction. There is a
- * getter for the normal vector, as well as a getter for the 
- * (constant) determinant.
+ * space. An abstract plane consists of 3 points, and a vector, 
+ * representing the normal of the plane. The constructor requires 
+ * three points and calculates the (normalized) normal vector 
+ * upon construction.
  *
+ *   since three points are sufficient and necessary for a plane
+ * definition, the abstract plane only keeps track of that many
+ * any derived classes can concern themselves with more points at
+ * there leisure
+ *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
@@ -19,7 +26,7 @@
 class AbstractPlane
 {
 protected:
-	//to move????? not good oop
+	//helper method for computing collision with arbitrary plane
 	float get_determinant(const Point&, const Point&, const Point&) const;
 
 	//these represent three points that define the plane in 3d space
@@ -37,9 +44,9 @@ public:
 
 	//getters
 
+	//same value for any point on plane
 	Vector get_normal() const;
 
-	//math ops on planes
 
 	//returns the amount by which p should be multiplied to the collision point
 	//only returns values for which it collides with <| p
