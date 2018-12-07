@@ -1,8 +1,17 @@
 /****************************************************************
- *	className
+ *	TrianglePlane
  *
- *	description of class
+ *	Triangle plane represents a 2-d triangle in 3-d space.
+ * triangle defined with letters
  *
+ * b
+ * |\
+ * | \
+ * a--c
+ *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
