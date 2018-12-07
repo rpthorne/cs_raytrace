@@ -1,8 +1,28 @@
 /****************************************************************
- *	className
+ *	XRay
  *
- *	description of class
+ *	an XRay models an distinct, discrete X-Ray beam,
+ * it is made up of several components. a source point, 
+ * representing where this X-ray starts.
+ * a dir(ection) and length representing where the Xray collides
+ * with something.
+ * 
+ * a wave direction, describing how the Xray oscilates
+ * 
+ * an intensity, describing how much energy the XRay can transmit
  *
+ * the index of refraction for the medium in which this XRay travels
+ *
+ * an optical path length which represents the distance this XRay
+ * has traveled (impeded by the medium it has traveled in) from
+ * when this XRay was produced from a raybox.
+ *
+ * a genration, indicating how many times this XRay has been reflected.
+ * We will not consider an XRay after some n generations
+ *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
