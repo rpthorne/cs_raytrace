@@ -1,94 +1,15 @@
-/****************************************************************
- *	className
- *
- *	description of class
- *
- ****************************************************************/
-
-#include "DetectorPlate.h"
-#include "Sphere.h"
-#include "Raygun.h"
-#include <forward_list>
-
-#ifndef ZERO_MAX
-#define ZERO_MAX (0.0001f)
-#endif // !ZERO_MAX
+#include "simulation.h"
 
 
-//detector plate size
-#ifndef DETECTOR_PLATE_SIZE
-#define DETECTOR_PLATE_SIZE (1)
-#endif // !DETECTOR_PLATE_SIZE
+//helper methods
+Point cp(int x, int y, int z) { return Point(x, y, z);}
+Vector cv(int x, int y, int z) {return Vector(x, y, z);}
+Vector down_vector(){return cv(0, 0, -1);}
 
-//detector plate depth
-#ifndef DETECTOR_PLATE_DEPTH
-#define DETECTOR_PLATE_DEPTH (2)
-#endif
-
-//detector plate width
-#ifndef DETECTOR_PLATE_WIDTH
-#define DETECTOR_PLATE_WIDTH (5)
-#endif
-
-//detector plate height
-#ifndef DETECTOR_PLATE_HEIGHT
-#define DETECTOR_PLATE_HEIGHT (5)
-#endif
-
-//sphere radius
-#ifndef SPHERE_RADIUS
-#define SPHERE_RADIUS (1)
-#endif
-
-//camera source depth
-#ifndef CAMERA_SOURCE_DEPTH
-#define CAMERA_SOURCE_DEPTH (4)
-#endif
-
-//field of view in degrees?
-#ifndef FIELD_OF_VIEW_DEGREES
-#define FIELD_OF_VIEW_DEGREES (90.0f)
-#endif
-
-//aspect ratio
-#ifndef ASPECT_RATIO
-#define ASPECT_RATIO (1.0f)
-#endif
-
-//xray count horizontally
-#ifndef XRAY_COUNT_HORIZONTAL
-#define XRAY_COUNT_HORIZONTAL (2.0f)
-#endif
-
-//xray count vertically
-#ifndef XRAY_COUNT_VERTICAL
-#define XRAY_COUNT_VERTICAL (2.0f)
-#endif
-
-//initial index of refraction
-#ifndef DEFAULT_INDEX_OF_REFRACTION
-#define DEFAULT_INDEX_OF_REFRACTION (1.0f)
-#endif
-
-//initial intensity
-#ifndef INITIAL_INTENSITY
-#define INITIAL_INTENSITY (1.0f)
-#endif
-
-std::forward_list<Sphere> sample;
-Raygun camera;
-std::forward_list<XRay> xray_list;
-DetectorPlate detector_plate;
-
-Point cp(int x, int y, int z)
-{
-	return Point(x, y, z);
-}
-
-Vector cv(int x, int y, int z)
-{
-	return Vector(x, y, z);
-}
+int simulation::draw_p(Point &p){return 1;}
+int simulation::draw_ray(XRay &x) { return 1;}
+//pseudo destructor
+int simulation::clean_scene() { return 1; }
 
 std::forward_list<Sphere> make_sample()
 {
@@ -98,39 +19,25 @@ std::forward_list<Sphere> make_sample()
 	return ret;
 }
 
-
-Vector down_vector()
-{
-	return cv(0, 0, -1);
-}
-
-int draw_p(Point &p)
-{
-	return 0;
-}
-
-
-float get_ior(XRay &p)
+float simulation::get_ior(XRay &p)
 {
 	Point f = p.get_src() + p.get_dir().traverse(.001f);
-	float sqrmag = f.getX() * f.getX() + f.getY() * f.getY() + f.getZ() * f.getZ();
+	float sqrmag = f.get_magnitude();
 	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
 		return 1.1f;
 	return 1.0f;
 }
 
-
-int setup_scene()
+simulation::simulation()
 {
 	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,-DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
 	xray_list = camera.create_rays(0);
-	return 0;
 }
 
-int run_scene()
+int simulation::run_scene()
 {
 	for (std::forward_list<XRay>::iterator it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
 	{
@@ -155,7 +62,8 @@ int run_scene()
 		if (length > 0)
 		{
 			it_xlist->set_length(length);
-			//blank atm duh
+			//this XRay is now completely processed, now draw and compute children
+			draw_ray(*it_xlist);
 			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
 			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(*it_xlist)));
 		}
@@ -166,9 +74,3 @@ int run_scene()
 	return 0;
 }
 
-
-int clean_scene()
-{
-	//here we output data from simulation
-	return 0;
-}
