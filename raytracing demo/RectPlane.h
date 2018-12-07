@@ -4,6 +4,9 @@
  *	A Rect Plane represents a 2-dimensional square in 3-dimensional
  * space.
  *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
