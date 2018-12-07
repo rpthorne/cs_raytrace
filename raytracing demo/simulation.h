@@ -7,7 +7,7 @@
 * when making some main, it is a good idea to derive it from simulation.
 *
 ****************************************************************/
-
+#pragma once
 #include "DetectorPlate.h"
 #include "Sphere.h"
 #include "Raygun.h"
@@ -51,7 +51,7 @@
 #define CAMERA_SOURCE_DEPTH (4)
 #endif
 
-//field of view in degrees?
+//field of view in degrees
 #ifndef FIELD_OF_VIEW_DEGREES
 #define FIELD_OF_VIEW_DEGREES (90.0f)
 #endif
