@@ -1,7 +1,8 @@
 /****************************************************************
- *	className
+ *	RectPlane
  *
- *	description of class
+ *	A Rect Plane represents a 2-dimensional square in 3-dimensional
+ * space.
  *
  ****************************************************************/
 
@@ -16,6 +17,12 @@ public:
 	RectPlane();
 	~RectPlane();
 
+	/*points for constructor are marked with their variable
+	*   b-----*
+	*   |     |
+	*   |     |
+	*   a-----c
+	*/
 	RectPlane(const Point &a, const Point &b, const Point &c);
 	float ray_plane_collision(const XRay &p) const ;
 };
