@@ -78,7 +78,7 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 	//fresenl that stuff
 	//p_direction
 	p_component = p_component * (index_of_refraction);
-
+	//TODO
 }
 
 //currently assuming no total internal reflections.
