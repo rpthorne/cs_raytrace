@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "simulation.h"
+#include "simulation.cpp"
 #define PI 3.1415
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
