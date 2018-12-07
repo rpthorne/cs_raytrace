@@ -12,6 +12,7 @@
 
 //assuming fixed 2d points on a XYplane begin and end form a rectangle at depth begin.z
 
+DetectorPlate::DetectorPlate() : DetectorPlate(Point(0, 0, 0), Point(0, 0, 0), 1, 1) {}
 
 //for now assuming that plate is alligned to x-y plane along x and y
 DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_)
