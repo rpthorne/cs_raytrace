@@ -72,9 +72,11 @@ public:
 		float fov_, float aspect_ratio_, 
 		float index_of_refraction_, float intensity_, 
 		int ray_width_, int ray_height_, int camera_width_, int camera_height_);
+	//assumes only one camera
 	Raygun(const Point x_source_, const Vector c_source_,
 		float fov_, float aspect_ratio_,
 		float index_of_refraction_, float intensity_,
 		int ray_width_, int ray_height_);
+	//camera id refers to the one-dimensional value (tot_colls * col + row) of the desired camera
 	std::forward_list<XRay> create_rays(int camera_id);
 };
