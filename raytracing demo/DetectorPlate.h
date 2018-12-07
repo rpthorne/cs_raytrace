@@ -1,8 +1,25 @@
 /****************************************************************
- *	className
+ *	DetectorPlate
  *
- *	description of class
+ *	 a detector plate is designed to capture XRays that collide 
+ * with it. any XRay that collides with a detector plate should be
+ * captured by the detector plate, and cannot pass through, or 
+ * reflect/refract. 
+ * 
+ *	 the detector plate has a resolution describing the discrete 
+ * "pixels" that an XRay can hit on the detector. each pixel must
+ * be capable of computing information based on all XRays that 
+ * intersect that particular pixel, produceable as a deplentry
  *
+ *	 Additionally, detector plates should be able to support an add
+ * operation that allows the combining of two separate detector
+ * plates that have the same definitions (specifically, height and
+ * width, but also expectedly the same size and position). this 
+ * feature is for parallelization of a single scene
+ *
+ * @author
+ * Ryan Thorne
+ * Nick Cox
  ****************************************************************/
 
 #pragma once
