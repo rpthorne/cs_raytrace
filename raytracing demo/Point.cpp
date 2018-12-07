@@ -1,6 +1,15 @@
 /****************************************************************
  *	Point
  *
+ *	Point class inherits the AbstractPoint class. It is a class
+ * defining a point in 3-dimensional space, composed of 3 float
+ * values: one for the x, y, and z components
+ *
+ ****************************************************************/
+
+/****************************************************************
+ *	Point
+ *
  *	Point class inherits the AbstractPoint class. It contains a
  * default constructor, standard constructor requiring 3 floats,
  * as well as some overriding operator methods: Binary + and - as
