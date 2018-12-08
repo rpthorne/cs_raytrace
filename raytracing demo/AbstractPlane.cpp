@@ -1,8 +1,20 @@
 /****************************************************************
- *	className
+ *	Abstract Plane
  *
- *	description of class
+ *	An abstract class that discerns a plane within 3-dimensional
+ * space. An abstract plane consists of 3 points, and a vector,
+ * representing the normal of the plane. The constructor requires
+ * three points and calculates the (normalized) normal vector
+ * upon construction.
  *
+ *   since three points are sufficient and necessary for a plane
+ * definition, the abstract plane only keeps track of that many
+ * any derived classes can concern themselves with more points at
+ * there leisure
+ *
+ * @author
+ * Ryan Thorne
+ * Nic Cox
  ****************************************************************/
 
 #pragma once

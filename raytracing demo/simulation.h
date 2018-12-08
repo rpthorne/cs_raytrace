@@ -1,5 +1,5 @@
 /****************************************************************
-*	className
+*	simulation
 *
 *	simulation is the primary driver interface.
 * simulation keeps track of the scene: which is made of
@@ -10,6 +10,7 @@
  * Ryan Thorne
  * Nic Cox
 ****************************************************************/
+
 #pragma once
 #include "DetectorPlate.h"
 #include "Sphere.h"

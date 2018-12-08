@@ -1,8 +1,13 @@
 /****************************************************************
-* Vector is a class representing a normalized vector, in that the
-* 3 points represent directional magnitude on each axis from the
-* origin
-*****************************************************************/
+ *	Vector
+ *
+ *	A vector represents a 3-dimensional point that has a distance
+ * to the origin of exactly 1. in other words, it is normalized.
+ *
+ * @author
+ * Ryan Thorne
+ * Nic Cox
+ ****************************************************************/
 
 #pragma once
 #include "Vector.h"
