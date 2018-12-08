@@ -48,7 +48,7 @@ void writemessage()
 	printf("\n\tVisual representation of X-Ray tracing simulation\n");
 	printf("\t\t> Use \'w\' to toggle wire mesh. Useful to see detector pixels\n");
 	printf("\t\t> Use arrow keys to position camera in scene view\n");
-	printf("\t\t> Use \'v\' to toggle between screen view and scene view\n");
+	printf("\t\t> Use \'v\' to toggle between detector view and scene view\n");
 	printf("");
 }
 
@@ -104,29 +104,29 @@ void drawRaygun() {
 
 	glNormal3f(0.0, -1.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(1.0, 1.0, 2.0);
-	glVertex3f(-1.0, 1.0, 2.0);
+	glVertex3f(0.75, 0.75, 2.0);
+	glVertex3f(-0.75, 0.75, 2.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(0.0, 1.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(-1.0, -1.0, 2.0);
-	glVertex3f(1.0, -1.0, 2.0);
+	glVertex3f(-0.75, -0.75, 2.0);
+	glVertex3f(0.75, -0.75, 2.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(-1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(1.0, -1.0, 2.0);
-	glVertex3f(1.0, 1.0, 2.0);
+	glVertex3f(0.75, -0.75, 2.0);
+	glVertex3f(0.75, 0.75, 2.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
 	glNormal3f(1.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
-	glVertex3f(-1.0, 1.0, 2.0);
-	glVertex3f(-1.0, -1.0, 2.0);
+	glVertex3f(-0.75, 0.75, 2.0);
+	glVertex3f(-0.75, -0.75, 2.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 }
@@ -251,6 +251,8 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 
 	//configure simulation setup/run/deliverables
+	simulation s = simulation();
+	int success = s.run_scene();
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);

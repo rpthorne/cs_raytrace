@@ -99,7 +99,7 @@ class simulation
 	int draw_ray(XRay &x);
 
 	//constructors
-	simulation();
+	public: simulation();
 
 	float get_ior(XRay &p);
 
