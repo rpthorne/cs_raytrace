@@ -5,6 +5,7 @@
  *
  ****************************************************************/
 
+#pragma once
 #include "AbstractPlane.h"
 #include "Point.h"
 #include "Vector.h"

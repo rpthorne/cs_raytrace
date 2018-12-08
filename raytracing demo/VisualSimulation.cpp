@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-//#include "simulation.cpp"
+#include "simulation.h"
 #define PI 3.1415
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -249,6 +249,8 @@ void keyboard(unsigned char key, int x, int y)
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
+
+	//configure simulation setup/run/deliverables
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);

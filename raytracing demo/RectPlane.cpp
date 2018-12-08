@@ -5,6 +5,7 @@
  *
  ****************************************************************/
 
+#pragma once
 #include "RectPlane.h"
 #include "Point.h"
 
