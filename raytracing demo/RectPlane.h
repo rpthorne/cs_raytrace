@@ -6,7 +6,7 @@
  *
  * @author
  * Ryan Thorne
- * Nick Cox
+ * Nic Cox
  ****************************************************************/
 
 #pragma once

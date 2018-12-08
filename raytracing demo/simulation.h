@@ -6,6 +6,9 @@
 * 1:gunbox, 1:sample, 1:detectorplate, and many:XRays.
 * when making some main, it is a good idea to derive it from simulation.
 *
+ * @author
+ * Ryan Thorne
+ * Nic Cox
 ****************************************************************/
 #pragma once
 #include "DetectorPlate.h"

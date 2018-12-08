@@ -1,15 +1,21 @@
-////////////////////////////////////////////////////////
-// Lab Exercise 07.cpp
-// Uses glutTimerFunc() to smoothly start and stop animation
-//
-///////////////////////////////////////////////////////
+/****************************************************************
+ *	VisualSimulation
+ *
+ *	A visual adaptation using OpenGL as a representation of a 
+ * single simulation. Contains the main method of the entire 
+ * project
+ *
+ * @author
+ * Ryan Thorne
+ * Nic Cox
+ ****************************************************************/
 
-
+#pragma once
 #include <GL/glut.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "simulation.cpp"
+//#include "simulation.cpp"
 #define PI 3.1415
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -243,6 +249,7 @@ void keyboard(unsigned char key, int x, int y)
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
+
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
 	glutInitWindowPosition(0, 0);
