@@ -99,6 +99,7 @@ int simulation::run_scene()
 		//no collision, check for detector plate collision, 
 		else
 			detector_plate.test_ray(*it_x);
+		xray_list.pop();
 	}
 	return 0;
 }

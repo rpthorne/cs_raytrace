@@ -42,6 +42,40 @@ static float alpha = 0.0;
 static float beta = PI / 6.0;
 
 int view = 1;
+//inherit and update simulation
+class VisualSimulation : public simulation
+{
+	int cull_factor = 10;
+	int cull_count = 0;
+public:
+	VisualSimulation() : simulation() {};
+	int draw_ray(XRay &x) override {
+		if (++cull_count < cull_factor)
+			return 0;
+		cull_count = 0;
+		Point origin = x.get_src();
+		Point dest = x.get_src() + x.get_dir().traverse(x.get_length());
+		Point tenth = Point((origin - dest).getX() * .1f, (origin - dest).getY() * .1f, (origin - dest).getY() * .1f);
+		float R2I = 1.0 / sqrtf(2.0);
+
+		glBegin(GL_LINES);
+		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+		glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+		//glColor3f(0.0f, 1.0f, 1.0f);
+		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+		glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
+		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+		glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
+		glEnd();
+		glBegin(GL_POINTS);
+		glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+		glEnd();
+		return 1;
+	}
+};
+
+
 
 void writemessage()
 {
@@ -266,6 +300,11 @@ int main(int argc, char** argv)
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+
+	//run core simulation
+	VisualSimulation vs = VisualSimulation();
+	vs.run_scene();
+	vs.clean_scene();
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);

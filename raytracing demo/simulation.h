@@ -89,19 +89,20 @@
 
 class simulation
 {
+protected:
 	std::forward_list<Sphere> sample;
 	Raygun camera;
 	DetectorPlate detector_plate;
 
 	//list to keep track of -ALL- XRays in the scene
 	std::queue<XRay, std::list<XRay>> xray_list;
-
+public:
 	//reccommend overriding these in graphical applications
-	int draw_p(Point &p);
-	int draw_ray(XRay &x);
+	virtual int draw_p(Point &p);
+	virtual int draw_ray(XRay &x);
 
 	//constructors
-	public: simulation();
+	simulation();
 
 	float get_ior(XRay &p);
 
