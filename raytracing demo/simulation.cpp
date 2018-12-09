@@ -48,7 +48,7 @@ simulation::simulation()
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
-	xray_list = std::queue<XRay, std::forward_list<XRay>> (camera.create_rays(0));
+	xray_list = std::queue<XRay, std::list<XRay>> (camera.create_rays(0));
 }
 
 int simulation::run_scene()
@@ -81,19 +81,19 @@ int simulation::run_scene()
 			draw_ray(*it_x);
 
 			//calculate children
-			XRay *refl, *refr;
-			int err = it_x->collide(refl, refr, colliding_object_norm, get_ior(*it_x));
+			XRay refl, refr;
+			int err = it_x->collide(&refl, &refr, colliding_object_norm, get_ior(*it_x));
 			//check error codes for reflected ray
 			if (!(err & 1))
 			{
 				//put reflected ray onto queue
-				xray_list.push(*refl);
+				xray_list.push(refl);
 			}
 			//check for refracted ray
 			if (err < 2)
 			{
 				//put refracted ray onto queue
-				xray_list.push(*refr);
+				xray_list.push(refr);
 			}
 		}
 		//no collision, check for detector plate collision, 
