@@ -85,8 +85,8 @@ Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 }
 
 
-std::forward_list<XRay> Raygun::create_rays(int camera_id) {
-	std::forward_list<XRay> ret = std::forward_list<XRay>();
+std::list<XRay> Raygun::create_rays(int camera_id) {
+	std::list<XRay> ret = std::list<XRay>();
 	//int xloc = camera_id % camera_width;
 	//int yloc = camera_id / camera_width;
 	for (int xloc = (camera_id % camera_width) * ray_per_camera_w * 2; xloc < ray_width * 2 && xloc < 2 * ray_per_camera_w * (camera_width + 1); xloc += 2)

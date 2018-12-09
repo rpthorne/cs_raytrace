@@ -48,7 +48,7 @@
 #include "XRay.h"
 #include "Point.h"
 #include "Vector.h"
-#include <forward_list>
+#include <list>
 
 class Raygun
 {
@@ -78,5 +78,5 @@ public:
 		float index_of_refraction_, float intensity_,
 		int ray_width_, int ray_height_);
 	//camera id refers to the one-dimensional value (tot_colls * col + row) of the desired camera
-	std::forward_list<XRay> create_rays(int camera_id);
+	std::list<XRay> create_rays(int camera_id);
 };
