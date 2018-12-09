@@ -301,10 +301,9 @@ int main(int argc, char** argv)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 
-	//run core simulation
+	//run core simulation?
 	VisualSimulation vs = VisualSimulation();
 	vs.run_scene();
-	vs.clean_scene();
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
