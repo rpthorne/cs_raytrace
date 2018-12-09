@@ -16,6 +16,7 @@
 #include "Sphere.h"
 #include "Raygun.h"
 #include <forward_list>
+#include <queue>
 
 #ifndef ZERO_MAX
 #define ZERO_MAX (0.0001f)
@@ -92,7 +93,7 @@ class simulation
 	DetectorPlate detector_plate;
 
 	//list to keep track of -ALL- XRays in the scene
-	std::forward_list<XRay> xray_list;
+	std::queue<XRay, std::forward_list<XRay>> xray_list;
 
 	//reccommend overriding these in graphical applications
 	int draw_p(Point &p);

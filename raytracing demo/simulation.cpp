@@ -48,13 +48,14 @@ simulation::simulation()
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
-	xray_list = camera.create_rays(0);
+	xray_list = std::queue<XRay, std::forward_list<XRay>> (camera.create_rays(0));
 }
 
 int simulation::run_scene()
 {
-	for (std::forward_list<XRay>::iterator it_xlist = xray_list.begin(); it_xlist != xray_list.end(); it_xlist++)
+	while(!xray_list.empty())
 	{
+		XRay *it_x = &xray_list.front();
 		float length = -1;
 		Vector colliding_object_norm;
 		Point colliding_object_loc;
@@ -64,7 +65,7 @@ int simulation::run_scene()
 			float res;
 			Vector norm;
 			Point loc;
-			it_samplelist->collision(*it_xlist, res, loc, norm);
+			it_samplelist->collision(*it_x, res, loc, norm);
 			if (res > 0 && res < length)
 			{
 				length = res;
@@ -75,15 +76,29 @@ int simulation::run_scene()
 		//if there was collision with sample, compute ray split, add new rays to end of list
 		if (length > 0)
 		{
-			it_xlist->set_length(length);
+			it_x->set_length(length);
 			//this XRay is now completely processed, now draw and compute children
-			draw_ray(*it_xlist);
-			xray_list.push_front(it_xlist->reflect(colliding_object_norm));
-			xray_list.push_front(it_xlist->refract(colliding_object_norm, get_ior(*it_xlist)));
+			draw_ray(*it_x);
+
+			//calculate children
+			XRay *refl, *refr;
+			int err = it_x->collide(refl, refr, colliding_object_norm, get_ior(*it_x));
+			//check error codes for reflected ray
+			if (!(err & 1))
+			{
+				//put reflected ray onto queue
+				xray_list.push(*refl);
+			}
+			//check for refracted ray
+			if (err < 2)
+			{
+				//put refracted ray onto queue
+				xray_list.push(*refr);
+			}
 		}
 		//no collision, check for detector plate collision, 
 		else
-			detector_plate.test_ray(*it_xlist);
+			detector_plate.test_ray(*it_x);
 	}
 	return 0;
 }
