@@ -28,7 +28,7 @@ int simulation::clean_scene(deplentry ***results)
 	detector_plate.collect_rays(results);
 	//get intermediate results of simulation
 
-	return 1; 
+	return 0; 
 }
 
 std::forward_list<Sphere> make_sample()

@@ -315,8 +315,11 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 
 	//configure simulation setup/run/deliverables
-	simulation s = simulation();
-	int success = s.run_scene();
+	deplentry ***results;
+	VisualSimulation s = VisualSimulation();
+	int failure = s.run_scene();
+	printf("first try: %d", failure);
+	if (!failure) failure = s.clean_scene(results);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
@@ -342,7 +345,6 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 	
-
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
