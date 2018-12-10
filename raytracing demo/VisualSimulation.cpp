@@ -53,7 +53,7 @@ struct ray
 };
 class VisualSimulation : public simulation
 {
-	int cull_factor = 10;
+	int cull_factor = 1;
 	int cull_count = 0;
 	std::queue<ray> d_ray;
 public:
@@ -315,11 +315,11 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 
 	//configure simulation setup/run/deliverables
-	deplentry ***results;
-	VisualSimulation s = VisualSimulation();
-	int failure = s.run_scene();
-	printf("first try: %d", failure);
-	if (!failure) failure = s.clean_scene(results);
+	//deplentry ***results;
+	//VisualSimulation s = VisualSimulation();
+	//int failure = s.run_scene();
+	//printf("first try: %d", failure);
+	//if (!failure) failure = s.clean_scene(results);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);

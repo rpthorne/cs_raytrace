@@ -50,7 +50,7 @@ float simulation::get_ior(XRay &p)
 
 simulation::simulation()
 {
-	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,-DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
+	detector_plate = DetectorPlate(cp(-DETECTOR_PLATE_SIZE ,- DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), cp(DETECTOR_PLATE_SIZE,DETECTOR_PLATE_SIZE, - DETECTOR_PLATE_DEPTH), DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT);
 	
 	sample = make_sample();
 	camera = Raygun(cp(0, 0, CAMERA_SOURCE_DEPTH), down_vector(), FIELD_OF_VIEW_DEGREES, ASPECT_RATIO, DEFAULT_INDEX_OF_REFRACTION, INITIAL_INTENSITY, XRAY_COUNT_HORIZONTAL, XRAY_COUNT_VERTICAL);
@@ -104,7 +104,10 @@ int simulation::run_scene()
 		}
 		//no collision, check for detector plate collision, 
 		else
-			detector_plate.test_ray(*it_x);
+		{
+			if (detector_plate.test_ray(*it_x))
+				draw_ray(*it_x);
+		}
 		xray_list.pop();
 	}
 	return 0;

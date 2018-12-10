@@ -77,6 +77,7 @@ int DetectorPlate::test_ray(XRay &p)
 	if ((len = detector_plane.ray_plane_collision(p)) >= 0)
 		//determine if ray collision has alternate method with more infor
 	{
+		p.set_length(len);
 		Point p_dest = p.get_src() + p.get_dir().traverse(len);
 		add_to_bucket(p, (int)((begin.getX() - end.getX()) / width / (begin.getX() - p_dest.getX())), (int)((begin.getY() - end.getY()) / height / (begin.getY() - p_dest.getY())));
 		return 0;
