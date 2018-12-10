@@ -5,8 +5,7 @@ Balyani. The basis of the project is to develop a simulation in C++ to create a 
 visual image rendering to X-Rays.
 
 ## Project Setup
-The preferred IDE for working on this project would be Visual Studio. You can download it [here]
-(https://visualstudio.microsoft.com/downloads/).
+The preferred IDE for working on this project would be Visual Studio. You can download it [here](https://visualstudio.microsoft.com/downloads/).
 
 You'll also need to download Git Bash or the Git UI [here](https://git-scm.com/downloads).
 The project thus far has (loosely) used the [Git Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows) but mostly just 
