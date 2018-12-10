@@ -285,8 +285,11 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 
 	//configure simulation setup/run/deliverables
-	simulation s = simulation();
-	int success = s.run_scene();
+	deplentry ***results;
+	VisualSimulation s = VisualSimulation();
+	int failure = s.run_scene();
+	printf("first try: %d", failure);
+	if (!failure) failure = s.clean_scene(results);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
@@ -300,10 +303,6 @@ int main(int argc, char** argv)
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-
-	//run core simulation?
-	VisualSimulation vs = VisualSimulation();
-	vs.run_scene();
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
