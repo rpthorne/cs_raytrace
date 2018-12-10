@@ -69,12 +69,12 @@
 
 //xray count horizontally
 #ifndef XRAY_COUNT_HORIZONTAL
-#define XRAY_COUNT_HORIZONTAL (2.0f)
+#define XRAY_COUNT_HORIZONTAL (40)
 #endif
 
 //xray count vertically
 #ifndef XRAY_COUNT_VERTICAL
-#define XRAY_COUNT_VERTICAL (2.0f)
+#define XRAY_COUNT_VERTICAL (40)
 #endif
 
 //initial index of refraction

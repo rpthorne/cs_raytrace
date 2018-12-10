@@ -69,6 +69,7 @@ Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	float index_of_refraction_, float intensity_,
 	int ray_width_, int ray_height_, int camera_width_, int camera_height_)
 {
+	
 	x_source = x_source_;
 	ray_width = ray_width_;
 	ray_height = ray_height_;
@@ -76,12 +77,14 @@ Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	camera_height = camera_height_;
 	intensity = intensity_;
 	index_of_refraction = index_of_refraction_;
-	float nhalf = atanhf(fov_ * .5f);
+	//convert fov_ to radians
+	float fov_rad = fov_ * 3.14f / 180.0f;
+	float nhalf = atanhf(fov_rad * .5f);
 	c_source = c_source_.traverse(1) - Point(nhalf * aspect_ratio_, nhalf , 0);
 	w_dist = nhalf / ray_width;
 	h_dist = nhalf * aspect_ratio_ / ray_height;
-	ray_per_camera_h = camera_height / ray_height;
-	ray_per_camera_w = camera_width / ray_width;
+	ray_per_camera_h = ray_height / camera_width;
+	ray_per_camera_w = ray_width / camera_height;
 }
 
 

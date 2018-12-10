@@ -39,13 +39,9 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	end = end_;
 	width = width_;
 	height = height_;
-	buckets = (std::forward_list<XRay>**)malloc(width * sizeof(std::forward_list<XRay> *));
-	bucket_coords = (RectPlane**)malloc(width * sizeof(RectPlane *) + width);
-	for (i = 0; i < width; i++)
-	{
-		buckets[i] = (std::forward_list<XRay>*)malloc(height * sizeof(std::forward_list<XRay>));
-		bucket_coords[i] = (RectPlane*)malloc(height * sizeof(RectPlane) + height);
-	}
+	buckets = new std::forward_list<XRay>[width * height];//(std::forward_list<XRay>**)malloc(width * sizeof(std::forward_list<XRay> *));
+	bucket_coords = new RectPlane[width * height];// (RectPlane**)malloc(width * sizeof(RectPlane *) + width);
+	
 	//compute normal and begin and ends normal.
 	/*
 	//arbitrary plane definition, currently not applicable
@@ -62,14 +58,14 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 		for (j = 0; j < height; j++)
 		{
 			Point temp = begin + Vector(1,0,0).traverse(x_vector * i) + Vector(0,1,0).traverse(y_vector * j);
-			bucket_coords[i][j] = RectPlane(temp, temp + Vector(1, 0, 0).traverse(x_vector * i), temp + Vector(1, 0, 0).traverse(x_vector * i));
+			bucket_coords[i * height + j] = RectPlane(temp, temp + Vector(1, 0, 0).traverse(x_vector * i), temp + Vector(1, 0, 0).traverse(x_vector * i));
 		}
 }
 
 //helper function to manage parallel, this should be the only write section
 int DetectorPlate::add_to_bucket(const XRay &p, int x, int y)
 {
-	buckets[x][y].push_front(p);
+	buckets[x * height + y].push_front(p);
 	return 0;// false on success
 }
 
@@ -104,7 +100,7 @@ int DetectorPlate::collect_rays(deplentry*** arr) const
 			(*arr)[i][j].simple_intensity = 0.0f;
 			(*arr)[i][j].complex_intensity = 0.0f;
 			(*arr)[i][j].intensity_dir = Vector(0, 0, 0);
-			for (auto k = buckets[i][j].begin(); k != buckets[i][j].end(); k++)
+			for (auto k = buckets[i * height + j].begin(); k != buckets[i * height + j].end(); k++)
 			{
 				Point temp = (*arr)[i][j].intensity_dir.traverse((*arr)[i][j].complex_intensity) + k->get_dir().traverse(k->get_intensity());
 				(*arr)[i][j].complex_intensity = temp.get_magnitude();

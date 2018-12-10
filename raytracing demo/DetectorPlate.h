@@ -39,8 +39,8 @@ struct deplentry
 
 class DetectorPlate
 {
-	std::forward_list<XRay>** buckets;
-	RectPlane** bucket_coords;
+	std::forward_list<XRay>* buckets;
+	RectPlane* bucket_coords;
 	RectPlane detector_plane;
 	float x_vector;
 	float y_vector;

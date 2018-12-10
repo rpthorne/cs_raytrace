@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "simulation.h"
+#include <time.h>
+#include <queue>
 #define PI 3.1415
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -43,37 +45,35 @@ static float beta = PI / 6.0;
 
 int view = 1;
 //inherit and update simulation
+
+struct ray
+{
+	Point src;
+	Point dest;
+};
 class VisualSimulation : public simulation
 {
 	int cull_factor = 10;
 	int cull_count = 0;
+	std::queue<ray> d_ray;
 public:
 	VisualSimulation() : simulation() {};
 	int draw_ray(XRay &x) override {
 		if (++cull_count < cull_factor)
 			return 0;
 		cull_count = 0;
-		Point origin = x.get_src();
-		Point dest = x.get_src() + x.get_dir().traverse(x.get_length());
-		Point tenth = Point((origin - dest).getX() * .1f, (origin - dest).getY() * .1f, (origin - dest).getY() * .1f);
-		float R2I = 1.0 / sqrtf(2.0);
-
-		glBegin(GL_LINES);
-		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-		glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-		//glColor3f(0.0f, 1.0f, 1.0f);
-		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-		glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
-		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-		glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
-		glEnd();
-		glBegin(GL_POINTS);
-		glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-		glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-		glEnd();
+		ray s = { x.get_src(), x.get_src() + x.get_dir().traverse(x.get_length()) };
+		d_ray.emplace(s);
 		return 1;
 	}
+	std::queue<ray> get_d_ray()
+	{
+		return d_ray;
+	}
 };
+
+
+VisualSimulation vs;
 
 
 
@@ -165,6 +165,28 @@ void drawRaygun() {
 	glEnd();
 }
 
+void draw_ray(ray s)
+{
+	Point origin = s.src;
+	Point dest = s.dest;
+	Point tenth = Point((origin - dest).getX() * .1f, (origin - dest).getY() * .1f, (origin - dest).getY() * .1f);
+	float R2I = 1.0 / sqrtf(2.0);
+
+	glBegin(GL_LINES);
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+	//glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
+	glEnd();
+	glBegin(GL_POINTS);
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glEnd();
+}
+
 void display(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -211,6 +233,14 @@ void display(void)
 	drawRaygun();
 	glPopMatrix();
 
+	//draw rays by computing them?
+	clock_t t;
+	std::queue<ray> dr = vs.get_d_ray();
+	while (!dr.empty())
+	{
+		draw_ray(dr.front());
+		dr.pop();
+	}
 	glFlush();
 	glutSwapBuffers();
 }
@@ -302,8 +332,16 @@ int main(int argc, char** argv)
 	glEnable(GL_LIGHT0);
 
 	//run core simulation?
-	VisualSimulation vs = VisualSimulation();
+	clock_t t;
+	t = clock();
+	vs = VisualSimulation();
+	t = clock() - t;
+	printf("number of seconds to initialize simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
+	t = clock();
 	vs.run_scene();
+	t = clock() - t;
+	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
+	
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
