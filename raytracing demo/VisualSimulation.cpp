@@ -44,7 +44,8 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1, sampleRay = 0, detectorMock = 0, detectorResults = 0, drawSample = 1, drawRays = 0;
+//simulation bits for changing views & items rendered.
+int view = 1, sampleRay = 0, detectorMock = 0, detectorResults = 0, drawSample = 1, drawRays = 0, pixelate = 0;
 //inherit and update simulation
 
 struct ray
@@ -81,9 +82,15 @@ VisualSimulation vs;
 void writemessage()
 {
 	printf("\n\tVisual representation of X-Ray tracing simulation\n");
-	printf("\t\t> Use \'w\' to toggle wire mesh. Useful to see detector pixels\n");
+	printf("\t\t> Use \'w\' to toggle wire mesh\n");
 	printf("\t\t> Use arrow keys to position camera in scene view\n");
 	printf("\t\t> Use \'v\' to toggle between detector view and scene view\n");
+	printf("\t\t> Use \'m\' to display mocked detector results\n");
+	printf("\t\t> Use \'M\' to display actual detector results\n");
+	printf("\t\t> Use \'r\' to display a single mocked XRay\n");
+	printf("\t\t> Use \'R\' to display actual XRays fired\n");
+	printf("\t\t> Use \'p\' to toggle pixel outline on detector plate\n");
+	printf("\t\t> Use \'s\' to toggle rendering the sample sphere\n");
 	printf("");
 }
 
@@ -92,10 +99,7 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//if (view == 3)
-		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
-	//else
-	//	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 2.0, 50.0);
+	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
 }
 
 void drawDetector() {
@@ -150,15 +154,17 @@ void drawDetector() {
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glEnd();
-			/* draws lines around every pixel
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glEnd();
-			*/
+
+			//draws lines around every pixel
+			if (pixelate) {
+				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, black);
+				glBegin(GL_LINE_LOOP);
+				glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.001);
+				glEnd();
+			}
 		}
 	}
 }
@@ -395,6 +401,14 @@ void keyboard(unsigned char key, int x, int y)
 			drawSample = 0;
 		else
 			drawSample = 1;
+		glutPostRedisplay();
+		break;
+
+	case 'p':
+		if (pixelate)
+			pixelate = 0;
+		else
+			pixelate = 1;
 		glutPostRedisplay();
 		break;
 
