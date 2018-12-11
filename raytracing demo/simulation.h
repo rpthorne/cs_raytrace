@@ -59,7 +59,7 @@
 
 //field of view in degrees
 #ifndef FIELD_OF_VIEW_DEGREES
-#define FIELD_OF_VIEW_DEGREES (90.0f)
+#define FIELD_OF_VIEW_DEGREES (80.0f)
 #endif
 
 //aspect ratio
