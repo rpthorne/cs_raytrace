@@ -323,16 +323,16 @@ int main(int argc, char** argv)
 	clock_t t;
 	t = clock();
 	deplentry ***results;
-	VisualSimulation s = VisualSimulation();
+	vs = VisualSimulation();
 	t = clock() - t;
 	printf("number of seconds to initialize simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 	
 	t = clock();
-	int failure = s.run_scene();
+	int failure = vs.run_scene();
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
-	if (!failure) failure = s.clean_scene(results);
+	//if (!failure) failure = s.clean_scene(results);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
