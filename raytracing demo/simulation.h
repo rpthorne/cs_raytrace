@@ -57,6 +57,16 @@
 #define CAMERA_SOURCE_DEPTH (5.0f)
 #endif
 
+//camera source depth
+#ifndef CAMERA_SOURCE_WIDTH
+#define CAMERA_SOURCE_WIDTH (2)
+#endif
+
+//camera source depth
+#ifndef CAMERA_SOURCE_HEIGHT
+#define CAMERA_SOURCE_HEIGHT (2)
+#endif
+
 //field of view in degrees
 #ifndef FIELD_OF_VIEW_DEGREES
 #define FIELD_OF_VIEW_DEGREES (30.0f)

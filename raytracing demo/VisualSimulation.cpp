@@ -263,6 +263,8 @@ void display(void)
 	glPushMatrix();
 	glTranslatef(-(detector_distance), 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
+	//align axis'
+	glRotatef(90, 0.0, 0.0, 1.0);
 	drawDetector();
 	glPopMatrix();
 
