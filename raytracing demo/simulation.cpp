@@ -105,7 +105,7 @@ int simulation::run_scene()
 		//no collision, check for detector plate collision, 
 		else
 		{
-			if (detector_plate.test_ray(*it_x))
+			if (!detector_plate.test_ray(*it_x))
 				draw_ray(*it_x);
 		}
 		xray_list.pop();

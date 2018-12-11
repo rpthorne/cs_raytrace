@@ -53,7 +53,7 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	x_vector = x_vector.scale_div(width);
 	y_vector = y_vector.scale_div(height);
 	//*/
-	detector_plane = RectPlane(begin, begin + Point(end.getX(), 0.0f, 0.0f), begin + Point(0.0f, end.getY(), 0.0f));
+	detector_plane = RectPlane(begin, Point(end.getX(), begin.getY(), begin.getZ()), Point(begin.getX() ,end.getY(), begin.getZ()));
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
