@@ -44,7 +44,7 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1, sampleRay = 0, detectorMock = 0;
+int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0;
 //inherit and update simulation
 
 struct ray
@@ -193,14 +193,23 @@ void drawRaygun() {
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 	if (sampleRay) {
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 		ray r1 = { Point(0.0, 0.0, 0.0), Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)) };
 		draw_ray(r1);
 		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5 - cos(120*DEGREES)) };
 		draw_ray(r2);
 		ray r3 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, 1.5, 7.0) };
 		draw_ray(r3);
+	}
+	if (drawRays) {
+		clock_t t;
+		std::queue<ray> dr = vs.get_d_ray();
+		while (!dr.empty())
+		{
+			draw_ray(dr.front());
+			dr.pop();
+		}
 	}
 }
 
@@ -232,7 +241,7 @@ void display(void)
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
-	if (view == 3) glutSolidSphere(1.0, 30, 20);
+	if (view == 3 && drawSample) glutSolidSphere(1.0, 30, 20);
 
 	//draw detector plate
 	detector_distance = 2.0;
@@ -251,14 +260,6 @@ void display(void)
 	glPopMatrix();
 
 	//draw rays by computing them?
-	/*
-	clock_t t;
-	std::queue<ray> dr = vs.get_d_ray();
-	while (!dr.empty())
-	{
-		draw_ray(dr.front());
-		dr.pop();
-	}*/
 
 	glFlush();
 	glutSwapBuffers();
@@ -331,12 +332,27 @@ void keyboard(unsigned char key, int x, int y)
 			sampleRay = 1;
 		glutPostRedisplay();
 		break;
+	case 'R':
+		if (drawRays)
+			drawRays = 0;
+		else
+			drawRays = 1;
+		glutPostRedisplay();
+		break;
 
 	case 'm':
 		if (detectorMock)
 			detectorMock = 0;
 		else
 			detectorMock = 1;
+		glutPostRedisplay();
+		break;
+
+	case 's':
+		if (drawSample)
+			drawSample = 0;
+		else
+			drawSample = 1;
 		glutPostRedisplay();
 		break;
 
@@ -349,12 +365,6 @@ int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 
-	//configure simulation setup/run/deliverables
-	//deplentry ***results;
-	//VisualSimulation s = VisualSimulation();
-	//int failure = s.run_scene();
-	//printf("first try: %d", failure);
-	//if (!failure) failure = s.clean_scene(results);
 	clock_t t;
 	t = clock();
 	deplentry ***results;
