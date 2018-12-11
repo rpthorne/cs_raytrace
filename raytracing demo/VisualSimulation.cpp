@@ -377,10 +377,13 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
-	//if (!failure) failure = s.clean_scene(results);
+	if (failure) printf("simulation failed to run correctly!\n");
+	//else failure = s.clean_scene(results);
+	if (failure) printf("failed to collect simulation results!\n");
+	//else anything?
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(600, 600);
+	glutInitWindowSize(800, 800);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow(argv[0]);
 
