@@ -39,20 +39,10 @@ DetectorPlate::DetectorPlate(const Point &begin_, const Point &end_, int width_,
 	end = end_;
 	width = width_;
 	height = height_;
+	//no malloc calls :(
 	buckets = new std::forward_list<XRay>[width * height];//(std::forward_list<XRay>**)malloc(width * sizeof(std::forward_list<XRay> *));
 	bucket_coords = new RectPlane[width * height];// (RectPlane**)malloc(width * sizeof(RectPlane *) + width);
 	
-	//compute normal and begin and ends normal.
-	/*
-	//arbitrary plane definition, currently not applicable
-	RectPlane normnorm = RectPlane(begin, end, direction);
-	x_vector = (begin + end).scale_mul(.5f);
-	y_vector = x_vector - normnorm.get_normal().scale_mul((x_vector - begin).magnitude_precise());
-	x_vector = x_vector + normnorm.get_normal().scale_mul((x_vector - begin).magnitude_precise());
-	detector_plane = RectPlane(begin, begin + x_vector, begin + y_vector);
-	x_vector = x_vector.scale_div(width);
-	y_vector = y_vector.scale_div(height);
-	//*/
 	detector_plane = RectPlane(begin, Point(end.getX(), begin.getY(), begin.getZ()), Point(begin.getX() ,end.getY(), begin.getZ()));
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
@@ -85,29 +75,27 @@ int DetectorPlate::test_ray(XRay &p)
 	return -1; 
 }
 
-int DetectorPlate::collect_rays(deplentry*** arr) const
+int DetectorPlate::collect_rays(deplentry** arr) const
 {
 	//create data table to hold information
 	//deplentry*** arr;
-	*arr = (deplentry**)malloc(width * (sizeof(deplentry)) + width);
+	*arr = new deplentry[width * height];// = (deplentry**)malloc(width * (sizeof(deplentry)) + width);
 	int i, j;
-	for (i = 0; i < height;i++)
-		**(arr + i) = (deplentry*)malloc(width * (sizeof(deplentry)) + height);
 	//no enumerate each cell and data-ize it to the deplentry
 	for (i = 0; i < width; i++)
 		for (j = 0; j < height; j++)
 		{
-			(*arr)[i][j].num_hits = 0;
-			(*arr)[i][j].simple_intensity = 0.0f;
-			(*arr)[i][j].complex_intensity = 0.0f;
-			(*arr)[i][j].intensity_dir = Vector(0, 0, 0);
+			(*arr)[i * height + j].num_hits = 0;
+			(*arr)[i * height + j].simple_intensity = 0.0f;
+			(*arr)[i * height + j].complex_intensity = 0.0f;
+			(*arr)[i * height + j].intensity_dir = Vector(0, 0, 0);
 			for (auto k = buckets[i * height + j].begin(); k != buckets[i * height + j].end(); k++)
 			{
-				Point temp = (*arr)[i][j].intensity_dir.traverse((*arr)[i][j].complex_intensity) + k->get_dir().traverse(k->get_intensity());
-				(*arr)[i][j].complex_intensity = temp.get_magnitude();
-				(*arr)[i][j].intensity_dir = Vector(temp);
-				(*arr)[i][j].simple_intensity += k->get_intensity();
-				(*arr)[i][j].num_hits++;
+				Point temp = (*arr)[i * height + j].intensity_dir.traverse((*arr)[i * height + j].complex_intensity) + k->get_dir().traverse(k->get_intensity());
+				(*arr)[i * height + j].complex_intensity = temp.get_magnitude();
+				(*arr)[i * height + j].intensity_dir = Vector(temp);
+				(*arr)[i * height + j].simple_intensity += k->get_intensity();
+				(*arr)[i * height + j].num_hits++;
 			}
 		}
 	return 0;//on success return false

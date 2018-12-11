@@ -23,7 +23,7 @@ Vector down_vector(){return cv(0, 0, -1);}
 int simulation::draw_p(Point &p){return 1;}
 int simulation::draw_ray(XRay &x) { return 1;}
 //pseudo destructor
-int simulation::clean_scene(deplentry ***results) 
+int simulation::clean_scene(deplentry **results) 
 { 
 	detector_plate.collect_rays(results);
 	//get intermediate results of simulation

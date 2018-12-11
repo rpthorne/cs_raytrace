@@ -69,12 +69,12 @@
 
 //xray count horizontally
 #ifndef XRAY_COUNT_HORIZONTAL
-#define XRAY_COUNT_HORIZONTAL (3)
+#define XRAY_COUNT_HORIZONTAL (5)
 #endif
 
 //xray count vertically
 #ifndef XRAY_COUNT_VERTICAL
-#define XRAY_COUNT_VERTICAL (3)
+#define XRAY_COUNT_VERTICAL (5)
 #endif
 
 //initial index of refraction
@@ -109,6 +109,6 @@ public:
 	int run_scene();
 
 	//here we output data from simulation, if it needs to be done
-	virtual int clean_scene(deplentry ***results);
+	virtual int clean_scene(deplentry **results);
 
 };
