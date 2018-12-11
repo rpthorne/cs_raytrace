@@ -44,7 +44,7 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1, sampleRay = 0, detectorMock = 0;
+int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1;
 //inherit and update simulation
 
 struct ray
@@ -229,7 +229,7 @@ void display(void)
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
-	if (view == 3) glutSolidSphere(1.0, 30, 20);
+	if (view == 3 && drawSample) glutSolidSphere(1.0, 30, 20);
 
 	//draw detector plate
 	detector_distance = 2.0;
@@ -334,6 +334,14 @@ void keyboard(unsigned char key, int x, int y)
 			detectorMock = 0;
 		else
 			detectorMock = 1;
+		glutPostRedisplay();
+		break;
+
+	case 's':
+		if (drawSample)
+			drawSample = 0;
+		else
+			drawSample = 1;
 		glutPostRedisplay();
 		break;
 
