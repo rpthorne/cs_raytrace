@@ -19,6 +19,7 @@
 #include <time.h>
 #include <queue>
 #define PI 3.1415
+#define DEGREES ((1.0 / 180)*PI)
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLdouble cpos[] = { 0.0, 5.0, 5.0 };
@@ -43,7 +44,7 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1;
+int view = 1, sampleRay = 0, detectorMock = 0;
 //inherit and update simulation
 
 struct ray
@@ -109,19 +110,22 @@ void drawDetector() {
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
-			if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 55)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
-			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 45)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 35)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
-			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 25)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
-			else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 15)
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
-			else
-				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
-
+			if (detectorMock) {
+				if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 55)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 45)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 35)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 25)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 15)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			}
+			else glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			if (i == 19 && j == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			glBegin(GL_POLYGON);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
@@ -130,6 +134,28 @@ void drawDetector() {
 			glEnd();
 		}
 	}
+}
+
+void draw_ray(ray s)
+{
+	Point origin = s.src;
+	Point dest = s.dest;
+	Point tenth = Point((origin - dest).getX() * .1f, (origin - dest).getY() * .1f, (origin - dest).getY() * .1f);
+	float R2I = 1.0 / sqrtf(2.0);
+
+	glBegin(GL_LINES);
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+	//glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
+	glEnd();
+	glBegin(GL_POINTS);
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
+	glEnd();
 }
 
 void drawRaygun() {
@@ -163,28 +189,16 @@ void drawRaygun() {
 	glVertex3f(-0.75, -0.75, 2.0);
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
-}
 
-void draw_ray(ray s)
-{
-	Point origin = s.src;
-	Point dest = s.dest;
-	Point tenth = Point((origin - dest).getX() * .1f, (origin - dest).getY() * .1f, (origin - dest).getY() * .1f);
-	float R2I = 1.0 / sqrtf(2.0);
-
-	glBegin(GL_LINES);
-	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-	//glColor3f(0.0f, 1.0f, 1.0f);
-	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
-	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
-	glEnd();
-	glBegin(GL_POINTS);
-	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glEnd();
+	if (sampleRay) {
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
+		ray r1 = { Point(0.0, 0.0, 0.0), Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)) };
+		draw_ray(r1);
+		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5 - cos(120*DEGREES)) };
+		draw_ray(r2);
+		ray r3 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, 1.5, 7.0) };
+		draw_ray(r3);
+	}
 }
 
 void display(void)
@@ -215,7 +229,7 @@ void display(void)
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
-	glutSolidSphere(1.0, 30, 20);
+	if (view == 3) glutSolidSphere(1.0, 30, 20);
 
 	//draw detector plate
 	detector_distance = 2.0;
@@ -234,13 +248,15 @@ void display(void)
 	glPopMatrix();
 
 	//draw rays by computing them?
+	/*
 	clock_t t;
 	std::queue<ray> dr = vs.get_d_ray();
 	while (!dr.empty())
 	{
 		draw_ray(dr.front());
 		dr.pop();
-	}
+	}*/
+
 	glFlush();
 	glutSwapBuffers();
 }
@@ -305,6 +321,22 @@ void keyboard(unsigned char key, int x, int y)
 		glutPostRedisplay();
 		break;
 
+	case 'r':
+		if (sampleRay)
+			sampleRay = 0;
+		else
+			sampleRay = 1;
+		glutPostRedisplay();
+		break;
+
+	case 'm':
+		if (detectorMock)
+			detectorMock = 0;
+		else
+			detectorMock = 1;
+		glutPostRedisplay();
+		break;
+
 	default:
 		break;
 	}
@@ -332,7 +364,7 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
-	if (!failure) failure = s.clean_scene(results);
+	//if (!failure) failure = s.clean_scene(results);
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(600, 600);
