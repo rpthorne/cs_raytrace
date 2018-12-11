@@ -34,7 +34,7 @@
 
 //detector plate depth
 #ifndef DETECTOR_PLATE_DEPTH
-#define DETECTOR_PLATE_DEPTH (2)
+#define DETECTOR_PLATE_DEPTH (2.0f)
 #endif
 
 //detector plate width, in pixels
@@ -54,7 +54,7 @@
 
 //camera source depth
 #ifndef CAMERA_SOURCE_DEPTH
-#define CAMERA_SOURCE_DEPTH (4)
+#define CAMERA_SOURCE_DEPTH (5.0f)
 #endif
 
 //field of view in degrees

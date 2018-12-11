@@ -251,7 +251,19 @@ void display(void)
 	drawRaygun();
 	glPopMatrix();
 
-	//draw rays by computing them?
+	//draw rays
+	glPushMatrix();
+	glRotatef(90, 0.0, 1.0, 0.0);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
+	if (drawRays) {
+		std::queue<ray> dr = vs.get_d_ray();
+		while (!dr.empty())
+		{
+			draw_ray(dr.front());
+			dr.pop();
+		}
+	}
+	glPopMatrix();
 
 	glFlush();
 	glutSwapBuffers();
