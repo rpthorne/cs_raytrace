@@ -69,7 +69,7 @@ int DetectorPlate::test_ray(XRay &p)
 	{
 		p.set_length(len);
 		Point p_dest = p.get_src() + p.get_dir().traverse(len);
-		add_to_bucket(p, (int)((begin.getX() - end.getX()) / width / (begin.getX() - p_dest.getX())), (int)((begin.getY() - end.getY()) / height / (begin.getY() - p_dest.getY())));
+		add_to_bucket(p, (int)((begin.getX() - p_dest.getX()) * width / (begin.getX() - end.getX())), (int)((begin.getY() - p_dest.getY()) * height / (begin.getY() - end.getY())));
 		return 0;
 	}
 	return -1; 

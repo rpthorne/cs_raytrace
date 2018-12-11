@@ -15,6 +15,11 @@
 
 #pragma once
 
+#ifndef ZERO_MAX
+#define ZERO_MAX (.00001f)
+#endif // !ZERO_MAX
+
+
 class AbstractPoint
 {
 protected:

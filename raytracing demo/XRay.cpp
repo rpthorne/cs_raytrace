@@ -31,9 +31,6 @@
 #include <stdlib.h>
 #include "TrianglePlane.h"
 
-#ifndef MAX_REFLECTION_COUNT
-#define MAX_REFLECTION_COUNT (3)
-#endif
 
 //macro for magnitude so i dont have to type that shit
 #define SQR_MAG(mag_point) (mag_point.getX() * mag_point.getX() + mag_point.getY() * mag_point.getY() + mag_point.getZ() * mag_point.getZ()) 
@@ -94,10 +91,14 @@ float XRay::get_length() const { return this->length; }
 //1: 1 XRay, normal propogatation but reflection has been cut due to excessive generation
 //2: 1 XRay, total internal reflection
 //3: 0 XRays, total internal reflection on a cut reflection
-int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float index_of_refraction)
+int XRay::collide(XRay** reflect, XRay** refract, Vector const &norm, const float index_of_refraction)
 {
+	//correct normal so it faces up
+	Vector corrected_norm = norm;
+	if (norm.dot_product(dir) > 0)
+		corrected_norm = -norm;
 	//first some precomputed values for ease of computation
-	float costheti = -this->dir.dot_product(norm);
+	float costheti = -this->dir.dot_product(corrected_norm);
 	float ior_ratio = current_index_of_refraction / index_of_refraction;
 	
 	//now compute possibility of total internal reflection. compute radicand
@@ -107,33 +108,33 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 		if (generation >= MAX_REFLECTION_COUNT) // no XRay to return
 			return 3;
 		//all energy is reflected, intensity stays the same
-		Point collision_point = dir.traverse(length);
-		Vector refl_dir = Vector(dir.traverse(1) + (norm.traverse(2.0f * costheti)));
-		Vector s_direction = TrianglePlane(collision_point, src, collision_point + norm.traverse(1)).get_normal();
+		Point collision_point = src + dir.traverse(length);
+		Vector refl_dir = Vector(dir.traverse(1) - (corrected_norm.traverse(2.0f * -costheti)));
+		Vector s_direction = TrianglePlane(collision_point, src, collision_point + corrected_norm.traverse(1)).get_normal();
 		float s_component = wave_dir.dot_product(s_direction);
 		//old waves p-components
 		Vector p_direction = TrianglePlane(collision_point, dir, s_direction).get_normal();
 		//new waves p-component
-		p_direction = Vector(p_direction.traverse(1) + (norm.traverse(2.0f * costheti)));
+		p_direction = Vector(p_direction.traverse(1) + (corrected_norm.traverse(2.0f * costheti)));
 		//sum the two to get the new direction of the wave_dir
 		Vector refl_wave_dir = Vector(s_direction.traverse(s_component) + p_direction.traverse(1 - s_component * s_component));
-		reflect = new XRay(collision_point, refl_dir, refl_wave_dir, current_index_of_refraction, intensity, generation + 1, get_optic_pathlength());
+		*reflect = new XRay(collision_point, refl_dir, refl_wave_dir, current_index_of_refraction, intensity, generation + 1, get_optic_pathlength());
 		return 2;
 	}
 	else // normal reflection
 	{
 		//compute refract first
-		Point collision_point = dir.traverse(length);
-		Vector refr_dir = Vector(dir.traverse(ior_ratio) + norm.traverse(ior_ratio * costheti - sqrtf(radicand)));
-		Vector s_direction = TrianglePlane(collision_point, src, collision_point + norm.traverse(1)).get_normal();
+		Point collision_point = src + dir.traverse(length);
+		Vector refr_dir = Vector(dir.traverse(ior_ratio) + corrected_norm.traverse(ior_ratio * costheti - sqrtf(radicand)));
+		Vector s_direction = TrianglePlane(collision_point, src, collision_point + corrected_norm.traverse(1)).get_normal();
 		float s_component = wave_dir.dot_product(s_direction);
 		//old waves p-components
 		Vector p_direction = TrianglePlane(collision_point, dir, s_direction).get_normal();
 		//new waves p-component
-		p_direction = Vector(dir.traverse(ior_ratio) + norm.traverse(ior_ratio * costheti - sqrtf(radicand)));
+		p_direction = Vector(dir.traverse(ior_ratio) + corrected_norm.traverse(ior_ratio * -costheti - sqrtf(radicand)));
 		//sum the two to get the new direction of the wave_dir
 		Vector refr_wave_dir = Vector(s_direction.traverse(s_component) + p_direction.traverse(1 - s_component * s_component));
-		refract = new XRay(collision_point, refr_dir, refr_wave_dir, index_of_refraction, intensity, generation, get_optic_pathlength());
+		*refract = new XRay(collision_point, refr_dir, refr_wave_dir, index_of_refraction, intensity * .5f, generation, get_optic_pathlength());
 
 		//check for cut reflect wave
 		if (generation >= MAX_REFLECTION_COUNT)
@@ -141,10 +142,10 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 
 
 		//reflect not cut, compute reflect
-		Vector refl_dir = Vector(dir.traverse(1) + (norm.traverse(2.0f * costheti)));
-		p_direction = Vector(p_direction.traverse(1) + (norm.traverse(2.0f * costheti)));
+		Vector refl_dir = Vector(dir.traverse(1) - (corrected_norm.traverse(2.0f * -costheti)));
+		p_direction = Vector(p_direction.traverse(1) + (corrected_norm.traverse(2.0f * costheti)));
 		Vector refl_wave_dir = Vector(s_direction.traverse(s_component) + p_direction.traverse(1 - s_component * s_component));
-		reflect = new XRay(collision_point, refl_dir, refl_wave_dir, current_index_of_refraction, intensity, generation + 1, get_optic_pathlength());
+		*reflect = new XRay(collision_point, refl_dir, refl_wave_dir, current_index_of_refraction, intensity * .5f, generation + 1, get_optic_pathlength());
 		return 0;
 
 	}
@@ -152,25 +153,19 @@ int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float 
 
 //XRay XRay::reflect_helper(Vector &norm, )
 
-//currently assuming no total internal reflections.
+//compute direction of rays only!!
 XRay XRay::reflect(Vector &norm) const
 {
+	Vector corrected_norm = norm;
+	if (norm.dot_product(dir) > 0)
+		corrected_norm = -norm;
 	Vector new_dir = this->dir;
-	new_dir = Vector(new_dir.traverse(1) - (norm.traverse(2.0f * new_dir.dot_product(norm))));
+	new_dir = Vector(new_dir.traverse(1) - (corrected_norm.traverse(2.0f * new_dir.dot_product(corrected_norm))));
 	XRay res;
 	//first direction of p-wave
-	Vector poi = norm.cross_product(dir);
-	Vector p_dir = poi.cross_product(dir);
-	Point p_component = p_dir.traverse(p_dir.dot_product(wave_dir) * intensity);
-	float p_intensity = sqrtf(SQR_MAG(p_component));
-	Point s_component = wave_dir.traverse(intensity) - p_component;
-	float s_intensity = sqrtf(SQR_MAG(s_component));
-	p_dir = norm.cross_product(new_dir);//set p_dir to the new p_dir
-	//initials are computed
 	
-
-	//now compute magnutude of nex pieces
-
+	if (generation >= MAX_REFLECTION_COUNT)
+		return XRay();
 	//now compute fresnel intensity 
 	res = XRay(this->src + this->dir.traverse(length), new_dir, this->wave_dir, this->current_index_of_refraction, this->intensity, generation + 1, get_optic_pathlength());
 	return res;
@@ -178,24 +173,20 @@ XRay XRay::reflect(Vector &norm) const
 
 XRay XRay::refract(Vector const &norm, const float index_of_refraction) const
 {
+	Vector corrected_norm = norm;
+	if (norm.dot_product(dir) > 0)
+		corrected_norm = -norm;
 	Vector new_dir;
 	float refract_index = this->current_index_of_refraction / index_of_refraction;
-	float vector_dot = this->dir.dot_product(-norm);
+	float vector_dot = this->dir.dot_product(-corrected_norm);
 	float radicand = 1 - refract_index * refract_index * (1 - vector_dot * vector_dot);
 	
 	//if radicand is less than 0, there is total internal reflection--- return an invalid XRay
 	if (radicand < 0) return XRay();
 
 	radicand = sqrt(radicand); // stored for later
-	new_dir = Vector(dir.traverse(refract_index) + norm.traverse(refract_index * vector_dot - radicand));
-
-	//fresnel intensity computation
-	float fresnel_intensity = 2 * current_index_of_refraction * radicand;
-	fresnel_intensity = fresnel_intensity / (current_index_of_refraction * radicand + index_of_refraction * norm.dot_product(new_dir));
-
-	
-
-	return XRay(src + dir.traverse(length), new_dir, this->wave_dir, index_of_refraction, fresnel_intensity, generation, get_optic_pathlength());
+	new_dir = Vector(dir.traverse(refract_index) + corrected_norm.traverse(refract_index * vector_dot - radicand));
+	return XRay(src + dir.traverse(length), new_dir, this->wave_dir, index_of_refraction, intensity, generation, get_optic_pathlength());
 }
 
 //the only place that the data of an XRay can be mutated

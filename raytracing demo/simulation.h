@@ -25,7 +25,7 @@
 
 
 //#defs for the simulation, these are run-time constants for the simulation,
-//if you wish to change them in a derived class, simple #define them before #including them
+//if you wish to change them in a derived class, simple #define them before #including this file
 
 //detector plate size, from the origin
 #ifndef DETECTOR_PLATE_SIZE
@@ -49,7 +49,7 @@
 
 //sphere radius
 #ifndef SPHERE_RADIUS
-#define SPHERE_RADIUS (1)
+#define SPHERE_RADIUS (1.0f)
 #endif
 
 //camera source depth
@@ -69,12 +69,12 @@
 
 //xray count horizontally
 #ifndef XRAY_COUNT_HORIZONTAL
-#define XRAY_COUNT_HORIZONTAL (10)
+#define XRAY_COUNT_HORIZONTAL (100)
 #endif
 
 //xray count vertically
 #ifndef XRAY_COUNT_VERTICAL
-#define XRAY_COUNT_VERTICAL (10)
+#define XRAY_COUNT_VERTICAL (100)
 #endif
 
 //initial index of refraction

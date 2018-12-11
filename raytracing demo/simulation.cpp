@@ -16,8 +16,8 @@
 
 
 //helper methods
-Point cp(int x, int y, int z) { return Point(x, y, z);}
-Vector cv(int x, int y, int z) {return Vector(x, y, z);}
+Point cp(float x, float y, float z) { return Point(x, y, z);}
+Vector cv(float x, float y, float z) {return Vector(x, y, z);}
 Vector down_vector(){return cv(0, 0, -1);}
 
 int simulation::draw_p(Point &p){return 1;}
@@ -44,8 +44,8 @@ float simulation::get_ior(XRay &p)
 	Point f = p.get_src() + p.get_dir().traverse(.001f);
 	float sqrmag = f.get_magnitude();
 	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
-		return 1.1f;
-	return 1.0f;
+		return 1.0f;
+	return 1.1f;
 }
 
 simulation::simulation()
@@ -68,11 +68,11 @@ int simulation::run_scene()
 		//simple check all elements for now
 		for (auto it_samplelist = sample.begin(); it_samplelist != sample.end(); it_samplelist++)
 		{
-			float res;
+			float res = -1;
 			Vector norm;
 			Point loc;
 			it_samplelist->collision(*it_x, res, loc, norm);
-			if (res > 0 && res < length)
+			if (res > ZERO_MAX && (res < length || length < 0))
 			{
 				length = res;
 				colliding_object_norm = norm;
@@ -87,19 +87,19 @@ int simulation::run_scene()
 			draw_ray(*it_x);
 
 			//calculate children
-			XRay refl, refr;
+			XRay *refl = new XRay(), *refr = new XRay();
 			int err = it_x->collide(&refl, &refr, colliding_object_norm, get_ior(*it_x));
 			//check error codes for reflected ray
 			if (!(err & 1))
 			{
 				//put reflected ray onto queue
-				xray_list.push(refl);
+				xray_list.push(*refl);
 			}
 			//check for refracted ray
 			if (err < 2)
 			{
 				//put refracted ray onto queue
-				xray_list.push(refr);
+				xray_list.push(*refr);
 			}
 		}
 		//no collision, check for detector plate collision, 

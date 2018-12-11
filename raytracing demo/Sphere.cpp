@@ -46,35 +46,37 @@ bool Sphere::onSurface(Point p) {
 }
 
 Vector Sphere::normalAt(Point p) {
-	if (!onSurface(p))
-		return (Vector(0, 0, 0));
-	return Vector(p.getX(), p.getY(), p.getZ());
+	//if (!onSurface(p))
+	//	return (Vector(0, 0, 0));
+	return Vector(p);
 }
 
 int Sphere::collision(XRay x, float &t, Point &p, Vector &n) {
-	Point tmp = Point(x.get_src().getX() - this->o.getX(), x.get_src().getY() - this->o.getY(), x.get_src().getZ() - this->o.getZ());
-	Vector m = Vector(tmp);
-	float b = m.dot_product(x.get_dir());
-	float c = (m.dot_product(m) - (this->r * this->r));
+	Point tmp = x.get_src() - o;// Point(x.get_src().getX() - this->o.getX(), x.get_src().getY() - this->o.getY(), x.get_src().getZ() - this->o.getZ());
+	//only works for rad=1 spheres
+	Vector m = Vector(x.get_src() - o);
+	float b = 2.0f * m.dot_product(x.get_dir()) * tmp.get_magnitude();
+	float c = (tmp.get_magnitude() * tmp.get_magnitude() - (this->r * this->r));
 
 	//exit if r's origin outside s (c > 0) and r pointing away from s (b > 0)
 	if (c > 0.0f && b > 0.0f)
 		return 0;
 
-	float discr = b * b - c;
+	float discr = b * b - 4.0 * c;
 
 	//negative discriminant means ray missed sphere
 	if (discr < 0.0f) return 0; //there was not an intersection
 
+	discr = sqrtf(discr);//costly square root function
 	//shortest distance t of intersection with sphere
-	t = -b - sqrtf(discr);
+	t = -b - discr;
 	
-	//if t is negative (rounding error?), force 0
-	if (t < 0.0f)
-		t = 0.0f;
-	Vector dir = x.get_dir();
-	Point d = Point(dir.getX() * t, dir.getY() * t, dir.getZ() * t);
-	p = x.get_src() + d;
+	//if t is negative or zero, one point of intersection behind us, use longer value instead
+	if (t < ZERO_MAX)
+		t += discr + discr;
+	t = t * .5f;//all over 2a
+
+	p = x.get_src() + x.get_dir().traverse(t);
 
 	n = this->normalAt(p);
 

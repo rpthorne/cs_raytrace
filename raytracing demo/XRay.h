@@ -29,6 +29,11 @@
 #include "Point.h"
 #include "Vector.h"
 
+#ifndef MAX_REFLECTION_COUNT
+#define MAX_REFLECTION_COUNT (3)
+#endif
+
+
 //length assumed to be one
 class XRay
 {
@@ -40,7 +45,7 @@ class XRay
 	int generation;
 	float optical_pathlength;
 	float current_index_of_refraction;
-
+	
 	//secret constructor for generational tracking
 	XRay(Point const &src_, Vector const &dir_, Vector const &wave_dir_, float index_of_refraction_, float intensity_, short generation_, float optical_pathlength_);
 public:
@@ -62,7 +67,7 @@ public:
 
 	int XRay::set_length(const float dist);
 
-	int XRay::collide(XRay* reflect, XRay* refract, Vector const &norm, const float index_of_refraction);
+	int XRay::collide(XRay** reflect, XRay** refract, Vector const &norm, const float index_of_refraction);
 	//relfect take some output from refract in order to save time
 	XRay XRay::reflect(Vector &norm) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction) const;

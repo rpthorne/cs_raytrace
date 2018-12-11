@@ -127,7 +127,21 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			else
+			{
+				if((*results)[i * height_pixels + j].num_hits < 1)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if ((*results)[i * height_pixels + j].num_hits < 2)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if ((*results)[i * height_pixels + j].num_hits < 3)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].num_hits < 4)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+
+
+			}
 			if (i == 19 && j == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			glBegin(GL_POLYGON);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
@@ -135,6 +149,15 @@ void drawDetector() {
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glEnd();
+			/* draws lines around every pixel
+			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			glBegin(GL_LINE_LOOP);
+			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
+			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
+			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
+			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
+			glEnd();
+			*/
 		}
 	}
 }
@@ -233,7 +256,7 @@ void display(void)
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
-	if (view == 3 && drawSample) glutSolidSphere(1.0, 30, 20);
+	if (view == 3 && drawSample) glutSolidSphere(SPHERE_RADIUS, 30, 20);
 
 	//draw detector plate
 	detector_distance = DETECTOR_PLATE_DEPTH;
