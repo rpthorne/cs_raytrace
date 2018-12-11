@@ -29,7 +29,7 @@
 
 //detector plate size, from the origin
 #ifndef DETECTOR_PLATE_SIZE
-#define DETECTOR_PLATE_SIZE (1)
+#define DETECTOR_PLATE_SIZE (2.5f)
 #endif // !DETECTOR_PLATE_SIZE
 
 //detector plate depth
@@ -59,7 +59,7 @@
 
 //field of view in degrees
 #ifndef FIELD_OF_VIEW_DEGREES
-#define FIELD_OF_VIEW_DEGREES (80.0f)
+#define FIELD_OF_VIEW_DEGREES (30.0f)
 #endif
 
 //aspect ratio
@@ -69,12 +69,12 @@
 
 //xray count horizontally
 #ifndef XRAY_COUNT_HORIZONTAL
-#define XRAY_COUNT_HORIZONTAL (5)
+#define XRAY_COUNT_HORIZONTAL (10)
 #endif
 
 //xray count vertically
 #ifndef XRAY_COUNT_VERTICAL
-#define XRAY_COUNT_VERTICAL (5)
+#define XRAY_COUNT_VERTICAL (10)
 #endif
 
 //initial index of refraction
