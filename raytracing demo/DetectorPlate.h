@@ -58,7 +58,7 @@ public:
 	DetectorPlate(const Point &begin_, const Point &end_, int width_, int height_);
 
 	//getters
-	int collect_rays(deplentry***) const;
+	int collect_rays(deplentry**) const;
 
 	//mutators
 	int test_ray(XRay &p);

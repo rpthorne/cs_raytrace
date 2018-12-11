@@ -109,6 +109,6 @@ public:
 	int run_scene();
 
 	//here we output data from simulation, if it needs to be done
-	virtual int clean_scene(deplentry ***results);
+	virtual int clean_scene(deplentry **results);
 
 };
