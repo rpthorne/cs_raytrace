@@ -108,6 +108,9 @@ void drawDetector() {
 	int i, j;
 	glNormal3fv(detectorNormal);
 
+	deplentry **results = new deplentry*;
+	vs.clean_scene(results);
+
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
 			if (detectorMock) {
