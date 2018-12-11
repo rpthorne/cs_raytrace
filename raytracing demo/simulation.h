@@ -29,7 +29,7 @@
 
 //detector plate size, from the origin
 #ifndef DETECTOR_PLATE_SIZE
-#define DETECTOR_PLATE_SIZE (2.5f)
+#define DETECTOR_PLATE_SIZE (5.0f)
 #endif // !DETECTOR_PLATE_SIZE
 
 //detector plate depth

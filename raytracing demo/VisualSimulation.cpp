@@ -99,10 +99,10 @@ void reshape(int w, int h)
 }
 
 void drawDetector() {
-	detector_width = 5.0;
-	detector_height = 5.0;
-	width_pixels = 100;
-	height_pixels = 100;
+	detector_width = DETECTOR_PLATE_SIZE;
+	detector_height = DETECTOR_PLATE_SIZE;
+	width_pixels = DETECTOR_PLATE_WIDTH;
+	height_pixels = DETECTOR_PLATE_HEIGHT;
 	float pixelWidth = detector_width / (float)width_pixels;
 	float pixelHeight = detector_height / (float)height_pixels;
 	int i, j;
@@ -202,15 +202,7 @@ void drawRaygun() {
 		ray r3 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, 1.5, 7.0) };
 		draw_ray(r3);
 	}
-	if (drawRays) {
-		clock_t t;
-		std::queue<ray> dr = vs.get_d_ray();
-		while (!dr.empty())
-		{
-			draw_ray(dr.front());
-			dr.pop();
-		}
-	}
+	
 }
 
 void display(void)
@@ -244,7 +236,7 @@ void display(void)
 	if (view == 3 && drawSample) glutSolidSphere(1.0, 30, 20);
 
 	//draw detector plate
-	detector_distance = 2.0;
+	detector_distance = DETECTOR_PLATE_DEPTH;
 	glPushMatrix();
 	glTranslatef(-(detector_distance), 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
@@ -252,7 +244,7 @@ void display(void)
 	glPopMatrix();
 
 	//draw raygun
-	raygun_distance = 5.0;
+	raygun_distance = CAMERA_SOURCE_DEPTH;
 	glPushMatrix();
 	glTranslatef(raygun_distance, 0.0, 0.0);
 	glRotatef(-90, 0.0, 1.0, 0.0);
