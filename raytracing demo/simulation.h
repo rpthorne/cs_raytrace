@@ -27,7 +27,7 @@
 //#defs for the simulation, these are run-time constants for the simulation,
 //if you wish to change them in a derived class, simple #define them before #including them
 
-//detector plate size
+//detector plate size, from the origin
 #ifndef DETECTOR_PLATE_SIZE
 #define DETECTOR_PLATE_SIZE (1)
 #endif // !DETECTOR_PLATE_SIZE
@@ -37,14 +37,14 @@
 #define DETECTOR_PLATE_DEPTH (2)
 #endif
 
-//detector plate width
+//detector plate width, in pixels
 #ifndef DETECTOR_PLATE_WIDTH
-#define DETECTOR_PLATE_WIDTH (5)
+#define DETECTOR_PLATE_WIDTH (100)
 #endif
 
-//detector plate height
+//detector plate height, in pixels
 #ifndef DETECTOR_PLATE_HEIGHT
-#define DETECTOR_PLATE_HEIGHT (5)
+#define DETECTOR_PLATE_HEIGHT (100)
 #endif
 
 //sphere radius
