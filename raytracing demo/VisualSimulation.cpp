@@ -92,10 +92,10 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	if (view == 3)
+	//if (view == 3)
 		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
-	else
-		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 2.0, 50.0);
+	//else
+	//	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 2.0, 50.0);
 }
 
 void drawDetector() {
