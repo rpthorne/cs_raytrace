@@ -44,7 +44,7 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0;
+int view = 1, sampleRay = 0, detectorMock = 0, detectorResults = 0, drawSample = 1, drawRays = 0;
 //inherit and update simulation
 
 struct ray
@@ -127,22 +127,23 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else
+			else if (detectorResults)
 			{
-				if((*results)[i * height_pixels + j].num_hits < 1)
+				if ((*results)[i * height_pixels + j].num_hits < 1)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if((*results)[i * height_pixels + j].num_hits < 2)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-				else if ((*results)[i * height_pixels + j].num_hits < 2)
-					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
 				else if ((*results)[i * height_pixels + j].num_hits < 3)
-					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
 				else if ((*results)[i * height_pixels + j].num_hits < 4)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].num_hits < 5)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
-
-
 			}
-			if (i == 19 && j == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+			else glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			if (j == 80 && i == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			glBegin(GL_POLYGON);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
@@ -370,10 +371,22 @@ void keyboard(unsigned char key, int x, int y)
 		break;
 
 	case 'm':
-		if (detectorMock)
+		if (detectorMock) 
 			detectorMock = 0;
-		else
+		else {
 			detectorMock = 1;
+			if (detectorResults) detectorResults = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case 'M':
+		if (detectorResults)
+			detectorResults = 0;
+		else {
+			detectorResults = 1;
+			if (detectorMock) detectorMock = 0;
+		}
 		glutPostRedisplay();
 		break;
 
