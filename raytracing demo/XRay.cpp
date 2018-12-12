@@ -86,7 +86,7 @@ float XRay::get_length() const { return this->length; }
 
 //setters and creaters
 
-//error codes:
+//return codes:
 //0: 2 XRays, all good
 //1: 1 XRay, normal propogatation but reflection has been cut due to excessive generation
 //2: 1 XRay, total internal reflection
@@ -154,7 +154,7 @@ int XRay::collide(XRay** reflect, XRay** refract, Vector const &norm, const floa
 //XRay XRay::reflect_helper(Vector &norm, )
 
 //compute direction of rays only!!
-XRay XRay::reflect(Vector &norm) const
+XRay XRay::reflect(Vector const &norm) const
 {
 	Vector corrected_norm = norm;
 	if (norm.dot_product(dir) > 0)

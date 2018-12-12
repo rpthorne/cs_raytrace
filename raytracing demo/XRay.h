@@ -67,12 +67,13 @@ public:
 
 	int XRay::set_length(const float dist);
 
+	//return codes:
+	//0: 2 XRays, all good
+	//1: 1 XRay, normal propogatation but reflection has been cut due to excessive generation
+	//2: 1 XRay, total internal reflection
+	//3: 0 XRays, total internal reflection on a cut reflection
 	int XRay::collide(XRay** reflect, XRay** refract, Vector const &norm, const float index_of_refraction);
 	//relfect take some output from refract in order to save time
 	XRay XRay::reflect(Vector &norm) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction) const;
-	//XRay XRay::reflect_s(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
-	//XRay XRay::refract_s(Vector const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
-	//XRay XRay::reflect_p(Pointf const &norm, float intensity_refracted) const { return reflect(norm, intensity_refracted, 1); };
-	//XRay XRay::refract_p(Vector const &norm, float index_of_refraction) const { return reflect(norm, index_of_refraction); };
 };
