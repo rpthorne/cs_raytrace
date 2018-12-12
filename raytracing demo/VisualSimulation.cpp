@@ -45,7 +45,14 @@ static float alpha = 0.0;
 static float beta = PI / 6.0;
 
 //simulation bits for changing views & items rendered.
-int view = 1, sampleRay = 0, detectorMock = 0, detectorResults = 0, drawSample = 1, drawRays = 0, pixelate = 0;
+int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0, pixelate = 0;
+
+//detector plate result displays
+int detectorNumHits = 0, detectorSimpleIntensity = 0, detectorComplexIntensity = 0;
+#ifndef INTENSITY_SCALE
+#define INTENSITY_SCALE 5.0
+#endif // INTENSITYSCALE
+
 //inherit and update simulation
 
 struct ray
@@ -85,8 +92,10 @@ void writemessage()
 	printf("\t\t> Use \'w\' to toggle wire mesh\n");
 	printf("\t\t> Use arrow keys to position camera in scene view\n");
 	printf("\t\t> Use \'v\' to toggle between detector view and scene view\n");
-	printf("\t\t> Use \'m\' to display mocked detector results\n");
-	printf("\t\t> Use \'M\' to display actual detector results\n");
+	printf("\t\t> Use \'0\' to display mocked detector results\n");
+	printf("\t\t> Use \'1\' to display actual detector num_hits results\n");
+	printf("\t\t> Use \'2\' to display actual detector simple_intensity results\n");
+	printf("\t\t> Use \'3\' to display actual detector complex_intensity results\n");
 	printf("\t\t> Use \'r\' to display a single mocked XRay\n");
 	printf("\t\t> Use \'R\' to display actual XRays fired\n");
 	printf("\t\t> Use \'p\' to toggle pixel outline on detector plate\n");
@@ -117,6 +126,7 @@ void drawDetector() {
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
+			//mocked detector plate results from before real results were available
 			if (detectorMock) {
 				if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 55)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -131,7 +141,7 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else if (detectorResults)
+			else if (detectorNumHits)
 			{
 				if ((*results)[i * height_pixels + j].num_hits < 1)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -146,7 +156,38 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
+			else if (detectorSimpleIntensity)
+			{
+				if ((*results)[i * height_pixels + j].simple_intensity <= 0.0)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.2 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.4 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.6 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.8 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			}
+			else if (detectorComplexIntensity)
+			{
+				if ((*results)[i * height_pixels + j].complex_intensity <= 0.0)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.2 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.4 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.6 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.8 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else 
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			}
 			else glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			//colors the pixel hit by the mocked XRay
 			if (j == 80 && i == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			glBegin(GL_POLYGON);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
@@ -376,22 +417,50 @@ void keyboard(unsigned char key, int x, int y)
 		glutPostRedisplay();
 		break;
 
-	case 'm':
+	case '0':
 		if (detectorMock) 
 			detectorMock = 0;
 		else {
 			detectorMock = 1;
-			if (detectorResults) detectorResults = 0;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 0;
 		}
 		glutPostRedisplay();
 		break;
 
-	case 'M':
-		if (detectorResults)
-			detectorResults = 0;
+	case '1':
+		if (detectorNumHits)
+			detectorNumHits = 0;
 		else {
-			detectorResults = 1;
-			if (detectorMock) detectorMock = 0;
+			detectorMock = 0;
+			detectorNumHits = 1;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case '2':
+		if (detectorSimpleIntensity)
+			detectorSimpleIntensity = 0;
+		else {
+			detectorMock = 0;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 1;
+			detectorComplexIntensity = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case '3':
+		if (detectorComplexIntensity)
+			detectorComplexIntensity = 0;
+		else {
+			detectorMock = 0;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 1;
 		}
 		glutPostRedisplay();
 		break;
