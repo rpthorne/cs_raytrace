@@ -1,18 +1,17 @@
 # cs_raytrace
 
 This (code) project began in 9/18 with Ryan Thorne and Nic Cox working on behalf of the research of Professor Yongjin Sung and Hamid 
-Balyani. The basis of the project is to develop a simulation in C++ to create a proof of concept for adapting ray tracing techniques in 
-visual image rendering to X-Rays.
+Balyani at the University of Wisconsin - Milwaukee. The basis of the project is to develop a simulation in C++ to create a proof of 
+concept for adapting ray tracing techniques in visual image rendering to X-Rays.
 
 ## Project Setup
 The preferred IDE for working on this project would be Visual Studio. You can download it [here](https://visualstudio.microsoft.com/downloads/).
 
-You'll also need to download Git Bash or the Git UI [here](https://git-scm.com/downloads).
+You'll also need to download Git Bash and the Git GUI [here](https://git-scm.com/downloads).
 The project thus far has (loosely) used the [Git Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows) but mostly just 
 consisted of pushing to and pulling from the Master Branch. 
 
 ### Initial Download
-
 To get the project on your local machine, navigate to your newly downloaded Git Bash terminal. From here navigate to the directory that 
 you wish to clone the project. Once in the directory, type `git clone <url>` where <url> is the clone/download URL from the project page. 
 At this time, the URL is `https://github.com/rpthorne/cs_raytrace.git` and is unlikely to change. Once given the success message, you may 
