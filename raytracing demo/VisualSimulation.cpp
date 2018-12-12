@@ -48,7 +48,8 @@ static float beta = PI / 6.0;
 int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0, pixelate = 0;
 
 //detector plate result displays
-int detectorNumHits = 0, detectorSimpleIntensity = 0, detectorComplexIntensity = 0;
+deplentry **results = new deplentry*;
+int detectorNumHits = 0, detectorSimpleIntensity = 0, detectorComplexIntensity = 0, simulationRan = 0;
 #ifndef INTENSITY_SCALE
 #define INTENSITY_SCALE 5.0
 #endif // INTENSITYSCALE
@@ -121,8 +122,7 @@ void drawDetector() {
 	int i, j;
 	glNormal3fv(detectorNormal);
 
-	deplentry **results = new deplentry*;
-	vs.clean_scene(results);
+	
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
@@ -141,7 +141,7 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else if (detectorNumHits)
+			else if (detectorNumHits && simulationRan)
 			{
 				if ((*results)[i * height_pixels + j].num_hits < 1)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -156,7 +156,7 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else if (detectorSimpleIntensity)
+			else if (detectorSimpleIntensity && simulationRan)
 			{
 				if ((*results)[i * height_pixels + j].simple_intensity <= 0.0)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -171,7 +171,7 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else if (detectorComplexIntensity)
+			else if (detectorComplexIntensity && simulationRan)
 			{
 				if ((*results)[i * height_pixels + j].complex_intensity <= 0.0)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -220,7 +220,6 @@ void draw_ray(ray s)
 	glBegin(GL_LINES);
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
 	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-	//glColor3f(0.0f, 1.0f, 1.0f);
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
 	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
@@ -233,7 +232,6 @@ void draw_ray(ray s)
 }
 
 void drawRaygun() {
-	//draw rays here?
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
 
 	glNormal3f(0.0, -1.0, 0.0);
@@ -264,8 +262,9 @@ void drawRaygun() {
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
+	//draw the mocked sample XRay
 	if (sampleRay) {
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 		ray r1 = { Point(0.0, 0.0, 0.0), Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)) };
 		draw_ray(r1);
 		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5 - cos(120*DEGREES)) };
@@ -282,7 +281,7 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	/* update camera position */
+	//update camera position 
 	cpos[0] = 7.0 * cos(beta) * sin(alpha);
 	cpos[1] = 7.0 * sin(beta);
 	cpos[2] = 7.0 * cos(beta) * cos(alpha);
@@ -300,7 +299,7 @@ void display(void)
 	//glutSolidSphere(0.1, 10, 8);
 	//glPopMatrix();
 
-	/* remaining objects do not look as if they emit light */
+	//remaining objects will not look as if they emit light 
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
@@ -308,24 +307,24 @@ void display(void)
 
 	//draw detector plate
 	detector_distance = DETECTOR_PLATE_DEPTH;
-	glPushMatrix();
+	glPushMatrix();	//saving initial matrix position (0.0, 0.0, 0.0)
 	glTranslatef(-(detector_distance), 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
 	//align axis'
 	glRotatef(90, 0.0, 0.0, 1.0);
 	drawDetector();
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	//draw raygun
 	raygun_distance = CAMERA_SOURCE_DEPTH;
-	glPushMatrix();
+	glPushMatrix(); //save initial matrix position
 	glTranslatef(raygun_distance, 0.0, 0.0);
 	glRotatef(-90, 0.0, 1.0, 0.0);
 	drawRaygun();
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	//draw rays
-	glPushMatrix();
+	glPushMatrix(); //save initial matrix position
 	glRotatef(90, 0.0, 1.0, 0.0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 	if (drawRays) {
@@ -336,7 +335,7 @@ void display(void)
 			dr.pop();
 		}
 	}
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	glFlush();
 	glutSwapBuffers();
@@ -492,8 +491,7 @@ int main(int argc, char** argv)
 
 	clock_t t;
 	t = clock();
-	deplentry ***results;
-	vs = VisualSimulation();
+		vs = VisualSimulation();
 	t = clock() - t;
 	printf("number of seconds to initialize simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 	
@@ -502,10 +500,11 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
+	
 	if (failure) printf("simulation failed to run correctly!\n");
-	//else failure = s.clean_scene(results);
+	else failure = vs.clean_scene(results);
 	if (failure) printf("failed to collect simulation results!\n");
-	//else anything?
+	else simulationRan = 1;
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(800, 800);
