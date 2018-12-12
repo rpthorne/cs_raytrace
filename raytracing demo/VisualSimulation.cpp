@@ -19,7 +19,7 @@
 #include <time.h>
 #include <queue>
 #define PI 3.1415
-#define DEGREES ((1.0 / 180)*PI)
+#define DEGREES ((1.0 / 180.0)*PI)
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLdouble cpos[] = { 0.0, 5.0, 5.0 };
@@ -27,6 +27,7 @@ static GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat grey[] = { 0.5, 0.5, 0.5, 1.0 };
 static GLfloat cyan[] = { 0.0, 1.0, 1.0, 1.0 };
+static GLfloat reflect[] = { 1.0, 1.0, 0.0, 1.0 };
 
 static GLfloat low[] = { 0.0, 1.0, 0.0, 1.0 };
 static GLfloat low_mid[] = { 0.5, 1.0, 0.0, 1.0 };
@@ -219,11 +220,11 @@ void draw_ray(ray s)
 
 	glBegin(GL_LINES);
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());/*
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
 	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
+	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());*/
 	glEnd();
 	glBegin(GL_POINTS);
 	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
@@ -263,14 +264,20 @@ void drawRaygun() {
 	glEnd();
 
 	//draw the mocked sample XRay
-	if (sampleRay) {
+	if (sampleRay && view != 1) {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 		ray r1 = { Point(0.0, 0.0, 0.0), Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)) };
 		draw_ray(r1);
-		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5 - cos(120*DEGREES)) };
+		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5.0 - cos(120*DEGREES)) };
 		draw_ray(r2);
 		ray r3 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, 1.5, 7.0) };
 		draw_ray(r3);
+
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, reflect);
+		ray r4 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(30 * DEGREES) + 0.5, 4.8 - cos(30 * DEGREES)) };
+		draw_ray(r4);
+		ray r5 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, sin(120 * DEGREES)-0.7, 4.9 - cos(120 * DEGREES)) };
+		draw_ray(r5);
 	}
 	
 }
