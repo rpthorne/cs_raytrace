@@ -18,6 +18,7 @@
 #include <forward_list>
 #include <list>
 #include <queue>
+#include "config.h"
 
 #ifndef ZERO_MAX
 #define ZERO_MAX (0.0001f)

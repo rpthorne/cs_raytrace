@@ -73,7 +73,8 @@ public:
 	//2: 1 XRay, total internal reflection
 	//3: 0 XRays, total internal reflection on a cut reflection
 	int XRay::collide(XRay** reflect, XRay** refract, Vector const &norm, const float index_of_refraction);
+
 	//relfect take some output from refract in order to save time
-	XRay XRay::reflect(Vector &norm) const;
+	XRay XRay::reflect(Vector const &norm) const;
 	XRay XRay::refract(Vector const &norm, const float index_of_refraction) const;
 };
