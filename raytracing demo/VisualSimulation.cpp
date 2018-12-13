@@ -19,7 +19,7 @@
 #include <time.h>
 #include <queue>
 #define PI 3.1415
-#define DEGREES ((1.0 / 180)*PI)
+#define DEGREES ((1.0 / 180.0)*PI)
 
 static GLfloat position[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLdouble cpos[] = { 0.0, 5.0, 5.0 };
@@ -27,6 +27,7 @@ static GLfloat black[] = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat white[] = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat grey[] = { 0.5, 0.5, 0.5, 1.0 };
 static GLfloat cyan[] = { 0.0, 1.0, 1.0, 1.0 };
+static GLfloat reflect[] = { 1.0, 1.0, 0.0, 1.0 };
 
 static GLfloat low[] = { 0.0, 1.0, 0.0, 1.0 };
 static GLfloat low_mid[] = { 0.5, 1.0, 0.0, 1.0 };
@@ -44,7 +45,16 @@ const GLfloat detectorNormal[3] = { 0.0, 0.0, 1.0 };
 static float alpha = 0.0;
 static float beta = PI / 6.0;
 
-int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0;
+//simulation bits for changing views & items rendered.
+int view = 1, sampleRay = 0, detectorMock = 0, drawSample = 1, drawRays = 0, pixelate = 0;
+
+//detector plate result displays
+deplentry **results = new deplentry*;
+int detectorNumHits = 0, detectorSimpleIntensity = 0, detectorComplexIntensity = 0, simulationRan = 0;
+#ifndef INTENSITY_SCALE
+#define INTENSITY_SCALE 5.0
+#endif // INTENSITYSCALE
+
 //inherit and update simulation
 
 struct ray
@@ -81,9 +91,17 @@ VisualSimulation vs;
 void writemessage()
 {
 	printf("\n\tVisual representation of X-Ray tracing simulation\n");
-	printf("\t\t> Use \'w\' to toggle wire mesh. Useful to see detector pixels\n");
+	printf("\t\t> Use \'w\' to toggle wire mesh\n");
 	printf("\t\t> Use arrow keys to position camera in scene view\n");
 	printf("\t\t> Use \'v\' to toggle between detector view and scene view\n");
+	printf("\t\t> Use \'0\' to display mocked detector results\n");
+	printf("\t\t> Use \'1\' to display actual detector num_hits results\n");
+	printf("\t\t> Use \'2\' to display actual detector simple_intensity results\n");
+	printf("\t\t> Use \'3\' to display actual detector complex_intensity results\n");
+	printf("\t\t> Use \'r\' to display a single mocked XRay\n");
+	printf("\t\t> Use \'R\' to display actual XRays fired\n");
+	printf("\t\t> Use \'p\' to toggle pixel outline on detector plate\n");
+	printf("\t\t> Use \'s\' to toggle rendering the sample sphere\n");
 	printf("");
 }
 
@@ -92,10 +110,7 @@ void reshape(int w, int h)
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//if (view == 3)
-		gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
-	//else
-	//	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 2.0, 50.0);
+	gluPerspective(80.0, (GLfloat)w / (GLfloat)h, 1.0, 50.0);
 }
 
 void drawDetector() {
@@ -108,11 +123,11 @@ void drawDetector() {
 	int i, j;
 	glNormal3fv(detectorNormal);
 
-	deplentry **results = new deplentry*;
-	vs.clean_scene(results);
+	
 
 	for (i = 0; i < width_pixels; i++) {
 		for (j = 0; j < height_pixels; j++) {
+			//mocked detector plate results from before real results were available
 			if (detectorMock) {
 				if (sqrt(abs(i - 50)*abs(i - 50) + abs(j - 50)*abs(j - 50)) > 55)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
@@ -127,37 +142,71 @@ void drawDetector() {
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
 			}
-			else
+			else if (detectorNumHits && simulationRan)
 			{
-				if((*results)[i * height_pixels + j].num_hits < 1)
+				if ((*results)[i * height_pixels + j].num_hits < 1)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if((*results)[i * height_pixels + j].num_hits < 2)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
-				else if ((*results)[i * height_pixels + j].num_hits < 2)
-					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
 				else if ((*results)[i * height_pixels + j].num_hits < 3)
-					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
 				else if ((*results)[i * height_pixels + j].num_hits < 4)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].num_hits < 5)
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
 				else
 					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
-
-
 			}
-			if (i == 19 && j == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+			else if (detectorSimpleIntensity && simulationRan)
+			{
+				if ((*results)[i * height_pixels + j].simple_intensity <= 0.0)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.2 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.4 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.6 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].simple_intensity < (0.8 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			}
+			else if (detectorComplexIntensity && simulationRan)
+			{
+				if ((*results)[i * height_pixels + j].complex_intensity <= 0.0)
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.2 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.4 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low_mid);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.6 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid);
+				else if ((*results)[i * height_pixels + j].complex_intensity < (0.8 * INTENSITY_SCALE))
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, mid_high);
+				else 
+					glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
+			}
+			else glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+			//colors the pixel hit by the mocked XRay
+			if (j == 80 && i == 50 && sampleRay) glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, low);
 			glBegin(GL_POLYGON);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
 			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
 			glEnd();
-			/* draws lines around every pixel
-			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, high);
-			glBegin(GL_LINE_LOOP);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.0);
-			glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.0);
-			glEnd();
-			*/
+
+			//draws lines around every pixel
+			if (pixelate) {
+				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, black);
+				glBegin(GL_LINE_LOOP);
+				glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + j * pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - (i + 1)*pixelHeight, 0.001);
+				glVertex3f(-(detector_width / 2.0) + (j + 1)*pixelWidth, detector_height / 2.0 - i * pixelHeight, 0.001);
+				glEnd();
+			}
 		}
 	}
 }
@@ -171,12 +220,11 @@ void draw_ray(ray s)
 
 	glBegin(GL_LINES);
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
-	//glColor3f(0.0f, 1.0f, 1.0f);
+	glVertex3f(origin.getX(), origin.getY(), origin.getZ());/*
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
 	glVertex3f(tenth.getX() + dest.getX(), tenth.getY() * R2I - tenth.getZ() * .5f + dest.getY(), tenth.getY() * .5f + tenth.getZ() * R2I + dest.getZ());
 	glVertex3f(dest.getX(), dest.getY(), dest.getZ());
-	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());
+	glVertex3f(tenth.getZ() * .5f + tenth.getX() * R2I + dest.getX(), tenth.getY() + dest.getY(), tenth.getZ() * R2I - tenth.getX() * .5f + dest.getZ());*/
 	glEnd();
 	glBegin(GL_POINTS);
 	glVertex3f(origin.getX(), origin.getY(), origin.getZ());
@@ -185,7 +233,6 @@ void draw_ray(ray s)
 }
 
 void drawRaygun() {
-	//draw rays here?
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
 
 	glNormal3f(0.0, -1.0, 0.0);
@@ -216,14 +263,21 @@ void drawRaygun() {
 	glVertex3f(0.0, 0.0, 0.0);
 	glEnd();
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
-	if (sampleRay) {
+	//draw the mocked sample XRay
+	if (sampleRay && view != 1) {
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 		ray r1 = { Point(0.0, 0.0, 0.0), Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)) };
 		draw_ray(r1);
-		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5 - cos(120*DEGREES)) };
+		ray r2 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(120*DEGREES), 5.0 - cos(120*DEGREES)) };
 		draw_ray(r2);
 		ray r3 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, 1.5, 7.0) };
 		draw_ray(r3);
+
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, reflect);
+		ray r4 = { Point(0.0, sin(30 * DEGREES), 5.0 - cos(30 * DEGREES)), Point(0.0, sin(30 * DEGREES) + 0.5, 4.8 - cos(30 * DEGREES)) };
+		draw_ray(r4);
+		ray r5 = { Point(0.0, sin(120 * DEGREES), 5 - cos(120 * DEGREES)), Point(0.0, sin(120 * DEGREES)-0.7, 4.9 - cos(120 * DEGREES)) };
+		draw_ray(r5);
 	}
 	
 }
@@ -234,7 +288,7 @@ void display(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	/* update camera position */
+	//update camera position 
 	cpos[0] = 7.0 * cos(beta) * sin(alpha);
 	cpos[1] = 7.0 * sin(beta);
 	cpos[2] = 7.0 * cos(beta) * cos(alpha);
@@ -252,7 +306,7 @@ void display(void)
 	//glutSolidSphere(0.1, 10, 8);
 	//glPopMatrix();
 
-	/* remaining objects do not look as if they emit light */
+	//remaining objects will not look as if they emit light 
 	glMaterialfv(GL_FRONT, GL_EMISSION, black);
 
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, grey);
@@ -260,24 +314,24 @@ void display(void)
 
 	//draw detector plate
 	detector_distance = DETECTOR_PLATE_DEPTH;
-	glPushMatrix();
+	glPushMatrix();	//saving initial matrix position (0.0, 0.0, 0.0)
 	glTranslatef(-(detector_distance), 0.0, 0.0);
 	glRotatef(90, 0.0, 1.0, 0.0);
 	//align axis'
 	glRotatef(90, 0.0, 0.0, 1.0);
 	drawDetector();
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	//draw raygun
 	raygun_distance = CAMERA_SOURCE_DEPTH;
-	glPushMatrix();
+	glPushMatrix(); //save initial matrix position
 	glTranslatef(raygun_distance, 0.0, 0.0);
 	glRotatef(-90, 0.0, 1.0, 0.0);
 	drawRaygun();
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	//draw rays
-	glPushMatrix();
+	glPushMatrix(); //save initial matrix position
 	glRotatef(90, 0.0, 1.0, 0.0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan);
 	if (drawRays) {
@@ -288,7 +342,7 @@ void display(void)
 			dr.pop();
 		}
 	}
-	glPopMatrix();
+	glPopMatrix(); //restore original matrix position
 
 	glFlush();
 	glutSwapBuffers();
@@ -369,11 +423,51 @@ void keyboard(unsigned char key, int x, int y)
 		glutPostRedisplay();
 		break;
 
-	case 'm':
-		if (detectorMock)
+	case '0':
+		if (detectorMock) 
 			detectorMock = 0;
-		else
+		else {
 			detectorMock = 1;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case '1':
+		if (detectorNumHits)
+			detectorNumHits = 0;
+		else {
+			detectorMock = 0;
+			detectorNumHits = 1;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case '2':
+		if (detectorSimpleIntensity)
+			detectorSimpleIntensity = 0;
+		else {
+			detectorMock = 0;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 1;
+			detectorComplexIntensity = 0;
+		}
+		glutPostRedisplay();
+		break;
+
+	case '3':
+		if (detectorComplexIntensity)
+			detectorComplexIntensity = 0;
+		else {
+			detectorMock = 0;
+			detectorNumHits = 0;
+			detectorSimpleIntensity = 0;
+			detectorComplexIntensity = 1;
+		}
 		glutPostRedisplay();
 		break;
 
@@ -382,6 +476,14 @@ void keyboard(unsigned char key, int x, int y)
 			drawSample = 0;
 		else
 			drawSample = 1;
+		glutPostRedisplay();
+		break;
+
+	case 'p':
+		if (pixelate)
+			pixelate = 0;
+		else
+			pixelate = 1;
 		glutPostRedisplay();
 		break;
 
@@ -396,8 +498,7 @@ int main(int argc, char** argv)
 
 	clock_t t;
 	t = clock();
-	deplentry ***results;
-	vs = VisualSimulation();
+		vs = VisualSimulation();
 	t = clock() - t;
 	printf("number of seconds to initialize simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 	
@@ -406,10 +507,11 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
+	
 	if (failure) printf("simulation failed to run correctly!\n");
-	//else failure = s.clean_scene(results);
+	else failure = vs.clean_scene(results);
 	if (failure) printf("failed to collect simulation results!\n");
-	//else anything?
+	else simulationRan = 1;
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(800, 800);
