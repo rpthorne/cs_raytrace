@@ -3,7 +3,9 @@
 *.sdf
 *.sln
 #add the source folder
-!/raytracing demo
+!/src
+!/include
+!/glu
 
 #remove the vcx project stuff
 *.vcxproj*
