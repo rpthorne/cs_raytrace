@@ -61,8 +61,8 @@ Raygun::~Raygun()
 Raygun::Raygun(const Point x_source_, const Vector c_source_,
 	float fov_, float aspect_ratio_,
 	float index_of_refraction_, float intensity_,
-	int ray_width_, int ray_height_)
-	: Raygun(x_source_, c_source_, fov_, aspect_ratio_, index_of_refraction_, intensity_, ray_width_, ray_height_, 1, 1) {}
+	int ray_width_, int ray_height_) 
+{	Raygun(x_source_, c_source_, fov_, aspect_ratio_, index_of_refraction_, intensity_, ray_width_, ray_height_, 1, 1); }
 
 Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	float fov_, float aspect_ratio_,
