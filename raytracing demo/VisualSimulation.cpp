@@ -64,11 +64,11 @@ struct ray
 };
 class VisualSimulation : public simulation
 {
-	int cull_factor = 1;
-	int cull_count = 0;
+	const int cull_factor = 1;
+	int cull_count;
 	std::queue<ray> d_ray;
 public:
-	VisualSimulation() : simulation() {};
+	VisualSimulation() : simulation() { cull_count = 0; };
 	int draw_ray(XRay &x) override {
 		if (++cull_count < cull_factor)
 			return 0;
