@@ -44,8 +44,8 @@ float simulation::get_ior(XRay &p)
 	Point f = p.get_src() + p.get_dir().traverse(.001f);
 	float sqrmag = f.get_magnitude();
 	if (sqrmag - SPHERE_RADIUS <= ZERO_MAX)
-		return 1.0f;
-	return 1.1f;
+		return DEFAULT_INDEX_OF_REFRACTION;
+	return SAMPLE_INDEX_OF_REFRACTION;
 }
 
 simulation::simulation()

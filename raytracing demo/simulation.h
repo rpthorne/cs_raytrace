@@ -92,6 +92,12 @@
 #define DEFAULT_INDEX_OF_REFRACTION (1.0f)
 #endif
 
+//samples index of refraction
+#ifndef SAMPLE_INDEX_OF_REFRACTION
+#define SAMPLE_INDEX_OF_REFRACTION (1.1f)
+#endif // !SAMPLE_INDEX_OF_REFRACTION
+
+
 //initial intensity
 #ifndef INITIAL_INTENSITY
 #define INITIAL_INTENSITY (1.0f)
