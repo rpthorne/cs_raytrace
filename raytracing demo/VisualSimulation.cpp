@@ -18,6 +18,7 @@
 #include "simulation.h"
 #include <time.h>
 #include <queue>
+#include "DataOutputer.cpp"
 #define PI 3.1415
 #define DEGREES ((1.0 / 180.0)*PI)
 
@@ -64,7 +65,7 @@ struct ray
 };
 class VisualSimulation : public simulation
 {
-	const int cull_factor = 1;
+	static const int cull_factor = 1;
 	int cull_count;
 	std::queue<ray> d_ray;
 public:
@@ -498,7 +499,7 @@ int main(int argc, char** argv)
 
 	clock_t t;
 	t = clock();
-		vs = VisualSimulation();
+	vs = VisualSimulation();
 	t = clock() - t;
 	printf("number of seconds to initialize simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 	
@@ -507,11 +508,21 @@ int main(int argc, char** argv)
 	t = clock() - t;
 	printf("number of seconds to compute simulation: (%f)\n", ((float)t) / CLOCKS_PER_SEC);
 
+	DataOutputer dp = DataOutputer();
+	printf("outputting data to%s\n", dp.get_file_name());
+
 	
 	if (failure) printf("simulation failed to run correctly!\n");
 	else failure = vs.clean_scene(results);
 	if (failure) printf("failed to collect simulation results!\n");
 	else simulationRan = 1;
+
+	DataOutputer data_out = DataOutputer();
+	printf("outputting data to%s\n", data_out.get_file_name());
+	if (data_out.output_results(results, DETECTOR_PLATE_WIDTH, DETECTOR_PLATE_HEIGHT))
+		printf("failed to output data");
+	else
+		printf("outputed data successfully");
 
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(800, 800);
