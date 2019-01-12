@@ -49,10 +49,11 @@ public:
 			for (j = 0; j < height; j++)
 			{
 				//print a deplentry
+				deplentry cur = (*out)[i * height + j];
 				//this is an example until intensity and phase are properly implemented
-				ofs << (*out)[i * height + j].complex_intensity << ",";
-				ofs << (*out)[i * height + j].simple_intensity << ",";
-				ofs << (*out)[i * height + j].num_hits << "";
+				ofs << cur.complex_intensity << ",";
+				ofs << cur.simple_intensity << ",";
+				ofs << cur.num_hits << "";
 				//indicate next entry
 				ofs << std::endl;
 			}
