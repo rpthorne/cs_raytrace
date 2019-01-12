@@ -79,7 +79,7 @@ Raygun::Raygun(const Point &x_source_, const Vector &c_source_,
 	index_of_refraction = index_of_refraction_;
 	//convert fov_ to radians
 	float fov_rad = fov_ * 3.14f / 180.0f;
-	float nhalf = atanhf(fov_rad * .5f);
+	float nhalf = atanf(fov_rad * .5f);
 	c_source = c_source_.traverse(1) - Point(nhalf * aspect_ratio_, nhalf , 0);
 	w_dist = nhalf / ray_width;
 	h_dist = nhalf * aspect_ratio_ / ray_height;
